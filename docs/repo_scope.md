@@ -2,7 +2,7 @@
 
 This repository is being prepared as the public code and documentation companion for the manuscript:
 
-**Fusion hidden Markov modeling reveals a dominant backbone state and transient alternatives in simultaneous resting-state EEG-fMRI**
+**Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
 ## Current scope
 

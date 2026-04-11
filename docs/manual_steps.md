@@ -8,7 +8,7 @@ The purpose of this file is to make the Brainstorm- and GUI-dependent parts of t
 
 This repository accompanies the manuscript:
 
-**Fusion hidden Markov modeling reveals a dominant backbone state and transient alternatives in simultaneous resting-state EEG-fMRI**
+**Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
 Some parts of the workflow were performed in Brainstorm or other GUI-based tools and then fed into downstream MATLAB/Python scripts. These steps are scientifically important and therefore must be documented in the repository even if they are not executable code.
 

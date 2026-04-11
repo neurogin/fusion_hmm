@@ -2,7 +2,7 @@
 
 This repository accompanies the manuscript:
 
-**Fusion hidden Markov modeling reveals a dominant backbone state and transient alternatives in simultaneous resting-state EEG-fMRI**
+**Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
 This document maps the manuscript methods and supplementary methods to the current repository structure and indicates where manual/hybrid procedures are documented.
 
@@ -77,6 +77,20 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current repo location**
 - `notebooks/1_eeg_sensor/`
 
+**Current public-facing stage-1 entry files**
+- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
+- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+
+**Stage-1 helper location**
+- `notebooks/1_eeg_sensor/helpers/`
+  - `r01_stage1_params.m`
+  - `r01_export_bst_exclusions_Fevents.m`
+  - `r01_merge_exclusions_union.m`
+  - `r01_qc_excl_union_folder.m`
+  - `r01_eeg_runlevel_qc_gates.m`
+
 **Expected content**
 - ICLabel-based component pruning
 - export of Brainstorm-facing cleaned EEG
@@ -93,6 +107,8 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - Brainstorm exclusion marking is manual/hybrid
 - exclusions are limited to `boundary` and manually marked `BAD`
 - `QRS` is not used as a censoring rule unless it falls inside an already excluded interval
+- exported files may also contain `bad_boundary` labels
+- original stage-1 drivers and provenance copies are preserved separately and are not the public-facing entry points
 
 ---
 

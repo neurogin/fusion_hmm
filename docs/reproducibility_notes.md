@@ -147,6 +147,23 @@ This policy matters later because exclusion intervals affect:
 
 Small differences in exclusion handling can materially affect the retained-data totals and the stability of later modeling.
 
+### 6.1 Current stage-1 refactor caveats
+
+The cleaned public-facing stage-1 scripts now live in:
+
+- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
+- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+
+Important caveats preserved intentionally in the first implementation pass:
+
+- the recovered Brainstorm exporter preserves `BAD`, `boundary`, and `bad_boundary` labels
+- point-shaped Brainstorm events are currently converted to zero-length intervals exactly as in the recovered helper and should be validated against real raw-link MAT files when available
+- the stage-1 QC implementation still contains an explicit `max_emg_db` gate even though the manuscript frames the EMG proxy as descriptive rather than a stand-alone exclusion threshold
+
+These points are documented explicitly and should not be silently harmonized during later cleanup.
+
 ---
 
 ## 7. Alignment and segmentation notes

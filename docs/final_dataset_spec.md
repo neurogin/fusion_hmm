@@ -2,7 +2,7 @@
 
 This document defines the **canonical final analysis dataset** used for the manuscript:
 
-**Fusion hidden Markov modeling reveals a dominant backbone state and transient alternatives in simultaneous resting-state EEG-fMRI**
+**Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
 It is intended to serve as the frozen reference for the final paper workflow during repository refactoring and public release preparation.
 
