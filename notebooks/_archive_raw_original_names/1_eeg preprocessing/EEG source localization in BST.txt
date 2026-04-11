@@ -1,0 +1,81 @@
+EEG source localization in Brainstorm GUI
+
+IMPORTANT: Run ICA of the raw EEG .set data in EEGLAB first, select only "brain" components at >= 70% probability (by ICLabel), save modified .set file to be used in the subsequent source localization step.
+
+MATLAB > brainstorm reset > brainstorm > Select folder: brainstorm_db
+Adjust interface scaling if needed (font size, etc): File > Edit Preferences
+
+BST GUI:
+File > Create Protocol > eegfmri_Y7N200  (Yeo/Yan 7 Networks 200 parcels) (leave defaults as is)
+Anatomy tab of new protocol > (right click) New subject > sub-01 (leave defaults as is) > save
+sub-01 > (right click) Import anatomy folder (auto) > Files of type: Freesurfer, navigate to sub-01's C:\EEG_source\sub-01\derivatives\fmriprep\sourcedata\freesurfer\sub-01 folder -- this is the subject's fs derivatives folder containing also the labels (hence, the atlas parcellation needed is also loaded into BST) (This will automatically set the fiducial points and normalize the anatomical data to MNI space by a linear method.)
+
+Resulting data:
+sub-01 -- MRI T1, head mask (10000), cortex_245707V, cortex_15002V (downsampled), white_245707V, white_15002V (downsampled)
+Leave cortex_15002V, MRI T1, and head mask highlighted green.
+
+Go to func tab:
+sub-01 > (right click) Review raw file > Files of type: EEG: EEGLAB(*.set) > Navigate to sub-01's raw eeg data (sub-01_ses-01_desc-ICBrain70_clean.set) which was previously modified to include only "brain" at >=70% probability regions > Sensors/anatomy registration: Refine registration now? Yes > Percentage of head points to ignore: 0 >  
+
+Distance between 59 head points and head surface:
+ |  Mean :  4.9 mm  |  Distance >  3mm:  33 points (56%)
+ |  Max  : 13.9 mm  |  Distance >  5mm:  26 points (44%)
+ |  Std  :  4.1 mm  |  Distance > 10mm:   8 points (14%)
+ |  Number of outlier points removed: 0 (0%)
+ |  Initial number of head points: 59
+
+Close the visualization window > EEGLAB channels > (right click) MRI registration > Edit > Project electrodes on surface (button at the toolbar in visualization window) > Close window or save the figure first > Save changes
+
+Resulting additional data under func tab:
+sub-01: sub-01_ses-01_desc-ICBrain70_clean > EEGLAB channels, Link to raw file
+
+Mark bad segments and boundary events in the raw eeg data: Click on Link to raw file > In Record tab under Events, scroll down and highlight "boundary" > Events" Mark group as bad - this will change the label to "bad_boundary" (red)
+Change Duration to 10 s: Go to the eeg channels/signals window > Drag and drop to select bad segments - this will highlight the time segment > Right click on any point in the selected region > Reject time segment - you will see the time segment listed in Events under "BAD" (red) > Scroll through (F3) and repeat for other bad segments > Close the eeg window and save the modifications
+
+Go to the anat tab: sub-01 > (right click) MRI Segmentation > Generate BEM Surfaces > Select Brainstorm - this will create BEM surfaces from T1 MRI, scalp and cortex surfaces, warp MNI template skull surfaces to fit the head shape of the subject > BEM surfaces options: Scalp = 1922, Outer skull = 1922, Inner skull = 1922, thickness of the layers - skull (mm) = 4 
+
+Resulting additional data:
+sub-01: bem_head_1922V, bem_outerskull_1922V, bem_innerskull_1922V
+
+Go to the func tab: sub-01 > (right click) Compute head model > Comment: OpenMEEG BEM, Source space: Cortex surface, Forward modeling methods: EEG OpenMEEG BEM > OpenMEEG Options: Keep all the default values > OK (this may take some time to run)
+
+Resulting additional data under func tab:
+sub-01: OpenMEEG BEM (head model or forward model)
+
+***In EEG source localization, "BEM" stands for "Boundary Element Method," which is a mathematical technique used to model the electrical conductivity of the head to accurately locate the source of brain activity recorded by EEG electrodes, providing a more realistic representation compared to simpler spherical models; essentially, it helps pinpoint the origin of brain signals by considering the complex shapes of the skull and scalp layers***
+
+
+Compute the noise covariance: Link to raw file > (right click) Noise covariance > Compute from recordings > Noise covariance window will show as baseline the time segment excluding the marked bad segments at the beginning and at the end, leave as is > Leave all default values as is > OK (save a copy of the noise covariance plot if needed)
+
+Resulting additional data under func tab:
+sub-01: Noise covariance
+
+Source localization: func tab > sub-01 > (right click) Compute sources [2018] > Compute sources window: Method = Minimum norm imaging, Measure = sLORETA, Source model: Dipole orientations = Unconstrained, Sensors = EEG, Leave everything else at the default values > OK 
+
+Resulting additional data under func tab:
+sub-01 > Link to raw file > sLORETA: EEG(Unconstr) 2018
+
+Map to Yeo/Yan Atlas: Load sLORETA: EEG(Unconstr) 2018 > Go to Atlas > Select 200parcels_yeo2011_7networks.
+
+
+
+============================
+
+
+NEXT STEP: Go to 'eegfmri analysis of sub-01 ses-01'
+
+
+=============================
+If electrode positions look incorrect, we will use and project to the standard 10-10 system: EEGLAB channels > Add EEG positions > ICBM152 > Generic > 10-10 65
+Subjects projected to standard 10-10 system: sub-08_ses-01, sub-08_ses-02 (NOT DONE IN LATEST R01 RE-RUN)
+
+
+
+
+
+
+
+
+
+
+

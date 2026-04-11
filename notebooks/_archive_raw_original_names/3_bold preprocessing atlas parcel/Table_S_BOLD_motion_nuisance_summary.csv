@@ -1,0 +1,16 @@
+Run,Volumes,FD mean (mm),FD p95 (mm),FD max (mm),FD spikes (%),Motion-outlier TRs kept (%),Total regressors,Note
+sub-01_ses-01_task-rest,288,0.149,0.277,0.542,0.347,3.819,64,—
+sub-02_ses-01_task-rest,288,0.127,0.225,0.455,0,2.431,59,—
+sub-03_ses-01_task-rest,288,0.366,0.889,4.247,22.222,17.708,145,higher motion
+sub-08_ses-01_task-rest,288,0.167,0.711,1.332,9.722,7.639,95,—
+sub-08_ses-02_task-rest,288,0.237,0.748,1.916,12.153,19.444,126,—
+sub-09_ses-01_task-rest,288,0.3,0.551,11.917,7.986,3.472,71,higher motion
+sub-13_ses-01_task-rest,288,0.119,0.242,2.275,1.042,2.083,59,motion spikes present
+sub-13_ses-02_task-rest,288,0.13,0.392,2.473,3.819,7.292,78,motion spikes present
+sub-14_ses-01_task-rest,288,0.107,0.269,0.567,0.347,1.042,55,—
+sub-16_ses-01_task-rest,288,0.159,0.319,0.46,0,0.694,55,—
+sub-17_ses-01_task-rest,288,0.201,0.686,2.748,6.944,6.944,81,motion spikes present
+sub-17_ses-02_task-rest,288,0.111,0.213,0.703,0.347,12.847,90,—
+sub-18_ses-01_task-rest,288,0.16,0.385,0.987,2.083,2.083,64,—
+sub-20_ses-01_task-rest,288,0.08,0.238,0.778,1.042,11.458,89,—
+sub-21_ses-01_task-rest,288,0.226,0.593,1.582,6.597,6.944,89,—

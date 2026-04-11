@@ -1,0 +1,17 @@
+Run,Feature mode,Lags (TR),Total TRs,Segments (minlen15),Retained TRs,Usable min,Max segment (TR),Retained (%)
+sub-01_ses-01,nolags,0,288,6,277,9.695,99,96.2
+sub-02_ses-01,nolags,0,288,2,276,9.66,194,95.8
+sub-03_ses-01,nolags,0,288,8,255,8.925,60,88.5
+sub-08_ses-01,nolags,0,288,5,226,7.91,117,78.5
+sub-08_ses-02,nolags,0,288,5,204,7.14,78,70.8
+sub-09_ses-01,nolags,0,288,2,234,8.19,198,81.2
+sub-13_ses-01,nolags,0,288,2,255,8.925,198,88.5
+sub-13_ses-02,nolags,0,288,7,240,8.4,77,83.3
+sub-14_ses-01,nolags,0,288,4,270,9.45,102,93.8
+sub-16_ses-01,nolags,0,288,5,223,7.805,109,77.4
+sub-17_ses-01,nolags,0,288,5,234,8.19,86,81.2
+sub-17_ses-02,nolags,0,288,5,265,9.275,130,92.0
+sub-18_ses-01,nolags,0,288,6,197,6.895,51,68.4
+sub-20_ses-01,nolags,0,288,3,283,9.905,187,98.3
+sub-21_ses-01,nolags,0,288,6,111,3.885,28,38.5
+Total / overall,nolags,0,4320,71,3550,124.25,198,82.2
