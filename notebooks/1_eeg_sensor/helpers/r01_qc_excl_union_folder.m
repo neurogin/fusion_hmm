@@ -41,13 +41,13 @@ for i = 1:numel(files)
 
     T = readtable(in_tsv, 'FileType','text','Delimiter','\t');
     if isempty(T)
-        rows(end+1,:) = make_row(in_tsv, NaN, 0, 0, NaN, NaN, NaN, NaN, "EMPTY", ""); %#ok<AGROW>
+        rows(end+1,:) = make_row(in_tsv, NaN, 0, 0, NaN, NaN, NaN, NaN, "EMPTY", ""); 
         continue;
     end
 
     % Required columns
     if ~all(ismember({'start_sec','end_sec'}, T.Properties.VariableNames))
-        rows(end+1,:) = make_row(in_tsv, NaN, height(T), NaN, NaN, NaN, NaN, NaN, "BAD_COLS", "Missing start_sec/end_sec"); %#ok<AGROW>
+        rows(end+1,:) = make_row(in_tsv, NaN, height(T), NaN, NaN, NaN, NaN, NaN, "BAD_COLS", "Missing start_sec/end_sec"); 
         continue;
     end
 
@@ -92,20 +92,20 @@ for i = 1:numel(files)
 
     % Flags
     flags = strings(0,1);
-    if any(s < -1e-6); flags(end+1) = "NEG_START"; end %#ok<AGROW>
-    if any(e < -1e-6); flags(end+1) = "NEG_END"; end %#ok<AGROW>
-    if swapped > 0; flags(end+1) = "SWAPPED_SE"; end %#ok<AGROW>
-    if overlap_ct > 0; flags(end+1) = "OVERLAP"; end %#ok<AGROW>
-    if any(dur <= 0); flags(end+1) = "NONPOS_DUR"; end %#ok<AGROW>
-    if ~isnan(min_dur) && min_dur < min_int; flags(end+1) = "TINY_INTERVAL"; end %#ok<AGROW>
-    if ~isnan(max_dur) && max_dur > max_int; flags(end+1) = "HUGE_INTERVAL"; end %#ok<AGROW>
-    if ~isnan(excl_frac) && excl_frac > max_frac; flags(end+1) = "HIGH_EXCL_FRAC"; end %#ok<AGROW>
-    if ~isnan(min_gap) && min_gap >= 0 && min_gap <= tol; flags(end+1) = "TOUCHING_WINDOWS"; end %#ok<AGROW>
+    if any(s < -1e-6); flags(end+1) = "NEG_START"; end 
+    if any(e < -1e-6); flags(end+1) = "NEG_END"; end 
+    if swapped > 0; flags(end+1) = "SWAPPED_SE"; end 
+    if overlap_ct > 0; flags(end+1) = "OVERLAP"; end 
+    if any(dur <= 0); flags(end+1) = "NONPOS_DUR"; end 
+    if ~isnan(min_dur) && min_dur < min_int; flags(end+1) = "TINY_INTERVAL"; end 
+    if ~isnan(max_dur) && max_dur > max_int; flags(end+1) = "HUGE_INTERVAL"; end 
+    if ~isnan(excl_frac) && excl_frac > max_frac; flags(end+1) = "HIGH_EXCL_FRAC"; end 
+    if ~isnan(min_gap) && min_gap >= 0 && min_gap <= tol; flags(end+1) = "TOUCHING_WINDOWS"; end 
 
     flag_str = "OK";
     if ~isempty(flags); flag_str = strjoin(flags, "|"); end
 
-    rows(end+1,:) = make_row(in_tsv, run_dur, numel(s), overlap_ct, total_excl, excl_frac, min_dur, max_dur, flag_str, ""); %#ok<AGROW>
+    rows(end+1,:) = make_row(in_tsv, run_dur, numel(s), overlap_ct, total_excl, excl_frac, min_dur, max_dur, flag_str, ""); 
 end
 
 S = cell2table(rows, 'VariableNames', { ...

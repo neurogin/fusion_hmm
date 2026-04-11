@@ -4,6 +4,7 @@ Code and documentation for the manuscript:
 
 **Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
+
 ## Overview
 
 This repository is being prepared as the public code and documentation companion for the manuscript above.
@@ -16,7 +17,7 @@ The project develops a whole-brain fusion hidden Markov modeling (HMM) workflow 
 - reproducibility-aware model selection
 - biological interpretation of the final fusion-state solution
 
-At present, the repository is in an active **refactor phase**. The existing MATLAB and Python notebook workflows are being reorganized into a cleaner, manuscript-aligned, GitHub-facing structure while preserving the original scientific behavior and keeping older working notebooks archived.
+At present, the repository is in an active **refactor phase**. The existing MATLAB and Python notebook workflows are being reorganized into a cleaner, manuscript-aligned, GitHub-facing structure while preserving the original scientific behavior and keeping older working files archived.
 
 ## Current status
 
@@ -25,13 +26,14 @@ What is already present in the repository:
 - `AGENTS.md`
 - `docs/methods_map.md`
 - `docs/manual_steps.md`
-- manuscript and supplement reference files under `docs/_manuscript_reference/`
-- `docs/figure_table_map.md`
 - `docs/repo_scope.md`
 - `docs/final_dataset_spec.md`
 - `docs/reproducibility_notes.md`
+- `docs/figure_table_map.md`
+- manuscript and supplement reference files under `docs/_manuscript_reference/`
 - notebook folders organized by major manuscript workflow stage
-- archive folder for original notebook versions
+- archive folder for original notebook/script versions
+- cleaned public-facing stage-1 MATLAB entry files under `notebooks/1_eeg_sensor/`
 
 What is not yet fully populated:
 
@@ -45,7 +47,7 @@ Also note:
 - `notebooks/8_figures/` is currently empty
 - `notebooks/9_tables/` is currently empty
 
-This is intentional for now. In the current codebase, many summaries, figure-generation steps, and table-generation steps are still embedded within earlier method notebooks rather than separated into dedicated folders.
+This is intentional for now. In the current codebase, many summaries, figure-generation steps, and table-generation steps are still embedded within earlier method notebooks rather than separated into dedicated later-stage folders.
 
 ## Scientific workflow represented in this repo
 
@@ -78,7 +80,9 @@ Unless otherwise noted, the repository should reflect the final paper dataset sp
 - 124.25 usable minutes
 - final selected model order = **K = 3**
 
-If older notebooks or intermediate outputs disagree with these values, they should be treated as historical/pre-refactor material unless explicitly documented otherwise.
+See also:
+
+- `docs/final_dataset_spec.md`
 
 ## Current repository structure
 
@@ -90,6 +94,10 @@ fusion_hmm/
   docs/
     methods_map.md
     manual_steps.md
+    figure_table_map.md
+    repo_scope.md
+    final_dataset_spec.md
+    reproducibility_notes.md
     _manuscript_reference/
       FULL_MANUSCRIPT.docx
       SUPPLEMENTAL_MATERIALS.docx
@@ -98,6 +106,11 @@ fusion_hmm/
 
   notebooks/
     1_eeg_sensor/
+      10_eeg_prune_iclabel_and_export_clean_sets.m
+      11_brainstorm_exclusion_marking_manual.md
+      12_export_and_union_merge_brainstorm_exclusions.m
+      13_eeg_run_qc_and_table_s1.m
+      helpers/
     2_eeg_source/
     3_bold/
     4_alignment/

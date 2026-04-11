@@ -89,8 +89,8 @@ for i = 2:numel(ss)
         % overlap or within tolerance gap
         cur_e = max(cur_e, ee(i));
     else
-        merged_s(end+1,1) = cur_s; %#ok<AGROW>
-        merged_e(end+1,1) = cur_e; %#ok<AGROW>
+        merged_s(end+1,1) = cur_s; 
+        merged_e(end+1,1) = cur_e; 
         cur_s = ss(i);
         cur_e = ee(i);
     end

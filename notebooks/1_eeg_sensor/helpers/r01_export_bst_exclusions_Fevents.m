@@ -77,7 +77,7 @@ for i = 1:numel(ev)
 
     % Append rows
     for k = 1:size(t,2)
-        rows(end+1,:) = {char(lab), t(1,k), t(2,k), 'brainstorm'}; %#ok<AGROW>
+        rows(end+1,:) = {char(lab), t(1,k), t(2,k), 'brainstorm'}; 
     end
 end
 

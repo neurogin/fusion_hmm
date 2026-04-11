@@ -244,34 +244,34 @@ for i = 1:numel(cleanFiles)
     if ~isempty(excl_flags) && excl_flags ~= "OK" && excl_flags ~= "MISSING_EXCL_SUMMARY"
         if any(contains(excl_flags, severeFlags))
             include = false;
-            reasons(end+1) = "excl_union_flags_severe"; %#ok<AGROW>
+            reasons(end+1) = "excl_union_flags_severe"; 
         else
-            reasons(end+1) = "excl_union_flags_warn"; %#ok<AGROW>
+            reasons(end+1) = "excl_union_flags_warn"; 
         end
     end
 
     if isnan(usable_frac)
         if ~opt.allow_unknown_usable
             include = false;
-            reasons(end+1) = "usable_frac_unknown"; %#ok<AGROW>
+            reasons(end+1) = "usable_frac_unknown"; 
         else
-            reasons(end+1) = "usable_frac_unknown_warn"; %#ok<AGROW>
+            reasons(end+1) = "usable_frac_unknown_warn"; 
         end
     elseif usable_frac < opt.min_usable_frac
         include = false;
-        reasons(end+1) = sprintf('usable_frac<%.2f', opt.min_usable_frac); %#ok<AGROW>
+        reasons(end+1) = sprintf('usable_frac<%.2f', opt.min_usable_frac); 
     end
 
     if ~isnan(emg_db) && emg_db > opt.max_emg_db
         include = false;
-        reasons(end+1) = sprintf('emg_db>%.1f', opt.max_emg_db); %#ok<AGROW>
+        reasons(end+1) = sprintf('emg_db>%.1f', opt.max_emg_db); 
     elseif isnan(emg_db)
-        reasons(end+1) = "emg_db_nan"; %#ok<AGROW>
+        reasons(end+1) = "emg_db_nan"; 
     end
 
     if n_badchan > badchan_cap
         include = false;
-        reasons(end+1) = sprintf('badchan>%d', badchan_cap); %#ok<AGROW>
+        reasons(end+1) = sprintf('badchan>%d', badchan_cap); 
     end
 
     reasons_str = "";
@@ -324,7 +324,7 @@ for i = 1:numel(cleanFiles)
     if numel(row) ~= nVars
         error('Internal error: row length != nVars');
     end
-    rows(end+1,:) = row; %#ok<AGROW>
+    rows(end+1,:) = row; 
 end
 
 QC = cell2table(rows, 'VariableNames', varNames);
@@ -475,9 +475,9 @@ end
 
 function stem = make_stem(sub, ses, run)
 parts = strings(0,1);
-if strlength(sub)>0; parts(end+1)=sub; end %#ok<AGROW>
-if strlength(ses)>0; parts(end+1)=ses; end %#ok<AGROW>
-if strlength(run)>0; parts(end+1)=run; end %#ok<AGROW>
+if strlength(sub)>0; parts(end+1)=sub; end 
+if strlength(ses)>0; parts(end+1)=ses; end 
+if strlength(run)>0; parts(end+1)=run; end 
 if isempty(parts); stem = ''; else; stem = char(strjoin(parts,'_')); end
 end
 
