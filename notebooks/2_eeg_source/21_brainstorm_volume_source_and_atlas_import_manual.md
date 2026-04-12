@@ -2,7 +2,7 @@
 
 ## What This File Is
 
-This is the manual/hybrid handoff stage for the cleaned public-facing Stage 2 workflow.
+This is the manual/hybrid stage that sits between the public-facing Stage-2 atlas-preparation notebook and the later scripted scout-extraction and parcel-export files.
 
 It sits between:
 
@@ -10,7 +10,7 @@ It sits between:
 - `22_extract_volgrid_scouts_from_brainstorm_tess.m`
 - `23_export_eeg_parcel_pc1_and_gain_normalize.m`
 
-It is intentionally documentation-only. The public repository does not present Brainstorm source localization, MNI normalization, BEM creation, or atlas import as if they were fully scripted.
+It is intentionally a short public-facing guide, not an executable notebook.
 
 ## Manuscript Linkage
 
@@ -24,9 +24,15 @@ It is intentionally documentation-only. The public repository does not present B
 - Supplementary Table S3
 - Supplementary Figures S1A,B and S2-S4
 
+## What You Do In This Stage
+
+Use Brainstorm to complete the subject-specific source-localization and atlas-import steps that the public MATLAB files depend on later.
+
+This step is required because the public repository does **not** pretend that Brainstorm source modeling and atlas import were fully scripted.
+
 ## Main Source Of Truth
 
-Follow the detailed manual and hybrid instructions in:
+Follow the detailed instructions in:
 
 - `docs/manual_steps.md`
   - Section 3. EEG volume source localization in Brainstorm
@@ -38,13 +44,13 @@ Follow the detailed manual and hybrid instructions in:
 
 This file is a stage-level map to those procedures.
 
-## Inputs You Need Before Opening Brainstorm
+## Inputs
 
 - Cleaned EEGLAB runs from Stage 1:
   - `*_clean.set`
-- Brainstorm protocol containing the imported EEG and anatomy:
+- Brainstorm protocol:
   - `eegfmri_R01_ICRej70`
-- The Schaefer atlas prepared in step 20:
+- Atlas files from step 20:
   - `tpl-MNI152NLin2009cAsym_res-01_atlas-Schaefer2018_desc-200Parcels7Networks_dseg.nii.gz`
   - matching `.txt` label file with the same basename
 
@@ -62,9 +68,9 @@ For each subject/session:
 
 These steps are hybrid because Brainstorm performs subject-specific alignment and source-grid atlas assignment inside the GUI and Brainstorm database.
 
-## Outputs The Scripted Stage-2 Files Expect
+## Outputs The Next Scripted Files Expect
 
-The later public Stage-2 scripts assume Brainstorm has already written:
+After the Brainstorm work is complete, the later public Stage-2 scripts expect:
 
 - run-level inverse-kernel files such as:
   - `results_MN_EEG_KERNEL_*.mat`
@@ -79,16 +85,6 @@ After that manual work is complete:
 - `23_export_eeg_parcel_pc1_and_gain_normalize.m`
   uses those scouts plus the kernel files and cleaned EEG to export parcel PCs and QC sidecars
 
-## Important Hybrid Interpretation
-
-The Schaefer atlas is template-space and shared across subjects, but parcel membership on the EEG source grid is still subject-specific because Brainstorm applies each subject's MNI normalization and source-grid mapping.
-
-This is why Stage 2 keeps:
-
-- manual Brainstorm setup explicit
-- scout extraction explicit
-- source-grid coverage QC explicit
-
 ## Known Project Note
 
 The project documentation records one subject-specific exception:
@@ -97,7 +93,7 @@ The project documentation records one subject-specific exception:
 
 Keep that exception visible. Do not silently normalize it away during refactor or reruns.
 
-## What To Check Before Leaving Brainstorm
+## Quick Reminder Before Leaving Brainstorm
 
 - the final source result uses the intended volumetric source model
 - the atlas import used the `dilated, MNI` volume-scout option
@@ -113,4 +109,6 @@ Keep that exception visible. Do not silently normalize it away during refactor o
 
 ## Refactor Note
 
-This repository keeps the Brainstorm Stage-2 handoff explicit on purpose. The cleaned public workflow is meant to be honest about what is manual, what is hybrid, and what is scripted.
+This repository keeps the Brainstorm Stage-2 handoff explicit on purpose.
+
+The cleaned public workflow does not describe this stage as if it were fully scripted.

@@ -5,12 +5,29 @@
 %   kernels and Brainstorm-defined volume-grid scouts, then apply the
 %   manuscript-preserved gain normalization and write batch summaries.
 %
+% When to run it:
+%   Run this after the manual Brainstorm Stage-2 work is complete and after
+%   the standardized scout files have already been written by step 22.
+%
 % Manuscript linkage:
 %   - Main Methods 2.2.3
 %   - Supplementary Methods 1.3
 %   - Supplementary Results 2.3
 %   - Supplementary Table S3 support
 %   - Supplementary Figs. S2-S4 support
+%
+% Inputs expected:
+%   - Brainstorm protocol root with kernel files
+%   - stage-1 cleaned EEGLAB .set files
+%   - subject/session scout MAT files from step 22
+%
+% Outputs written:
+%   - *_parcelPC_raw.mat
+%   - *_parcelPC_gnorm.mat
+%   - batch_parcel_gain_summary_v3.csv
+%   - batch_parcel_coverage_summary_v3.csv
+%   - batch_parcel_manifest_v3.csv
+%   - .npy sidecars when WriteNPY=true, including *_time_sec.npy
 %
 % Manual dependency:
 %   Brainstorm source localization and atlas import must already be
@@ -69,6 +86,9 @@ assert_configured_input_dir(protocol_root, 'protocol_root');
 assert_configured_input_dir(clean_eeg_dir, 'clean_eeg_dir');
 assert_configured_output_dir(parcel_output_dir, 'parcel_output_dir');
 
+% writeNPY remains an external dependency. The exporter helper still runs
+% without it, but the downstream alignment-ready .npy outputs will be
+% incomplete if it is missing.
 if write_npy && exist('writeNPY', 'file') ~= 2
     warning(['writeNPY is not on the MATLAB path. The preserved helper will skip .npy output, ' ...
         'which means downstream alignment-ready sidecars will not be created.']);

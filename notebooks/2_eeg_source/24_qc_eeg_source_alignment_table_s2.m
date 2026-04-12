@@ -5,12 +5,22 @@
 %   Table-S2 support CSV describing atlas coverage on the EEG volumetric
 %   source grid.
 %
+% When to run it:
+%   Run this after step 23 has written the coverage summary CSV.
+%
 % Manuscript linkage:
 %   - Main Methods 2.2.2
 %   - Supplementary Methods 1.2
 %   - Supplementary Results 2.2
 %   - Supplementary Table S2
 %   - Supplementary Fig. S1A,B support
+%
+% Inputs expected:
+%   - batch_parcel_coverage_summary_v3.csv from step 23
+%   - optional scout-build summary CSV from step 22
+%
+% Outputs written:
+%   - table_s2_eeg_atlas_alignment_summary.csv
 %
 % Manual dependency:
 %   The upstream Brainstorm source localization and atlas import remain
@@ -121,6 +131,9 @@ end
 
 writetable(tableS2, table_s2_csv);
 
+% -------------------------------------------------------------------------
+% Step 6. Point the user to the manual/hybrid figure note
+% -------------------------------------------------------------------------
 fprintf('\nStage 2 / Step 24 complete.\n');
 fprintf('Wrote Table-S2 support CSV: %s\n', table_s2_csv);
 fprintf(['Figure S1A,B still requires manual/hybrid Brainstorm screenshots or later ' ...

@@ -6,12 +6,25 @@
 %   subject/session in the same vertex-index space as the run-level
 %   Brainstorm inverse kernels.
 %
+% When to run it:
+%   Run this after the manual Brainstorm source-localization and atlas-
+%   import steps are complete, and before parcel PC export.
+%
 % Manuscript linkage:
 %   - Main Methods 2.2.2
 %   - Supplementary Methods 1.2
 %   - Supplementary Results 2.2
 %   - Supplementary Table S2
 %   - Supplementary Fig. S1A,B support
+%
+% Inputs expected:
+%   - Brainstorm protocol root
+%   - run-level results_MN_EEG_KERNEL_*.mat files
+%   - subject/session tess files that already contain the imported atlas
+%
+% Outputs written:
+%   - one standardized scout MAT per subject/session
+%   - one scout-build summary CSV
 %
 % Manual dependency:
 %   Brainstorm source localization and atlas import must already be
@@ -84,6 +97,9 @@ end
 
 writetable(T, summary_csv);
 
+% -------------------------------------------------------------------------
+% Step 6. Point the user to the next stage
+% -------------------------------------------------------------------------
 fprintf('Wrote scout-build summary: %s\n', summary_csv);
 fprintf('Next scripted step: run 23_export_eeg_parcel_pc1_and_gain_normalize.m.\n');
 
