@@ -156,16 +156,26 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Table S4. BOLD parcel extraction and atlas preservation
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/3_bold/`
+**Status:** active public-facing build step
+**Current source file(s):**
+- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
+
+**Notes:**
+- built by joining exporter `dataset_index.csv` with atlas-preservation `qc_atlas_on_boldgrid_summary.csv`
 
 ---
 
 ## Table S5. Motion burden and nuisance-model composition for BOLD preprocessing
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/3_bold/`
+**Status:** active public-facing build step
+**Current source file(s):**
+- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+
+**Notes:**
+- numeric fields come from exporter `dataset_index.csv`
+- the short `Note` column is kept explicit as provenance annotation rather than treated as a computed metric
 
 ---
 
@@ -222,7 +232,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
 - `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
 - `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
-- `notebooks/3_bold/` outputs later in the pipeline
+- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
 
 **Notes:**
 - final assembly still likely uses Brainstorm screenshots and later BOLD-side outputs
@@ -259,10 +270,15 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 
 ---
 
-## Figure S5. Representative run-level example of BOLD parcel time series after nuisance regression
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/3_bold/`
+## Figure S5. BOLD QC reconstruction from exporter sidecars
+**Status:** reconstructed from recovered provenance
+**Current source file(s):**
+- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+
+**Notes:**
+- built from exporter QC sidecars that are present in the recovered Stage-3 outputs
+- the exact original final panel generator was not recovered, so the public repo keeps this reconstruction explicit
 
 ---
 

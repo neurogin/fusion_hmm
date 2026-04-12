@@ -211,6 +211,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current repo location**
 - `notebooks/3_bold/`
 
+**Public-facing Stage-3 files**
+- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
+- `notebooks/3_bold/33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+
 **Expected content**
 - nuisance design construction
 - nuisance regression
@@ -226,6 +232,10 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Notes**
 - BOLD is largely scripted in this repo
 - atlas consistency with EEG is handled through shared template-space anatomical correspondence rather than voxel-for-voxel identity
+- the standalone atlas-on-BOLD-grid branch is kept for atlas-preservation QC and overlay provenance
+- the parcel-export path keeps the exporter-side `res-02` atlas branch authoritative
+- Supplementary Table S4 is built by joining atlas QC outputs with exporter metadata
+- Supplementary Figure S5 is reconstructed from exporter QC sidecars because one explicit original figure generator was not recovered
 
 ---
 

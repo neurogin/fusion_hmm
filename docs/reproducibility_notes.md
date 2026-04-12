@@ -141,6 +141,29 @@ It should **not** be silently replaced with `single(EEG.times/1000)`, because th
 
 This also means that the external MATLAB `writeNPY` dependency is practically required for a fully downstream-ready Stage-2 export set, even though the preserved helper can still run without it.
 
+### 5.5 Stage-3 uses two atlas branches for different purposes
+The cleaned public-facing Stage-3 workflow keeps two related but distinct atlas branches visible:
+
+- `30_map_schaefer200_to_bold_run_grids.ipynb`
+  - standalone atlas-preservation QC and overlay provenance
+- `31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+  - the authoritative parcel-export path
+
+The recovered Stage-3 provenance shows that the parcel-export path is anchored to the exporter-side frozen `res-02` Schaefer atlas in `parcel_pc1_v6/atlas_source/`.
+
+The standalone atlas-on-BOLD-grid notebook remains useful for atlas-label preservation checks and BOLD-side figure support, but it should not be treated as the authoritative atlas producer for exported parcel time series.
+
+### 5.6 Stage-3 Figure S5 is reconstructed from available QC sidecars
+The current repo snapshot did not yield one explicit original script that writes the final manuscript Figure S5.
+
+The cleaned public-facing Stage-3 QC notebook therefore reconstructs Figure S5 from the exporter QC sidecars that are actually present:
+
+- `qc_motion_to_pc.csv`
+- `qc/qc_parcel_blowups.csv`
+- per-run `qc/qc_parcel_blowups_<runTag>.png`
+
+This limitation should remain explicit. The public repo should not imply that an exact original one-step Figure S5 generator was recovered when it was not.
+
 ---
 
 ## 6. EEG exclusion and masking notes
