@@ -210,6 +210,58 @@ The alignment workflow depends on:
 - applying both EEG-coverage and sample-completeness criteria
 - exporting only contiguous retained stretches of at least 15 TR
 
+### 7.1 Trigger-based EEG timeline reconciliation is an explicit dependency
+
+The cleaned public-facing Stage-4 alignment notebook keeps the original trigger logic explicit.
+
+The workflow depends on:
+- recurring `R128` events in both the raw and preprocessed EEG event TSVs
+- the first raw `S1` event as the absolute anchor
+
+The preserved alignment helper searches event labels across:
+- `trial_type`
+- `value`
+- `type`
+
+and searches time columns across:
+- `onset`
+- `start`
+- `start_sec`
+- `time`
+- `latency_sec`
+- `latency`
+
+This trigger dependency should be treated as part of the reproducible input contract for Stage 4, not as an implicit assumption.
+
+### 7.2 Stage-4 run discovery is availability-based and now audited explicitly
+
+The preserved Stage-4 logic still discovers runs by globbing the required inputs and intersecting them by:
+- `sub-XX_ses-YY`
+
+This behavior is preserved because it matches the original notebook, but it is still a dataset-specific assumption rather than a general manifest-driven design.
+
+The cleaned public-facing notebook now writes:
+- `qc/run_input_audit.csv`
+
+so users can see which runs were omitted because one or more required inputs were absent.
+
+### 7.3 The public default is no-lag plus `minlen15`
+
+Older Stage-4 notebooks exposed `minlen10` and lagged branches centrally during exploratory development.
+
+The cleaned public-facing Stage-4 default is now the frozen manuscript dataset:
+- no-lag design
+- minimum retained segment length = 15 TR
+
+Optional lagged `minlen15` outputs remain available for provenance and later model-comparison checks, but they are not presented as the main public dataset.
+
+### 7.4 Offset-jump-threshold exposure remains intentionally unharmonized
+
+The original alignment notebook exposed an `OFFSET_JUMP_THR` input, but the active split rule inside the offset-segmentation helper still uses a hard-coded `0.5 s` threshold.
+
+The cleaned public-facing Stage-4 files preserve that mismatch explicitly and record both values in:
+- `qc/alignment_parameters_used.json`
+
 Important implication:
 
 When segments are later combined into model inputs, gaps should not be treated as continuous time unless sequence boundaries are explicitly preserved.

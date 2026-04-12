@@ -27,10 +27,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 # Main manuscript figures
 
 ## Figure 1. Timestamp-based alignment and construction of the final no-lag, 15-TR-minimum EEG-BOLD fusion dataset
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/4_alignment/`
-- possibly `notebooks/8_figures/` later
+**Status:** Hybrid / Manual assembly
+**Current source file(s):**
+- `notebooks/4_alignment/40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
+- `notebooks/4_alignment/41_build_final_no_lag_fusion_observation_segments.ipynb`
+- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 **Expected components:**
 - alignment schematic
@@ -38,7 +39,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - retained-TR mask illustration
 
 **Notes:**
-- may include manually assembled schematic elements in addition to scripted outputs
+- `42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb` writes support plots and a manifest under `manuscript_support/figure1_support/`
+- final Figure 1 still includes schematic and layout decisions that remain hybrid/manual rather than one-click scripted
 
 ---
 
@@ -180,17 +182,36 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Table S6. Parameters defining the final no-lag, 15-TR-minimum fusion-HMM dataset
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/4_alignment/`
-- `docs/final_dataset_spec.md`
+**Status:** active public-facing build step
+**Current source file(s):**
+- `notebooks/4_alignment/40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
+- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+
+**Upstream requirements:**
+- cleaned Stage-2 EEG parcel NPY exports, including `*_PC1_gnorm.npy` and `*_time_sec.npy`
+- cleaned Stage-3 BOLD parcel NPY exports
+- raw and preprocessed EEG event TSVs containing recurring `R128` triggers
+
+**Expected output:**
+- `manuscript_support/table_s6_alignment_parameters.csv`
+
+**Notes:**
+- summarizes the parameters preserved in `qc/alignment_parameters_used.json`
+- keeps the exposed-versus-active offset-jump-threshold mismatch explicit rather than silently harmonizing it
 
 ---
 
 ## Table S7. Run-level summary of the final no-lag, 15-TR-minimum fusion dataset
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/4_alignment/`
+**Status:** active public-facing build step
+**Current source file(s):**
+- `notebooks/4_alignment/41_build_final_no_lag_fusion_observation_segments.ipynb`
+- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+
+**Expected output:**
+- `manuscript_support/table_s7_final_dataset_run_summary.csv`
+
+**Notes:**
+- reports per-run retained TRs, usable minutes, and contiguous-segment counts for the canonical no-lag `minlen15` dataset
 
 ---
 

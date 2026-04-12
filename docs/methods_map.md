@@ -251,6 +251,15 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current repo location**
 - `notebooks/4_alignment/`
 
+**Current public-facing stage-4 entry files**
+- `notebooks/4_alignment/40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
+- `notebooks/4_alignment/41_build_final_no_lag_fusion_observation_segments.ipynb`
+- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+
+**Stage-4 helper files used here**
+- `notebooks/4_alignment/stage4_alignment_helpers.py`
+- `notebooks/4_alignment/stage4_segment_helpers.py`
+
 **Expected content**
 - raw-to-preprocessed EEG timeline reconciliation
 - TR-level keep-mask construction
@@ -265,6 +274,16 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 
 **Notes**
 - this stage is scripted, but it depends on earlier manual/hybrid EEG exclusions and Brainstorm-derived source outputs
+- the cleaned public-facing Stage-4 default is the canonical manuscript dataset:
+  - no-lag design
+  - minimum retained segment length = 15 TR
+- `40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb` preserves the original trigger-based alignment logic:
+  - recurring `R128` events in raw and preprocessed EEG event TSVs
+  - raw `S1` as the absolute anchor
+  - accepted event-label columns `trial_type`, `value`, and `type`
+  - accepted time columns `onset`, `start`, `start_sec`, `time`, `latency_sec`, and `latency`
+- Stage 4 preserves glob-based run discovery, but the cleaned public notebook now writes an explicit missing-run audit so availability-based exclusions are visible
+- lagged alignment outputs remain available for provenance, but `41_build_final_no_lag_fusion_observation_segments.ipynb` presents the no-lag `minlen15` branch as the main public output path
 
 ---
 
