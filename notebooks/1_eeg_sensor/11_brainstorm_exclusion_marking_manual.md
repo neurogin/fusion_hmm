@@ -1,8 +1,13 @@
 # 11 Brainstorm Exclusion Marking Manual
 
-## Status
+## What This File Is
 
-Manual / hybrid stage. This is not a fully scripted notebook.
+This is the manual/hybrid stage that sits between the two scripted stage-1 entry files:
+
+- `10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `12_export_and_union_merge_brainstorm_exclusions.m`
+
+It is intentionally a short public-facing guide, not an executable notebook.
 
 ## Manuscript Linkage
 
@@ -11,24 +16,21 @@ Manual / hybrid stage. This is not a fully scripted notebook.
 - Supplementary Results 2.1
 - Supplementary Table S1
 
-## Purpose
+## What You Do In This Stage
 
-This stage sits between:
+Open the cleaned EEG runs in Brainstorm and mark conservative exclusion intervals that will later be exported and merged by the scripted stage-1 pipeline.
 
-- `10_eeg_prune_iclabel_and_export_clean_sets.m`
-- `12_export_and_union_merge_brainstorm_exclusions.m`
+This step is required because the public repository does **not** pretend Brainstorm exclusion marking was fully automated.
 
-Its purpose is to create the conservative Brainstorm exclusion annotations that the later scripted stage exports and merges.
+## Main Source Of Truth
 
-## Source Of Truth
-
-Follow the detailed Brainstorm instructions in:
+Follow the detailed instructions in:
 
 - `docs/manual_steps.md`
   - Section 1. Manual EEG exclusion marking in Brainstorm
   - Section 2. Brainstorm protocol setup and EEG import
 
-This file is a short stage-level pointer, not a replacement for the full manual document.
+This file is a short stage-level map to that documentation.
 
 ## Inputs
 
@@ -37,33 +39,41 @@ This file is a short stage-level pointer, not a replacement for the full manual 
 - Brainstorm protocol:
   - `eegfmri_R01_ICRej70`
 
-## Required Event Groups
+## Event Names To Use
 
 - `boundary` (lowercase)
 - `BAD` (uppercase)
 
-## Key Policy
+## Key Stage-1 Policy
 
-Exclusions are limited to:
+The exclusion policy is intentionally conservative:
 
-- inherited `boundary` events
-- manually marked `BAD` segments
+- keep inherited `boundary` events
+- add manual `BAD` segments only for genuinely problematic intervals
+- do not use `QRS` as a routine censoring marker
 
-`QRS` markers are retained and are not used as routine censoring markers unless they fall inside an already excluded interval.
+`QRS` events are retained unless they fall inside an already excluded interval.
 
-## Outputs Used By The Next Scripted Stage
+## What The Next Scripted File Will Export
 
-These manual Brainstorm annotations are exported later by:
+After Brainstorm marking is complete, the next public stage-1 script:
 
 - `12_export_and_union_merge_brainstorm_exclusions.m`
 
-Expected downstream files:
+will export and merge these annotations into:
 
 - `*_bst_exclusions.tsv`
 - `*_excl_union.tsv`
 
+## Quick Reminder Before Leaving Brainstorm
+
+- confirm `boundary` still exists
+- confirm `BAD` only marks genuine problem intervals
+- confirm `QRS` was not used as a routine censoring label
+- confirm the run is saved before moving to the export step
+
 ## Important Refactor Note
 
-This repository intentionally keeps Brainstorm exclusion marking explicit as a manual/hybrid dependency.
+This repository keeps Brainstorm exclusion marking explicit as a manual/hybrid dependency on purpose.
 
-The public stage-1 refactor does not pretend this step is fully automated.
+The cleaned public stage-1 workflow does not describe this step as if it were fully scripted.
