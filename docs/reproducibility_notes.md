@@ -128,6 +128,19 @@ was used intentionally to reduce parcel dropout caused by coarse source-grid sam
 
 This should not be treated as an arbitrary GUI choice.
 
+### 5.4 Stage-2 sample-time sidecars are part of the parcel export
+The cleaned public-facing Stage-2 exporter restores the `*_time_sec.npy` sidecar beside `*_PC1_gnorm.npy` when `WriteNPY = true`.
+
+This sidecar is:
+- sample-level, not TR-level
+- aligned to the rows of the exported parcel PC arrays
+- defined deterministically as:
+  - `single((0:nTime-1)' / srate)`
+
+It should **not** be silently replaced with `single(EEG.times/1000)`, because the recovered example bundle showed that those are not exactly identical after float conversion.
+
+This also means that the external MATLAB `writeNPY` dependency is practically required for a fully downstream-ready Stage-2 export set, even though the preserved helper can still run without it.
+
 ---
 
 ## 6. EEG exclusion and masking notes

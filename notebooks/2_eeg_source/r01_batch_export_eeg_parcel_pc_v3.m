@@ -244,6 +244,7 @@ for i = 1:numel(rawMats)
     pc2n = fullfile(npyDir, sprintf('%s_PC2_gnorm.npy', runTag));
     pve1n = fullfile(npyDir, sprintf('%s_PVE1.npy', runTag));
     pve2n = fullfile(npyDir, sprintf('%s_PVE2.npy', runTag));
+    tsn   = fullfile(npyDir, sprintf('%s_time_sec.npy', runTag));
     vmn  = fullfile(npyDir, sprintf('%s_valid_parcel_mask.npy', runTag));
     nv_n = fullfile(npyDir, sprintf('%s_n_vertices.npy', runTag));
     nr_n = fullfile(npyDir, sprintf('%s_n_rows.npy', runTag));
@@ -261,6 +262,7 @@ for i = 1:numel(rawMats)
             n_vertices = M.n_vertices;
             n_rows = M.n_rows;
             parcel_ids = M.parcel_ids;
+            time_sec = single((0:nT-1)' / double(d.srate));
 
             writeNPY(single(PC1), pc1n);
             if opt.SavePC2
@@ -268,6 +270,7 @@ for i = 1:numel(rawMats)
             end
             writeNPY(single(PVE1), pve1n);
             writeNPY(single(PVE2), pve2n);
+            writeNPY(time_sec, tsn);
             writeNPY(uint8(valid_parcel_mask(:)), vmn);
             writeNPY(int32(n_vertices(:)), nv_n);
             writeNPY(int32(n_rows(:)), nr_n);

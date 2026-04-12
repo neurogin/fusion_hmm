@@ -124,16 +124,34 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Table S2. EEG volumetric source-grid atlas alignment and parcel coverage
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/2_eeg_source/`
+**Status:** Hybrid
+**Current source file(s):**
+- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+
+**Upstream requirements:**
+- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- Brainstorm manual/hybrid source workflow documented in `docs/manual_steps.md`
+
+**Expected output:**
+- `table_s2_eeg_atlas_alignment_summary.csv`
 
 ---
 
 ## Table S3. EEG parcel-feature export after volumetric source localization and atlas-aligned scout generation
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/2_eeg_source/`
+**Status:** Hybrid
+**Current source file(s):**
+- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+
+**Upstream requirements:**
+- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- current v3 QC CSV outputs written by:
+  - `r01_qc_v3_run_timeseries_and_gain_summary.m`
+  - `r01_qc_v3_sign_convention_parcelpc.m`
+  - `r01_qc_v3_pve1_hist_and_lowparcels.m`
+
+**Expected output:**
+- `table_s3_eeg_parcel_extraction_summary.csv`
 
 ---
 
@@ -199,35 +217,45 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 # Supplementary figures
 
 ## Figure S1. Multimodal atlas alignment for EEG source space and BOLD voxel space
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/2_eeg_source/`
-- `notebooks/3_bold/`
-- final assembly may be manual/hybrid
+**Status:** Hybrid / Manual assembly
+**Current source file(s):**
+- `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
+- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/3_bold/` outputs later in the pipeline
 
 **Notes:**
-- likely includes Brainstorm screenshots and BOLD atlas overlay outputs
+- final assembly still likely uses Brainstorm screenshots and later BOLD-side outputs
 
 ---
 
 ## Figure S2. Run-wise median EEG parcel-PC1 scale after gain normalization
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/2_eeg_source/`
+**Status:** Hybrid
+**Current source file(s):**
+- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+
+**Expected output:**
+- `fig_s2_gain_pc1_scale_after_gnorm.png`
 
 ---
 
 ## Figure S3. Pooled distribution of PVE1 across runs and parcels
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/2_eeg_source/`
+**Status:** Hybrid
+**Current source file(s):**
+- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+
+**Expected output:**
+- `fig_s3_pve1_histogram_pooled.png`
 
 ---
 
 ## Figure S4. Run-wise PVE1 quantiles
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/2_eeg_source/`
+**Status:** Hybrid
+**Current source file(s):**
+- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+
+**Expected output:**
+- `fig_s4_pve1_run_quantiles.png`
 
 ---
 

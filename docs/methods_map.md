@@ -124,6 +124,16 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current repo location**
 - `notebooks/2_eeg_source/`
 
+**Current public-facing stage-2 entry files**
+- `notebooks/2_eeg_source/20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
+- `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
+- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+
+**Stage-2 helper files used here**
+- `notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m`
+- `notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m`
+
 **Expected content**
 - Brainstorm source workflow support files
 - volumetric scout extraction
@@ -141,6 +151,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - this stage is explicitly hybrid
 - Brainstorm handles subject-specific anatomical alignment and volume-grid scout definition
 - downstream scripts should not assume constant source-grid size across subjects
+- the public Table-S2 support file is written by `24_qc_eeg_source_alignment_table_s2.m`
 
 ---
 
@@ -155,6 +166,17 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 
 **Current repo location**
 - `notebooks/2_eeg_source/`
+
+**Current public-facing stage-2 entry files**
+- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+
+**Stage-2 helper files used here**
+- `notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m`
+- `notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m`
+- `notebooks/2_eeg_source/r01_qc_v3_run_timeseries_and_gain_summary.m`
+- `notebooks/2_eeg_source/r01_qc_v3_sign_convention_parcelpc.m`
+- `notebooks/2_eeg_source/r01_qc_v3_pve1_hist_and_lowparcels.m`
 
 **Expected content**
 - parcel PC1 extraction
@@ -171,6 +193,8 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Notes**
 - Brainstorm defines parcel membership on the subject-specific volume grid
 - MATLAB/Python scripts perform parcel PC extraction, metadata export, and QC summaries
+- `23_export_eeg_parcel_pc1_and_gain_normalize.m` preserves the current v3 helper behavior, including PC2 provenance outputs and the restored sample-time sidecar `*_time_sec.npy`
+- `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` uses the current v3 CSV outputs and does not port the older MAT-schema-specific exploratory cells wholesale
 
 ---
 

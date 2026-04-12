@@ -34,6 +34,7 @@ What is already present in the repository:
 - notebook folders organized by major manuscript workflow stage
 - archive folder for original notebook/script versions
 - cleaned public-facing stage-1 MATLAB entry files under `notebooks/1_eeg_sensor/`
+- cleaned public-facing stage-2 EEG source / parcel entry files under `notebooks/2_eeg_source/`
 
 What is not yet fully populated:
 
@@ -112,6 +113,12 @@ fusion_hmm/
       13_eeg_run_qc_and_table_s1.m
       helpers/
     2_eeg_source/
+      20_prepare_schaefer200_atlas_for_brainstorm.ipynb
+      21_brainstorm_volume_source_and_atlas_import_manual.md
+      22_extract_volgrid_scouts_from_brainstorm_tess.m
+      23_export_eeg_parcel_pc1_and_gain_normalize.m
+      24_qc_eeg_source_alignment_table_s2.m
+      25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb
     3_bold/
     4_alignment/
     5_hmm_selection/
