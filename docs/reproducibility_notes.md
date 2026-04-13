@@ -268,6 +268,44 @@ When segments are later combined into model inputs, gaps should not be treated a
 
 During refactoring, any code that concatenates retained segments should be checked carefully to ensure state transitions are not accidentally allowed across true temporal gaps.
 
+### 7.5 Stage-5 public defaults follow the canonical no-lag `minlen15` dataset
+
+The cleaned Stage-5 public notebooks are wired to the canonical Stage-4 branch:
+
+- `FEATURE_MODE = "nolags"`
+- `MINLEN = 15`
+
+Older lagged or `minlen10` branches remain preserved as provenance, but they are not the main public path for model selection.
+
+### 7.6 Stage-5 selection was not a one-rule automatic decision
+
+The preserved broad K-sweep notebook still reports several screening-stage candidates, including local minima at lower and higher K values.
+
+The public Stage-5 narrative keeps the actual process explicit:
+
+- first run the broad LOSO K-sweep over `K = 2..12`
+- inspect free-energy and feasibility outputs to identify plausible candidates
+- note that `K=12` and some lower-K values can remain visible at the screening stage
+- then run the main shortlist stability comparison on `K=3` and `K=5`
+- choose the final manuscript solution as `K=3`
+
+This should not be rewritten as if the final `K=3` choice came from a single automatic rule alone.
+
+### 7.7 Stage-5 is compute-sensitive and environment-sensitive
+
+The cleaned Stage-5 public notebooks still rely on the preserved TensorFlow and `osl_dynamics` workflow.
+
+Important public-facing execution assumptions include:
+
+- TensorFlow and `osl_dynamics` installed in the active Python environment
+- GPU-sensitive behavior under long runs
+- XLA-off execution in the preserved source notebooks
+- memory-growth or explicit GPU-memory-cap handling
+- chunk/resume logic to reduce long-session failures
+- WSL-style or other local path cleanup by the public wrappers
+
+CPU-only execution is possible in code, but it may be much slower than the original GPU-oriented workflow.
+
 ---
 
 ## 8. Mixed language / mixed environment workflow

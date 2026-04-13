@@ -45,16 +45,24 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Figure 2. LOSO-CV model selection and shortlist stability
-**Status:** placeholder  
+**Status:** active public-facing support notebook available
 **Likely source folder(s):**
 - `notebooks/5_hmm_selection/`
 - possibly `notebooks/8_figures/` later
+
+**Current public-facing source file(s):**
+- `notebooks/5_hmm_selection/52_build_figure2_and_table_s8_model_selection_summary.ipynb`
 
 **Expected components:**
 - free-energy curve
 - matched state-signature reproducibility
 - occupancy summaries
 - cross-fold similarity matrices
+
+**Notes:**
+- the public summary notebook reads broad K-sweep outputs plus shortlist-stability outputs
+- the manuscript-facing comparison centers on `K=3` versus `K=5`
+- higher-K candidates such as `K=12` remain visible in the screening-stage annotations and compact decision table
 
 ---
 
@@ -216,9 +224,15 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Table S8. Cross-validated fit and stability metrics used for final fusion-HMM model selection
-**Status:** placeholder  
+**Status:** active public-facing support notebook available
 **Likely source folder(s):**
 - `notebooks/5_hmm_selection/`
+
+**Current public-facing source file(s):**
+- `notebooks/5_hmm_selection/52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+
+**Notes:**
+- built from `summary_byK_selected.tsv`, `K_selection_recommendation.json`, and the active per-K shortlist outputs under `K03/` and `K05/`
 
 ---
 

@@ -299,6 +299,14 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current repo location**
 - `notebooks/5_hmm_selection/`
 
+**Current public-facing stage-5 entry files**
+- `notebooks/5_hmm_selection/50_run_loso_k_sweep_model_selection.ipynb`
+- `notebooks/5_hmm_selection/51_run_loso_shortlist_stability_checks.ipynb`
+- `notebooks/5_hmm_selection/52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+
+**Stage-5 helper files used here**
+- `notebooks/5_hmm_selection/stage5_hmm_selection_helpers.py`
+
 **Expected content**
 - K sweep over candidate model orders
 - held-out free energy summaries
@@ -310,6 +318,11 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Notes**
 - fully scripted stage
 - should consume only the frozen final no-lag 15-TR-minimum dataset
+- `50_run_loso_k_sweep_model_selection.ipynb` preserves the broad screening stage over `K = 2..12`
+- the screening outputs may still leave `K=12` and lower-K local minima visible
+- `51_run_loso_shortlist_stability_checks.ipynb` presents the manuscript-facing shortlist comparison as `K = 3` versus `K = 5`
+- higher-K candidates remain part of the screening-stage provenance, but are not the main public comparison carried forward here
+- the final manuscript choice remains `K = 3`
 
 ---
 
