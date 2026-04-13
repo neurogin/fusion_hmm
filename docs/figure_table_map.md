@@ -67,59 +67,72 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Figure 3. Final-state dynamics of the full-data K = 3 fusion HMM
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/` later if separated
+**Status:** active public-facing review notebook available
+**Current source file(s):**
+- `notebooks/6_hmm_final/61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
 
 **Expected components:**
 - subject-level FO
 - run-level FO
 - transition matrix
-- kinetic summary diagram
+- dwell summary
+- state-signature similarity review
+
+**Notes:**
+- built from the saved final-fit outputs written by `60_fit_final_k3_fusion_hmm.ipynb`
+- gamma-raster-style provenance still exists in preserved umbrella notebooks, but those do not define the main public Stage-6 workflow
 
 ---
 
 ## Figure 4. State-wise BOLD network organization
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/`
-- `notebooks/8_figures/`
+**Status:** active public-facing reconstruction notebook available
+**Current source file(s):**
+- `notebooks/6_hmm_final/62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+- optional panel-export support: `notebooks/6_hmm_final/65_optional_export_figure4_figure5_panels.ipynb`
 
 **Expected components:**
 - BOLD block matrices
 - state contrasts relative to S2
 - ranked network contrasts
 
+**Notes:**
+- the public reconstruction notebook derives the reference state from the saved final FO vector unless overridden
+- the optional panel-export notebook is for manual composite assembly support only
+
 ---
 
 ## Figure 5. Descriptive cross-modal BOLD-EEG block structure
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/`
-- `notebooks/8_figures/`
+**Status:** active public-facing reconstruction notebook available
+**Current source file(s):**
+- `notebooks/6_hmm_final/63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+- optional panel-export support: `notebooks/6_hmm_final/65_optional_export_figure4_figure5_panels.ipynb`
 
 **Expected components:**
 - cross-modal block matrices
 - state contrasts relative to S2
 - ranked cross-modal contrasts
 
+**Notes:**
+- the cleaned public notebook keeps only the true cross-modal reconstruction half of the mixed provenance notebook
+- the earlier alignment-style fusion-input illustration is not part of the main public Stage-6 path
+- final composite layout remains manual/hybrid even though the panel content is scripted
+
 ---
 
 ## Figure 6. Parcelized cortical maps of dominant and contrast BOLD state organization
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/`
-- `notebooks/8_figures/`
+**Status:** active public-facing map notebook available
+**Current source file(s):**
+- `notebooks/6_hmm_final/64_build_parcelized_cortical_state_maps.ipynb`
 
 **Expected components:**
 - S2 nodal mean connectivity map
 - S1-S2 contrast map
 - S3-S2 contrast map
 - atlas reference map
+
+**Notes:**
+- the current active map notebook preserves an explicitly imposed `S2` reference state
+- nilearn may fetch fsaverage surfaces if they are not already cached locally
 
 ---
 
@@ -237,25 +250,35 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Table S9. Final-model fitting parameters and QC for the full-data K = 3 fusion HMM
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
+**Status:** active public-facing fit and review notebooks available
+**Current source file(s):**
+- `notebooks/6_hmm_final/60_fit_final_k3_fusion_hmm.ipynb`
+- `notebooks/6_hmm_final/61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
+
+**Notes:**
+- built from root-level final-fit outputs such as `run_meta.json`, `preproc_meta.json`, `seed_candidates.tsv`, `topM_seeds.json`, `run_metrics.tsv`, `subject_metrics.tsv`, `dwell_from_A.tsv`, and `qc_summary.json`
 
 ---
 
 ## Table S10. Ranked BOLD network contrasts relative to S2
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/`
+**Status:** active public-facing reconstruction notebook available
+**Current source file(s):**
+- `notebooks/6_hmm_final/62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+
+**Notes:**
+- ranked BOLD network contrasts are written relative to the explicit reference state used by the physiology notebook
+- by default that reference state is derived from the saved final FO vector unless overridden
 
 ---
 
 ## Table S11. Ranked cross-modal contrasts relative to S2
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/`
+**Status:** active public-facing reconstruction notebook available
+**Current source file(s):**
+- `notebooks/6_hmm_final/63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+
+**Notes:**
+- ranked cross-modal contrasts are written relative to the reference-state logic preserved from the mixed provenance notebook
+- this logic usually derives the reference state from `best_seed.json`, but keeps override and fallback behavior explicit
 
 ---
 
@@ -318,10 +341,13 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ---
 
 ## Figure S6. Per-run gamma activation raster for the final K = 3 fusion HMM
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/6_hmm_final/`
-- `notebooks/7_summaries/`
+**Status:** provenance notebook available, not yet a dedicated public Stage-6 entry point
+**Current provenance source file(s):**
+- `notebooks/6_hmm_final/PipelineE_K3_manuscript_figures_notebook_with_raster.ipynb`
+
+**Notes:**
+- gamma and Viterbi segment outputs are part of the Stage-6 final-fit artifact contract
+- the cleaner public Stage-6 review notebook currently focuses on saved QC and state-dynamics summaries rather than reproducing the full raster notebook wholesale
 
 ---
 

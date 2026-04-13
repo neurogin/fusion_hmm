@@ -337,6 +337,17 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current repo location**
 - `notebooks/6_hmm_final/`
 
+**Current public-facing stage-6 entry files**
+- `notebooks/6_hmm_final/60_fit_final_k3_fusion_hmm.ipynb`
+- `notebooks/6_hmm_final/61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
+- `notebooks/6_hmm_final/62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+- `notebooks/6_hmm_final/63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+- `notebooks/6_hmm_final/64_build_parcelized_cortical_state_maps.ipynb`
+- optional: `notebooks/6_hmm_final/65_optional_export_figure4_figure5_panels.ipynb`
+
+**Stage-6 helper files used here**
+- `notebooks/6_hmm_final/stage6_hmm_final_helpers.py`
+
 **Expected content**
 - final retained dataset loading
 - run-wise normalization
@@ -348,6 +359,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Notes**
 - fully scripted stage
 - should use the canonical final dataset specification listed above
+- `60_fit_final_k3_fusion_hmm.ipynb` consumes the canonical Stage-4 retained dataset directly through `segments_manifest.tsv`
+- Stage 5 contributes the scientific decision to carry `K = 3` forward, but it is not a file dependency for the final fit
+- the final-model artifact contract includes:
+  - root-level provenance, preprocessing, seed-screening, and QC files
+  - authoritative model outputs under `final/`
+  - per-run decoded outputs under `gamma/` and `viterbi/`
 
 ---
 
@@ -365,11 +382,18 @@ Unless otherwise noted, refactoring and code organization should follow this fin
   - `notebooks/6_hmm_final/`
   - or later separated into `notebooks/7_summaries/`
 
+**Current public-facing stage-6 entry file**
+- `notebooks/6_hmm_final/61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
+
 **Expected content**
 - fractional occupancy
 - transition matrix
 - dwell times
 - gamma activation rasters
+
+**Notes**
+- the cleaned public review notebook is built around saved final-fit outputs rather than retraining the HMM
+- per-run gamma and Viterbi outputs are part of the Stage-6 artifact contract, but some raster-style figure provenance still lives in preserved umbrella notebooks
 
 ---
 
@@ -388,10 +412,17 @@ Unless otherwise noted, refactoring and code organization should follow this fin
   - `notebooks/7_summaries/`
   - or `notebooks/8_figures/`
 
+**Current public-facing stage-6 entry file**
+- `notebooks/6_hmm_final/62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+
 **Expected content**
 - BOLD covariance backprojection
 - parcel-to-network aggregation
 - ranked BOLD contrasts relative to S2
+
+**Notes**
+- the cleaned public notebook keeps the reference-state logic explicit
+- by default it derives the reference state from the saved final FO vector unless the user overrides it
 
 ---
 
@@ -410,6 +441,9 @@ Unless otherwise noted, refactoring and code organization should follow this fin
   - `notebooks/7_summaries/`
   - or `notebooks/8_figures/`
 
+**Current public-facing stage-6 entry file**
+- `notebooks/6_hmm_final/63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+
 **Expected content**
 - cross-modal covariance backprojection
 - correlation-like matrix construction
@@ -418,6 +452,11 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 
 **Interpretation note**
 - these outputs are descriptive, not subject-level inferential statistics
+
+**Notes**
+- the cleaned public notebook keeps only the true cross-modal reconstruction half of the mixed provenance notebook
+- the earlier alignment-style fusion-input illustration remains provenance/support logic rather than the main Stage-6 public path
+- the preserved reference-state behavior usually derives the reference state from `best_seed.json`, but still keeps override and fallback behavior explicit
 
 ---
 
@@ -434,11 +473,18 @@ Unless otherwise noted, refactoring and code organization should follow this fin
   - `notebooks/7_summaries/`
   - or `notebooks/8_figures/`
 
+**Current public-facing stage-6 entry file**
+- `notebooks/6_hmm_final/64_build_parcelized_cortical_state_maps.ipynb`
+
 **Expected content**
 - nodal mean connectivity
 - S2 reference map
 - S1-S2 and S3-S2 contrast maps
 - atlas reference map
+
+**Notes**
+- the cleaned public notebook preserves the current active behavior where `REFERENCE_STATE = 2` is imposed explicitly
+- this means the manuscript-facing S2 reference map is a presentation choice in this notebook, not a fresh inference from the saved final FO vector
 
 ---
 
