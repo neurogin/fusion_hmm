@@ -420,3 +420,16 @@ A later stage may add:
 - runnable entry points in `scripts/`
 - clearer figure/table generators
 - stronger environment setup documentation
+
+
+## 14. Alignment branch naming: `lenient`, `intermediate`, and `strict`
+
+During development, the EEG-to-BOLD alignment step was explored under more than one TR-retention policy. These branch names describe how permissive the keep-mask rule is after EEG usability is projected onto the BOLD TR grid.
+
+- **`lenient`**: earlier, more permissive retention variant
+- **`strict`**: earlier, more conservative retention variant
+- **`intermediate`**: the middle-ground retention variant used for the final manuscript workflow
+
+In this repository, `intermediate` is the canonical public alignment branch. It reflects the compromise policy used in the final analysis: stricter than the earlier lenient branch, but not as restrictive as the earlier strict branch. The final public fusion dataset used downstream is therefore the `intermediate`, `nolags`, `minlen15` branch.
+
+The earlier `lenient` and `strict` variants are part of development/provenance history and may still appear in older notebooks, paths, or comments, but they are not the main public manuscript path.
