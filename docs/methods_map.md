@@ -19,6 +19,7 @@ At this stage:
 - the folders `7_summaries/`, `8_figures/`, and `9_tables/` may remain empty until a later cleanup pass
 - original notebook files are preserved separately in `_archive_raw_original_names/`
 - manual and hybrid GUI-based steps are documented in `docs/manual_steps.md`
+- active public entry files and active helper layers use descriptive names where practical, while older `r01_` and `Pipeline*` names are retained only for provenance or compatibility
 
 ## Repository workflow folders
 
@@ -83,13 +84,17 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
 - `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
 
-**Stage-1 helper location**
+**Stage-1 active helper location**
 - `notebooks/1_eeg_sensor/helpers/`
-  - `r01_stage1_params.m`
-  - `r01_export_bst_exclusions_Fevents.m`
-  - `r01_merge_exclusions_union.m`
-  - `r01_qc_excl_union_folder.m`
-  - `r01_eeg_runlevel_qc_gates.m`
+  - `stage1_eeg_sensor_settings.m`
+  - `run_iclabel_pruning_and_metadata_export.m`
+  - `batch_export_brainstorm_exclusion_events.m`
+  - `batch_merge_exclusion_union_masks.m`
+  - `summarize_exclusion_union_qc.m`
+  - `build_eeg_run_qc_gates_and_manifests.m`
+
+**Preserved legacy implementations**
+- the original `r01_*` helper files remain in the same stage folders for provenance and compatibility
 
 **Expected content**
 - ICLabel-based component pruning
@@ -131,8 +136,9 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
 
 **Stage-2 helper files used here**
-- `notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m`
-- `notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m`
+- `notebooks/2_eeg_source/batch_extract_volgrid_scouts_from_brainstorm_tess.m`
+- preserved low-level implementation: `notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m`
+- preserved one-run implementation: `notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m`
 
 **Expected content**
 - Brainstorm source workflow support files
@@ -172,11 +178,14 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Stage-2 helper files used here**
-- `notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m`
-- `notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m`
-- `notebooks/2_eeg_source/r01_qc_v3_run_timeseries_and_gain_summary.m`
-- `notebooks/2_eeg_source/r01_qc_v3_sign_convention_parcelpc.m`
-- `notebooks/2_eeg_source/r01_qc_v3_pve1_hist_and_lowparcels.m`
+- `notebooks/2_eeg_source/batch_export_eeg_parcel_pc_outputs.m`
+- `notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m`
+- preserved low-level export implementation: `notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m`
+- preserved one-run export implementation: `notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m`
+- preserved QC implementations:
+  - `notebooks/2_eeg_source/r01_qc_v3_run_timeseries_and_gain_summary.m`
+  - `notebooks/2_eeg_source/r01_qc_v3_sign_convention_parcelpc.m`
+  - `notebooks/2_eeg_source/r01_qc_v3_pve1_hist_and_lowparcels.m`
 
 **Expected content**
 - parcel PC1 extraction
@@ -194,6 +203,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - Brainstorm defines parcel membership on the subject-specific volume grid
 - MATLAB/Python scripts perform parcel PC extraction, metadata export, and QC summaries
 - `23_export_eeg_parcel_pc1_and_gain_normalize.m` preserves the current v3 helper behavior, including PC2 provenance outputs and the restored sample-time sidecar `*_time_sec.npy`
+- `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` expects the Stage-2 QC sidecars written by `run_eeg_parcel_export_qc_summaries.m`
 - `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` uses the current v3 CSV outputs and does not port the older MAT-schema-specific exploratory cells wholesale
 
 ---
@@ -216,6 +226,10 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
 - `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
 - `notebooks/3_bold/33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+
+**Stage-3 helper modules**
+- `notebooks/3_bold/stage3_bold_export_helpers.py`
+- `notebooks/3_bold/stage3_bold_summary_helpers.py`
 
 **Expected content**
 - nuisance design construction

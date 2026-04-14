@@ -139,10 +139,18 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 # Supplementary tables
 
 ## Table S1. Run-level summary of EEG retained after preprocessing and exclusion of marked intervals
-**Status:** placeholder  
-**Likely source folder(s):**
-- `notebooks/1_eeg_sensor/`
-- possibly `notebooks/9_tables/` later
+**Status:** active public-facing build step
+**Current source file(s):**
+- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+
+**Upstream requirements:**
+- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
+- Brainstorm manual exclusion marking documented in `docs/manual_steps.md`
+
+**Notes:**
+- this stage writes run-level QC CSVs and include/exclude manifests that support the manuscript summary table
+- any later manuscript-order formatting should remain explicit rather than being treated as a separate active Stage-9 workflow
 
 ---
 
@@ -168,10 +176,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 
 **Upstream requirements:**
 - `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
-- current v3 QC CSV outputs written by:
-  - `r01_qc_v3_run_timeseries_and_gain_summary.m`
-  - `r01_qc_v3_sign_convention_parcelpc.m`
-  - `r01_qc_v3_pve1_hist_and_lowparcels.m`
+- `notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m`
+
+**Notes:**
+- the public Stage-2 QC notebook reads the CSV sidecars written by the descriptive Stage-2 QC helper
+- the preserved lower-level `r01_qc_v3_*` MATLAB implementations remain available underneath for provenance and compatibility
 
 **Expected output:**
 - `table_s3_eeg_parcel_extraction_summary.csv`

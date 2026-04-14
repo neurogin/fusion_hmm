@@ -1,3 +1,23 @@
+"""Helper functions for the cleaned Stage-3 BOLD QC and summary notebooks.
+
+This module supports the public Stage-3 notebooks that build Table S4,
+Table S5, and the reconstructed Figure S5 support outputs from saved BOLD
+parcel-export sidecars.
+
+Main inputs:
+- exporter `dataset_index.csv`
+- atlas QC CSVs
+- exporter QC sidecars such as motion and parcel-blowup summaries
+
+Main outputs:
+- manuscript-facing table-support CSVs
+- reconstructed BOLD QC summary figures
+
+Important note:
+- these helpers summarize saved Stage-3 outputs; they do not replace the
+  upstream parcel-export notebook that generates those outputs
+"""
+
 from __future__ import annotations
 
 from pathlib import Path

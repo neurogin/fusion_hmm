@@ -1,67 +1,11 @@
 function P = r01_stage1_params()
-%R01_STAGE1_PARAMS Cleaned stage-1 config helper for EEG sensor processing.
+%R01_STAGE1_PARAMS Legacy compatibility wrapper for Stage-1 settings.
 %
-% This helper preserves the paper-facing scientific defaults while making
-% the path configuration explicit for a public repository.
-%
-% Edit the placeholder roots below before running the public stage-1 files.
+% The cleaned public Stage-1 workflow now uses
+% `stage1_eeg_sensor_settings.m` as the descriptive editable config file.
+% This legacy helper remains in place so older provenance code can still
+% resolve the same settings without changing behavior.
 
-% -------------------------------------------------------------------------
-% Manuscript-default ICLabel pruning policy
-% -------------------------------------------------------------------------
-P.ic_policy = "reject_artifacts";
-P.ic_reject_threshold = 0.70;
-P.ic_reject_classes = ["Eye","Muscle","Heart","LineNoise","ChannelNoise","Other"];
-P.iclabel_tag = sprintf("ICRej%02d", round(100 * P.ic_reject_threshold));
-
-% Preserved for provenance only. This is not the final paper path.
-P.historical.iclabel_brain_threshold = 0.60;
-
-% -------------------------------------------------------------------------
-% User-edited path roots
-% -------------------------------------------------------------------------
-P.paths.r01_rerun_root = "<SET_R01_RERUN_ROOT>";
-P.paths.brainstorm_db_root = "<SET_BRAINSTORM_DB_ROOT>";
-
-% -------------------------------------------------------------------------
-% Derived stage-1 paths
-% -------------------------------------------------------------------------
-P.paths.raw_eeglab_dir = fullfile(P.paths.r01_rerun_root, "01_raw", "eeg_eeglab");
-P.paths.ic_pruned_dir = fullfile(P.paths.r01_rerun_root, "02_derivatives", "eeg_source", "ic_pruned");
-P.paths.bst_export_dir = fullfile(P.paths.r01_rerun_root, "02_derivatives", "masks", "bst_exports");
-P.paths.qc_tables_dir = fullfile(P.paths.r01_rerun_root, "04_qc", "tables");
-P.paths.qc_exclusions_dir = fullfile(P.paths.r01_rerun_root, "04_qc", "exclusions");
-
-% Brainstorm protocol metadata
-P.brainstorm.protocol_name = "eegfmri_R01_ICRej70";
-
-% Only export Brainstorm raw-links corresponding to the manuscript-default
-% cleaned EEG files.
-P.file_filter = P.iclabel_tag + "_clean";
-
-% -------------------------------------------------------------------------
-% Exclusion merge settings
-% -------------------------------------------------------------------------
-P.mask.merge.adjacency_tol_sec = 0.0;
-P.mask.merge.min_dur_sec = 0.0;
-
-% -------------------------------------------------------------------------
-% Folder-level exclusion QC warning settings
-% -------------------------------------------------------------------------
-P.qc.excl.max_excl_frac_warn = 0.20;
-P.qc.excl.max_interval_sec_warn = 30.0;
-P.qc.excl.min_interval_sec_warn = 0.05;
-
-% -------------------------------------------------------------------------
-% Run-level EEG QC gate settings
-% -------------------------------------------------------------------------
-P.qc.run.min_usable_frac = 0.70;
-P.qc.run.max_emg_db = 3.0;
-P.qc.run.max_badchan_abs = 10;
-P.qc.run.max_badchan_frac = 0.10;
-P.qc.run.allow_unknown_usable = false;
-P.qc.run.load_raw_duration = false;
-P.qc.run.hf_band = [30 80];
-P.qc.run.lf_band = [8 13];
+P = stage1_eeg_sensor_settings();
 
 end

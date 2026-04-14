@@ -26,7 +26,7 @@ if isempty(stage1_dir)
 end
 
 helper_dir = fullfile(stage1_dir, 'helpers');
-config_file = fullfile(helper_dir, 'r01_stage1_params.m');
+config_file = fullfile(helper_dir, 'stage1_eeg_sensor_settings.m');
 
 addpath(stage1_dir);
 addpath(helper_dir);
@@ -34,9 +34,9 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 % Step 1. Load the stage-1 configuration
 %
-% Edit path placeholders in helpers/r01_stage1_params.m before running.
+% Edit path placeholders in helpers/stage1_eeg_sensor_settings.m before running.
 % -------------------------------------------------------------------------
-P = r01_stage1_params();
+P = stage1_eeg_sensor_settings();
 
 brainstorm_db_root = char(P.paths.brainstorm_db_root);
 bst_export_dir = char(P.paths.bst_export_dir);
@@ -71,7 +71,7 @@ fprintf('  Min union duration: %.3f sec\n\n', min_union_duration_sec);
 %
 % The preserved exporter helper is intentionally used as-is here.
 % -------------------------------------------------------------------------
-r01_batch_export_bst_exclusions_Fevents( ...
+batch_export_brainstorm_exclusion_events( ...
     brainstorm_db_root, ...
     bst_export_dir, ...
     'overwrite', overwrite_existing_outputs, ...
@@ -81,7 +81,7 @@ r01_batch_export_bst_exclusions_Fevents( ...
 % -------------------------------------------------------------------------
 % Step 6. Merge exported exclusions into one union interval list per run
 % -------------------------------------------------------------------------
-r01_batch_merge_exclusions_union( ...
+batch_merge_exclusion_union_masks( ...
     bst_export_dir, ...
     'adjacency_tol_sec', merge_tolerance_sec, ...
     'min_dur_sec', min_union_duration_sec, ...

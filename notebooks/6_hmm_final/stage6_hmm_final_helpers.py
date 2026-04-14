@@ -1,3 +1,25 @@
+"""Helper functions for the cleaned Stage-6 final K=3 workflow.
+
+This module supports the public Stage-6 notebooks that:
+- run the final full-data K=3 fit
+- review saved final-fit QC and state-dynamics outputs
+- reconstruct BOLD, cross-modal, and cortical-map summaries
+
+Main inputs:
+- the canonical Stage-4 `segments_manifest.tsv`
+- saved final-model artifacts under the Stage-6 output tree
+
+Main outputs:
+- wrapped final-fit outputs
+- QC summaries
+- manuscript-facing reconstruction tables, plots, and map products
+
+Important note:
+- the notebooks preserve non-uniform reference-state behavior where it is
+  part of the original workflow; this helper module does not silently
+  standardize those choices
+"""
+
 from __future__ import annotations
 
 import contextlib

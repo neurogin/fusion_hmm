@@ -1,3 +1,26 @@
+"""Helper functions for the cleaned Stage-4 EEG-BOLD alignment workflow.
+
+This module supports the public Stage-4 notebooks that reconcile raw and
+preprocessed EEG timelines, project usable EEG intervals onto the BOLD TR
+axis, and write per-run alignment products for the final fusion dataset.
+
+Main inputs:
+- raw EEG event TSVs
+- preprocessed EEG event TSVs
+- exclusion-union TSVs
+- EEG parcel NPY exports including `*_time_sec.npy`
+- BOLD parcel PC1 NPY exports
+
+Main outputs:
+- per-run alignment products such as keep masks, aligned TR summaries, and
+  run-input audit tables
+
+Important note:
+- the preserved trigger logic remains explicit here:
+  recurring `R128` events anchor raw-to-preprocessed reconciliation, with
+  raw `S1` used as the absolute anchor
+"""
+
 from __future__ import annotations
 
 import json

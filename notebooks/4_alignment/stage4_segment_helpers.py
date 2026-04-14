@@ -1,3 +1,25 @@
+"""Helper functions for the cleaned Stage-4 retained-segment workflow.
+
+This module supports the public Stage-4 notebooks that convert per-run
+alignment products into the final retained observation segments for the
+fusion HMM pipeline.
+
+Main inputs:
+- per-run aligned BOLD and EEG feature arrays
+- TR-edge files
+- per-run keep masks for the requested feature mode and minimum segment
+  length
+
+Main outputs:
+- retained segment arrays
+- segment manifests
+- per-run segment QC summaries and support plots
+
+Important note:
+- the public manuscript path is `FEATURE_MODE="nolags"` with `MINLEN=15`
+- optional lagged branches remain available only as provenance support
+"""
+
 from __future__ import annotations
 
 import json

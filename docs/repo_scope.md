@@ -11,6 +11,10 @@ At the current refactor stage, this repository includes:
 - repository-level instructions in `AGENTS.md`
 - manuscript workflow documentation in `docs/methods_map.md`
 - manual and hybrid Brainstorm procedures in `docs/manual_steps.md`
+- figure and table provenance notes in `docs/figure_table_map.md`
+- frozen dataset and reproducibility notes in:
+  - `docs/final_dataset_spec.md`
+  - `docs/reproducibility_notes.md`
 - manuscript and supplement reference copies in `docs/_manuscript_reference/`
 - analysis notebooks organized by major manuscript workflow stage in `notebooks/`
 - an archive folder of original notebook versions in `notebooks/_archive_raw_original_names/`
@@ -26,6 +30,8 @@ The notebook folders currently cover the main manuscript analysis stages:
 - HMM model-order selection
 - final full-data HMM fitting
 
+Stages 1 to 6 now have cleaned public-facing workflow files.
+
 Some summary, QC, figure, and table logic is still embedded within these earlier method notebooks.
 
 ## What is intentionally not yet finalized
@@ -35,9 +41,6 @@ The following parts of the intended public repo structure are not yet fully popu
 - `config/`
 - `scripts/`
 - `src/`
-- `docs/figure_table_map.md`
-- `docs/final_dataset_spec.md`
-- `docs/reproducibility_notes.md`
 
 Also, the folders:
 
@@ -46,6 +49,8 @@ Also, the folders:
 - `notebooks/9_tables/`
 
 may currently remain empty because summary, figure, and table generation are still partly embedded in earlier method notebooks.
+
+This is intentional in the current public workflow. The repo does not force duplicate wrappers into Stages 7 to 9 when the upstream stage notebooks are still the clearest source of those products.
 
 ## What is not the goal of this repo right now
 
@@ -65,14 +70,15 @@ During this stage, the repository focuses on:
 - documenting manual versus scripted steps honestly
 - preserving original notebook provenance
 - preparing a cleaner public-facing structure for the final paper repo
+- using descriptive names for active public files and active helper layers while keeping legacy names visible only where needed for provenance
 
 ## Expected future additions
 
 As the refactor continues, this repository is expected to gain:
 
-- cleaner public-facing notebook names
-- selected figure/table generator notebooks or scripts
+- additional helper cleanup and documentation polish
+- selected figure/table generator notebooks or scripts only where they clearly improve readability
 - config templates
 - reusable code in `src/`
 - cleaner runnable entry points in `scripts/`
-- additional documentation for figure/table mapping and reproducibility
+- additional environment setup guidance

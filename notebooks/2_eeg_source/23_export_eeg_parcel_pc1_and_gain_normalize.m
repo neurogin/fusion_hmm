@@ -34,11 +34,13 @@
 %   complete, and the standardized scout files must already exist.
 %
 % Preserved implementation note:
-%   This public entry script wraps the existing v3 exporter helpers. It
-%   does not change the parcel support threshold, sign convention, gain
-%   normalization basis, or QC metadata logic. The restored sample-time
-%   sidecar is written as single((0:nTime-1)' / srate) beside the exported
-%   *_PC1_gnorm.npy files when WriteNPY=true.
+%   This public entry script now calls a descriptive public wrapper helper,
+%   while the preserved v3 exporter implementation remains available
+%   underneath for provenance compatibility. It does not change the parcel
+%   support threshold, sign convention, gain normalization basis, or QC
+%   metadata logic. The restored sample-time sidecar is written as
+%   single((0:nTime-1)' / srate) beside the exported *_PC1_gnorm.npy files
+%   when WriteNPY=true.
 
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add it to the MATLAB path
@@ -112,7 +114,7 @@ fprintf('  Write NPY sidecars:       %d\n\n', write_npy);
 % -------------------------------------------------------------------------
 % Step 4. Run the preserved exporter helper logic
 % -------------------------------------------------------------------------
-batch = r01_batch_export_eeg_parcel_pc_v3( ...
+batch = batch_export_eeg_parcel_pc_outputs( ...
     protocol_root, ...
     parcel_output_dir, ...
     'EEGCleanDir', clean_eeg_dir, ...

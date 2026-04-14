@@ -1,3 +1,25 @@
+"""Helper functions for the cleaned Stage-3 BOLD parcel-export workflow.
+
+This module supports the public Stage-3 notebooks that:
+- map the Schaefer atlas to each BOLD run grid
+- export parcel PC1 time series after nuisance regression
+- write atlas-preservation and exporter-side QC summaries
+
+Main inputs:
+- BIDS or derivatives folders containing BOLD reference images and masks
+- the frozen Stage-3 Schaefer atlas files
+
+Main outputs:
+- atlas-on-grid NIfTI files, overlays, and QC tables
+- exporter-side CSV, MAT, and NPY outputs written by the public notebooks
+
+Important note:
+- the standalone atlas-preservation branch and the authoritative exporter
+  branch remain intentionally distinct in this stage
+- this module is only helper logic; the public notebooks remain the main
+  user-facing entry points
+"""
+
 from __future__ import annotations
 
 import json

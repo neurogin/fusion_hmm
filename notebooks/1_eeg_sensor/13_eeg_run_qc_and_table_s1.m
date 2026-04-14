@@ -26,7 +26,7 @@ if isempty(stage1_dir)
 end
 
 helper_dir = fullfile(stage1_dir, 'helpers');
-config_file = fullfile(helper_dir, 'r01_stage1_params.m');
+config_file = fullfile(helper_dir, 'stage1_eeg_sensor_settings.m');
 
 addpath(stage1_dir);
 addpath(helper_dir);
@@ -34,9 +34,9 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 % Step 1. Load the stage-1 configuration
 %
-% Edit path placeholders in helpers/r01_stage1_params.m before running.
+% Edit path placeholders in helpers/stage1_eeg_sensor_settings.m before running.
 % -------------------------------------------------------------------------
-P = r01_stage1_params();
+P = stage1_eeg_sensor_settings();
 
 raw_eeglab_dir = char(P.paths.raw_eeglab_dir);
 ic_pruned_dir = char(P.paths.ic_pruned_dir);
@@ -98,7 +98,7 @@ fprintf('  Max bad channels frac: %.2f\n\n', max_badchan_frac);
 % This writes excl_union_qc_summary.csv, which the run-level QC helper uses
 % as its preferred source for usable-fraction and exclusion-flag inputs.
 % -------------------------------------------------------------------------
-r01_qc_excl_union_folder( ...
+summarize_exclusion_union_qc( ...
     bst_export_dir, ...
     qc_exclusions_dir, ...
     'bst_db_root', bst_db_root_for_qc, ...
@@ -113,7 +113,7 @@ r01_qc_excl_union_folder( ...
 % The preserved helper keeps the current QC gate behavior unchanged,
 % including the explicit max_emg_db threshold noted above.
 % -------------------------------------------------------------------------
-r01_eeg_runlevel_qc_gates( ...
+build_eeg_run_qc_gates_and_manifests( ...
     raw_eeglab_dir, ...
     ic_pruned_dir, ...
     qc_tables_dir, ...

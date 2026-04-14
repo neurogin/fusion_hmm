@@ -23,6 +23,15 @@ Some parts of the workflow were performed in Brainstorm or other GUI-based tools
 This document is being built during the repo refactor phase.  
 It reflects the final paper workflow and the current practical procedure used in the project.
 
+## How to use this document with the cleaned workflow
+
+Use this file together with the stage-specific public files:
+
+- Stage 1 manual handoff: `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
+- Stage 2 manual handoff: `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
+
+The public MATLAB and notebook entry files point back here when a step remains genuinely manual or hybrid.
+
 ---
 
 # 1. Manual EEG exclusion marking in Brainstorm
@@ -114,7 +123,10 @@ Per run, later exported by MATLAB scripts:
 - `*_excl_union.tsv`
 
 ## Downstream scripted handoff
-These outputs are consumed by the exclusion export / union / QC scripts described in the EEG sensor-processing stage.
+These outputs are consumed by the cleaned Stage-1 public files:
+
+- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
 
 ---
 
@@ -320,6 +332,15 @@ For each subject/session:
 Different subjects may show different volume-grid sizes (for example ~39k, ~43k, ~50k).  
 This is acceptable, but the downstream exporter must use the correct scout file for each subject/run.
 
+## Downstream scripted handoff
+
+These outputs feed the cleaned public Stage-2 files:
+
+- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+
 ---
 
 # 7. Hybrid EEG parcel PC extraction workflow
@@ -407,6 +428,13 @@ The goal is:
 - quantified residual mismatch through QC summaries
 
 This is important context for the multimodal alignment described in the manuscript.
+
+## Downstream scripted handoff
+
+This BOLD-side atlas note feeds the cleaned public Stage-3 files:
+
+- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
 
 ---
 

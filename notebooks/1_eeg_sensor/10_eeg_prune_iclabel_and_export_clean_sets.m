@@ -16,9 +16,9 @@
 %   documented in 11_brainstorm_exclusion_marking_manual.md.
 %
 % Preserved implementation note:
-%   This file is a readable public entry point. The low-level pruning logic
-%   remains in r01_eeg_iclabel_prune_and_metadata.m so that the scientific
-%   behavior stays unchanged.
+%   This file is a readable public entry point. It now calls a descriptive
+%   public wrapper helper, while the preserved low-level implementation
+%   remains available underneath for provenance compatibility.
 
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add the stage-1 helper path
@@ -29,7 +29,7 @@ if isempty(stage1_dir)
 end
 
 helper_dir = fullfile(stage1_dir, 'helpers');
-config_file = fullfile(helper_dir, 'r01_stage1_params.m');
+config_file = fullfile(helper_dir, 'stage1_eeg_sensor_settings.m');
 
 addpath(stage1_dir);
 addpath(helper_dir);
@@ -37,12 +37,12 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 % Step 1. Load the stage-1 configuration
 %
-% Edit path placeholders in helpers/r01_stage1_params.m before running.
+% Edit path placeholders in helpers/stage1_eeg_sensor_settings.m before running.
 % The manuscript-default ICLabel policy is stored there as:
 %   - ic_policy = "reject_artifacts"
 %   - reject_threshold = 0.70
 % -------------------------------------------------------------------------
-P = r01_stage1_params();
+P = stage1_eeg_sensor_settings();
 
 raw_eeglab_dir = char(P.paths.raw_eeglab_dir);
 ic_pruned_dir = char(P.paths.ic_pruned_dir);
@@ -83,7 +83,7 @@ fprintf('  Reject classes:   %s\n\n', strjoin(cellstr(reject_classes), ', '));
 % -------------------------------------------------------------------------
 % Step 5. Run the preserved pruning/export implementation
 % -------------------------------------------------------------------------
-r01_eeg_iclabel_prune_and_metadata( ...
+run_iclabel_pruning_and_metadata_export( ...
     raw_eeglab_dir, ...
     ic_pruned_dir, ...
     qc_tables_dir, ...

@@ -385,6 +385,22 @@ Refactoring should prioritize:
 Original notebooks should remain preserved in:
 - `notebooks/_archive_raw_original_names/`
 
+### 9.1 Active public helper names versus preserved legacy names
+
+The cleaned public workflow now distinguishes between:
+
+- active public entry files
+- active helper files or helper modules used by those entry files
+- preserved legacy implementations kept for provenance or compatibility
+
+In practice:
+
+- Stage 1 and Stage 2 public entry files now call descriptive helper names
+- older `r01_*` MATLAB helpers remain in place underneath where needed so historical code paths still resolve
+- later Python stages keep stage-specific helper modules with plain-language module headers
+
+This means an older internal name may still appear in a provenance note or compatibility wrapper, but it should not be mistaken for the main public-facing entry point.
+
 ---
 
 ## 10. Figure and table generation caveat

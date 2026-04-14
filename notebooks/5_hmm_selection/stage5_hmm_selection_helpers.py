@@ -1,3 +1,26 @@
+"""Helper functions for the cleaned Stage-5 HMM model-selection workflow.
+
+This module supports the public Stage-5 notebooks that:
+- run the broad LOSO K sweep
+- run the manuscript-facing shortlist stability comparison
+- rebuild Figure 2 and Table S8 support outputs
+
+Main inputs:
+- the canonical Stage-4 `intermediate + nolags + minlen15` segment outputs
+- preserved source notebooks used as compute backends
+
+Main outputs:
+- wrapped K-sweep outputs
+- shortlist-stability outputs
+- model-selection summary tables and figures
+
+Important note:
+- these helpers wrap the preserved TensorFlow and `osl_dynamics` notebooks
+  rather than replacing their scientific logic
+- the final choice of `K = 3` remains a documented scientific decision, not
+  a single automatic rule
+"""
+
 from __future__ import annotations
 
 import contextlib

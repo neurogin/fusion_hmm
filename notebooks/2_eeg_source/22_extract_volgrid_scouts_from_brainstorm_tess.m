@@ -31,8 +31,9 @@
 %   complete. See 21_brainstorm_volume_source_and_atlas_import_manual.md.
 %
 % Preserved implementation note:
-%   This public entry script wraps the existing scout-extraction helpers so
-%   that the source-grid-aware Brainstorm logic stays unchanged.
+%   This public entry script now calls a descriptive public wrapper helper,
+%   while the preserved low-level scout-extraction implementation remains
+%   available underneath for provenance compatibility.
 
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add it to the MATLAB path
@@ -77,7 +78,7 @@ fprintf('  Summary CSV:              %s\n\n', summary_csv);
 % -------------------------------------------------------------------------
 % Step 4. Run the preserved scout-extraction helper logic
 % -------------------------------------------------------------------------
-T = r01_batch_make_volgrid_scouts_from_tess( ...
+T = batch_extract_volgrid_scouts_from_brainstorm_tess( ...
     protocol_root, ...
     scout_filename, ...
     atlas_name_contains, ...
