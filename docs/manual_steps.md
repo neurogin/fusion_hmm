@@ -27,7 +27,7 @@ It reflects the final paper workflow and the current practical procedure used in
 
 Use this file together with the stage-specific public files:
 
-- Stage 1 manual handoff: `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
+- Stage 1 manual handoff: `notebooks/1_eeg_sensor/brainstorm_exclusion_marking_manual_11.md`
 - Stage 2 manual handoff: `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
 
 The public MATLAB and notebook entry files point back here when a step remains genuinely manual or hybrid.

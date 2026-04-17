@@ -81,7 +81,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 
 **Current public-facing stage-1 entry files**
 - `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
+- `notebooks/1_eeg_sensor/brainstorm_exclusion_marking_manual_11.md`
 - `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
 - `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
@@ -97,7 +97,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Preserved legacy implementations**
 - the original `r01_*` helper files remain in the same stage folders for provenance and compatibility
 - the cleaned public helper layer now checks those preserved low-level files explicitly so the dependency is visible rather than hidden
-- one preserved low-level Stage-1 QC implementation still lives at `notebooks/2_eeg_source/r01_eeg_runlevel_qc_gates.m`; the public Stage-1 helper now checks for that file explicitly before running
+- one preserved low-level Stage-1 QC implementation still lives at `notebooks/1_eeg_sensor/helpers/r01_eeg_runlevel_qc_gates.m`; the public Stage-1 helper checks for that file explicitly before running
 
 **Expected content**
 - ICLabel-based component pruning

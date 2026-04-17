@@ -13,7 +13,7 @@
 %
 % Manual dependency:
 %   The outputs of this file feed the later manual Brainstorm marking step
-%   documented in 11_brainstorm_exclusion_marking_manual.md.
+%   documented in brainstorm_exclusion_marking_manual_11.md.
 %
 % Preserved implementation note:
 %   This file is a readable public entry point. It now calls a descriptive
@@ -119,7 +119,7 @@ run_iclabel_pruning_and_metadata_export( ...
 % Step 6. Point the user to the next stage
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 10 complete.\n');
-fprintf('Next manual step: review 11_brainstorm_exclusion_marking_manual.md before Brainstorm marking.\n');
+fprintf('Next manual step: review brainstorm_exclusion_marking_manual_11.md before Brainstorm marking.\n');
 
 function assert_configured_input_dir(path_value, label, config_file)
 path_char = char(path_value);

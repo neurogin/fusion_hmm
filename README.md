@@ -87,7 +87,7 @@ See also:
 Public files in `notebooks/1_eeg_sensor/`:
 
 - `eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `11_brainstorm_exclusion_marking_manual.md`
+- `brainstorm_exclusion_marking_manual_11.md`
 - `export_and_union_merge_brainstorm_exclusions_12.m`
 - `eeg_run_qc_and_table_s1_13.m`
 
@@ -188,7 +188,7 @@ fusion_hmm/
   notebooks/
     1_eeg_sensor/
       eeg_prune_iclabel_and_export_clean_sets_10.m
-      11_brainstorm_exclusion_marking_manual.md
+      brainstorm_exclusion_marking_manual_11.md
       export_and_union_merge_brainstorm_exclusions_12.m
       eeg_run_qc_and_table_s1_13.m
       helpers/

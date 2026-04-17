@@ -188,7 +188,7 @@ Small differences in exclusion handling can materially affect the retained-data 
 The cleaned public-facing stage-1 scripts now live in:
 
 - `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
+- `notebooks/1_eeg_sensor/brainstorm_exclusion_marking_manual_11.md`
 - `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
 - `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
