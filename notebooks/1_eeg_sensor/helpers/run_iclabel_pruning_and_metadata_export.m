@@ -2,9 +2,8 @@ function run_iclabel_pruning_and_metadata_export(root_raw_eeglab, out_base_dir, 
 %RUN_ICLABEL_PRUNING_AND_METADATA_EXPORT Public wrapper for Stage-1 pruning.
 %
 % What this helper does:
-%   Runs the preserved ICLabel pruning and metadata export implementation
-%   that writes the "withICA", "clean", and QC-table outputs used in the
-%   Stage-1 public workflow.
+%   Runs the promoted Stage-1 ICLabel pruning helper that writes the
+%   "withICA", "clean", and QC-table outputs used in the public workflow.
 %
 % When it is used:
 %   Called by `eeg_prune_iclabel_and_export_clean_sets_10.m`.
@@ -16,12 +15,13 @@ function run_iclabel_pruning_and_metadata_export(root_raw_eeglab, out_base_dir, 
 %   - the same name-value options accepted by the preserved legacy helper
 %
 % Key outputs:
-%   Delegates to the preserved exporter and writes the same files as before.
+%   Delegates to the promoted helper and writes the same files as before.
 %
 % Important note:
-%   This file is the descriptive public-facing wrapper. The underlying
-%   scientific implementation still lives in
-%   `r01_eeg_iclabel_prune_and_metadata.m`.
+%   The scientific logic now lives in
+%   `prune_iclabel_components_and_export_metadata.m`. The older
+%   `r01_eeg_iclabel_prune_and_metadata.m` file remains only as a
+%   compatibility wrapper.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
@@ -34,13 +34,11 @@ if ~isempty(this_dir)
     addpath(this_dir);
 end
 
-assert_dependency_exists(fullfile(stage1_dir, 'r01_eeg_iclabel_prune_and_metadata.m'), ...
-    ['Missing preserved Stage-1 implementation:' newline ...
-     '  notebooks/1_eeg_sensor/r01_eeg_iclabel_prune_and_metadata.m' newline ...
-     'The public helper layer still depends on that low-level file for the' newline ...
-     'scientific ICLabel pruning logic.']);
+assert_dependency_exists(fullfile(this_dir, 'prune_iclabel_components_and_export_metadata.m'), ...
+    ['Missing Stage-1 pruning helper:' newline ...
+     '  notebooks/1_eeg_sensor/helpers/prune_iclabel_components_and_export_metadata.m']);
 
-r01_eeg_iclabel_prune_and_metadata(root_raw_eeglab, out_base_dir, qc_table_dir, varargin{:});
+prune_iclabel_components_and_export_metadata(root_raw_eeglab, out_base_dir, qc_table_dir, varargin{:});
 
 end
 

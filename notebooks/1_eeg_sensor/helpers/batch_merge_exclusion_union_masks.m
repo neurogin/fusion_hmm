@@ -18,15 +18,16 @@ function batch_merge_exclusion_union_masks(export_dir, union_dir, varargin)
 %   Writes `*_excl_union.tsv` and per-run QC CSV sidecars in `union_dir`.
 %
 % Important note:
-%   The interval-merging logic itself remains in the preserved legacy
-%   one-run implementation `r01_merge_exclusions_union.m`.
+%   The interval-merging logic now lives in the descriptive one-run helper
+%   `merge_exclusion_union_masks.m`. The older `r01_*` file remains only as
+%   a compatibility wrapper.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
 
-assert_dependency_exists(fullfile(this_dir, 'r01_merge_exclusions_union.m'), ...
-    ['Missing preserved Stage-1 one-run union-merger:' newline ...
-     '  notebooks/1_eeg_sensor/helpers/r01_merge_exclusions_union.m']);
+assert_dependency_exists(fullfile(this_dir, 'merge_exclusion_union_masks.m'), ...
+    ['Missing Stage-1 one-run union-merger:' newline ...
+     '  notebooks/1_eeg_sensor/helpers/merge_exclusion_union_masks.m']);
 
 p = inputParser;
 p.addParameter('adjacency_tol_sec', 0.0, @(x) isnumeric(x) && isscalar(x) && x>=0);
@@ -53,7 +54,7 @@ for i = 1:numel(files)
     end
 
     fprintf('[%d/%d] Merge: %s\n', i, numel(files), files(i).name);
-    r01_merge_exclusions_union(in_tsv, out_tsv, ...
+    merge_exclusion_union_masks(in_tsv, out_tsv, ...
         'labels', p.Results.labels, ...
         'adjacency_tol_sec', p.Results.adjacency_tol_sec, ...
         'min_dur_sec', p.Results.min_dur_sec, ...

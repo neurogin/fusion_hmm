@@ -19,16 +19,16 @@ function summarize_exclusion_union_qc(union_dir, out_dir, varargin)
 %
 % Important note:
 %   This wrapper keeps the current exclusion-summary behavior unchanged by
-%   delegating to `r01_qc_excl_union_folder.m`.
+%   delegating to `summarize_exclusion_union_folder_qc.m`.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
 
-assert_dependency_exists(fullfile(this_dir, 'r01_qc_excl_union_folder.m'), ...
-    ['Missing preserved Stage-1 exclusion-summary helper:' newline ...
-     '  notebooks/1_eeg_sensor/helpers/r01_qc_excl_union_folder.m']);
+assert_dependency_exists(fullfile(this_dir, 'summarize_exclusion_union_folder_qc.m'), ...
+    ['Missing Stage-1 exclusion-summary helper:' newline ...
+     '  notebooks/1_eeg_sensor/helpers/summarize_exclusion_union_folder_qc.m']);
 
-r01_qc_excl_union_folder(union_dir, out_dir, varargin{:});
+summarize_exclusion_union_folder_qc(union_dir, out_dir, varargin{:});
 
 end
 
