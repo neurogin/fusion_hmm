@@ -12,6 +12,11 @@
 %   Brainstorm marking must already be complete. This file does not create
 %   BAD or boundary annotations; it only exports and merges them.
 %
+% Before you run this file:
+%   1. Make sure `helpers/stage1_eeg_sensor_settings.m` is filled out.
+%   2. Make sure the manual Brainstorm marking step in
+%      `brainstorm_exclusion_marking_manual_11.md` is already complete.
+%
 % Preserved implementation note:
 %   This public entry file keeps the recovered exporter behavior unchanged,
 %   including its current point-event handling. The low-level export and
@@ -36,7 +41,8 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 % Step 1. Load the stage-1 configuration
 %
-% Edit path placeholders in helpers/stage1_eeg_sensor_settings.m before running.
+% Fill out the settings file below before running this script:
+%   helpers/stage1_eeg_sensor_settings.m
 % -------------------------------------------------------------------------
 P = stage1_eeg_sensor_settings();
 
@@ -64,13 +70,16 @@ ensure_dir(union_mask_dir);
 % Step 4. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 12: Export and union-merge Brainstorm exclusions\n');
+fprintf('  Settings file:        %s\n', config_file);
 fprintf('  Brainstorm DB root: %s\n', brainstorm_db_root);
 fprintf('  Brainstorm exports: %s\n', brainstorm_export_dir);
 fprintf('  Union-mask output:  %s\n', union_mask_dir);
 fprintf('  File filter:        %s\n', file_filter);
 fprintf('  Labels kept:        BAD, boundary, bad_boundary\n');
 fprintf('  Merge tolerance:    %.3f sec\n', merge_tolerance_sec);
-fprintf('  Min union duration: %.3f sec\n\n', min_union_duration_sec);
+fprintf('  Min union duration: %.3f sec\n', min_union_duration_sec);
+fprintf(['  This script expects Brainstorm raw-link MAT files under:' newline ...
+         '    <brainstorm_db_root>\\data\\...' newline newline]);
 
 % -------------------------------------------------------------------------
 % Step 5. Export Brainstorm BAD / boundary labels to per-run TSV files

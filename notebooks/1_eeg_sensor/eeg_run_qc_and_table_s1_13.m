@@ -16,6 +16,13 @@
 %   though the manuscript describes the EMG proxy as descriptive rather than
 %   a stand-alone exclusion threshold. This file makes that tension visible
 %   and does not silently harmonize it.
+%
+% Before you run this file:
+%   1. Make sure `helpers/stage1_eeg_sensor_settings.m` is filled out.
+%   2. Make sure step 10 and step 12 have already finished successfully.
+%   3. This script reads the clean EEG sets and merged exclusion TSV files
+%      from those earlier Stage-1 outputs, then writes the QC tables and
+%      manifests used for Supplementary Table S1 support.
 
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add the stage-1 helper path
@@ -35,7 +42,8 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 % Step 1. Load the stage-1 configuration
 %
-% Edit path placeholders in helpers/stage1_eeg_sensor_settings.m before running.
+% Fill out the settings file below before running this script:
+%   helpers/stage1_eeg_sensor_settings.m
 % -------------------------------------------------------------------------
 P = stage1_eeg_sensor_settings();
 
@@ -91,6 +99,7 @@ end
 % Step 4. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 13: Run-level EEG QC and Table S1 support exports\n');
+fprintf('  Settings file:        %s\n', config_file);
 fprintf('  Raw EEGLAB input:      %s\n', raw_eeglab_dir);
 fprintf('  with_ica dir:          %s\n', with_ica_dir);
 fprintf('  clean_sets dir:        %s\n', clean_sets_dir);
@@ -103,7 +112,8 @@ fprintf('  Max EMG proxy (dB):    %.1f\n', max_emg_db);
 fprintf('  Max bad channels abs:  %d\n', max_badchan_abs);
 fprintf('  Max bad channels frac: %.2f\n', max_badchan_frac);
 fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path to' newline ...
-         '  read the cleaned Stage-1 .set files. GUI review of those files is separate.' newline newline]);
+         '  read the cleaned Stage-1 .set files. GUI review of those files is separate.' newline ...
+         '  This script writes run-level QC tables and include/exclude manifests.' newline newline]);
 
 % -------------------------------------------------------------------------
 % Step 5. Summarize merged exclusion windows and warning flags

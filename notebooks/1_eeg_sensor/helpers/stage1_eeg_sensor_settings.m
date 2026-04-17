@@ -1,32 +1,38 @@
 function P = stage1_eeg_sensor_settings()
 %STAGE1_EEG_SENSOR_SETTINGS Public configuration helper for Stage 1.
 %
-% What this helper does:
-%   Stores the editable path roots and the manuscript-default settings for
-%   Stage 1 EEG sensor preprocessing, Brainstorm exclusion export, and
-%   run-level QC.
+% Before you run any Stage-1 script:
+%   1. Set `P.paths.project_root` below.
+%   2. Set `P.paths.brainstorm_db_root` below.
+%   3. Save this file.
 %
-% When it is used:
-%   The cleaned Stage-1 public entry files call this helper near the top so
-%   that all user-edited paths and frozen scientific defaults live in one
-%   predictable place.
+% What those two required paths mean:
+%   - `P.paths.project_root`
+%       Your main project folder for this repo run. The scripts expect the
+%       raw EEGLAB `.set` inputs under:
+%         <project_root>\01_raw\eeg_eeglab\
+%       and they will write Stage-1 derivatives and QC outputs under:
+%         <project_root>\02_derivatives\stage1_eeg_sensor\
+%         <project_root>\04_qc\stage1_eeg_sensor\
 %
-% Key inputs:
-%   Edit the placeholder roots below before running:
-%     - P.paths.project_root
-%     - P.paths.brainstorm_db_root
+%   - `P.paths.brainstorm_db_root`
+%       The Brainstorm protocol folder for this study. This folder must
+%       contain Brainstorm's `data\` subfolder underneath it, because the
+%       Stage-1 export script scans:
+%         <brainstorm_db_root>\data\...
+%       for the saved `data_0raw_*.mat` raw-link files.
 %
-% Key outputs:
-%   Returns one struct `P` containing:
-%     - manuscript-default ICLabel policy settings
-%     - derived Stage-1 input/output folders
-%     - exclusion-merge settings
-%     - run-level EEG QC thresholds
+% What this helper returns:
+%   One struct `P` containing:
+%   - the two user-edited root paths above
+%   - all derived Stage-1 input/output folders
+%   - the manuscript-default pruning and QC settings
 %
 % Important note:
-%   This public helper is now the main editable config file for Stage 1.
-%   The legacy compatibility helper `r01_stage1_params.m` remains in place
-%   and forwards to this file so older provenance code can still run.
+%   This is the main user-editable Stage-1 settings file. Most users only
+%   need to edit the two placeholder paths below. The legacy compatibility
+%   helper `r01_stage1_params.m` remains in place so older provenance code
+%   can still run.
 
 % -------------------------------------------------------------------------
 % Manuscript-default ICLabel pruning policy
@@ -41,9 +47,11 @@ P.historical.iclabel_brain_threshold = 0.60;
 
 % -------------------------------------------------------------------------
 % User-edited path roots
+%
+% These are the only placeholders most users need to change.
 % -------------------------------------------------------------------------
-P.paths.project_root = "<SET_PROJECT_ROOT>";
-P.paths.brainstorm_db_root = "<SET_BRAINSTORM_DB_ROOT>";
+P.paths.project_root = "<SET_PROJECT_ROOT>";          % Main project folder containing 01_raw, 02_derivatives, and 04_qc
+P.paths.brainstorm_db_root = "<SET_BRAINSTORM_DB_ROOT>"; % Brainstorm protocol folder that contains the data\ subfolder
 
 % Legacy compatibility alias preserved for older provenance code.
 P.paths.r01_rerun_root = P.paths.project_root;
@@ -51,25 +59,27 @@ P.paths.r01_rerun_root = P.paths.project_root;
 % -------------------------------------------------------------------------
 % Derived Stage-1 paths
 %
+% You usually do not need to edit anything below this line.
+%
 % These are the outsider-facing default locations used by the cleaned
-% public workflow. Legacy aliases are kept below where helpful so older
-% provenance helpers can still resolve the same folders.
+% public workflow. They are derived automatically from the two root paths
+% above so the Stage-1 scripts all write to consistent locations.
 % -------------------------------------------------------------------------
-P.paths.raw_eeglab_dir = fullfile(P.paths.project_root, "01_raw", "eeg_eeglab");
+P.paths.raw_eeglab_dir = fullfile(P.paths.project_root, "01_raw", "eeg_eeglab"); % Raw EEGLAB .set files read by step 10
 
 P.paths.stage1_derivatives_root = fullfile(P.paths.project_root, "02_derivatives", "stage1_eeg_sensor");
 P.paths.stage1_qc_root = fullfile(P.paths.project_root, "04_qc", "stage1_eeg_sensor");
 
-P.paths.ic_pruned_dir = fullfile(P.paths.stage1_derivatives_root, "ic_pruned");
-P.paths.with_ica_dir = fullfile(P.paths.ic_pruned_dir, "with_ica");
-P.paths.clean_sets_dir = fullfile(P.paths.ic_pruned_dir, "clean_sets");
+P.paths.ic_pruned_dir = fullfile(P.paths.stage1_derivatives_root, "ic_pruned"); % Parent folder for Stage-1 pruned EEG outputs
+P.paths.with_ica_dir = fullfile(P.paths.ic_pruned_dir, "with_ica");              % Auditable outputs that keep ICA metadata
+P.paths.clean_sets_dir = fullfile(P.paths.ic_pruned_dir, "clean_sets");          % Brainstorm-facing clean .set files
 
-P.paths.exclusions_root = fullfile(P.paths.stage1_derivatives_root, "exclusions");
-P.paths.brainstorm_export_dir = fullfile(P.paths.exclusions_root, "brainstorm_exports");
-P.paths.union_mask_dir = fullfile(P.paths.exclusions_root, "union_masks");
+P.paths.exclusions_root = fullfile(P.paths.stage1_derivatives_root, "exclusions");           % Parent folder for exported exclusion TSV files
+P.paths.brainstorm_export_dir = fullfile(P.paths.exclusions_root, "brainstorm_exports");     % Raw Brainstorm event exports
+P.paths.union_mask_dir = fullfile(P.paths.exclusions_root, "union_masks");                    % Merged exclusion windows used downstream
 
-P.paths.qc_tables_dir = fullfile(P.paths.stage1_qc_root, "tables");
-P.paths.qc_exclusions_dir = fullfile(P.paths.stage1_qc_root, "exclusions");
+P.paths.qc_tables_dir = fullfile(P.paths.stage1_qc_root, "tables");           % Run-level QC tables, manifests, and Table-S1 support files
+P.paths.qc_exclusions_dir = fullfile(P.paths.stage1_qc_root, "exclusions");   % Exclusion-summary QC outputs
 
 % Legacy compatibility aliases
 P.paths.withICA_dir = P.paths.with_ica_dir;
@@ -77,6 +87,9 @@ P.paths.clean_dir = P.paths.clean_sets_dir;
 P.paths.bst_export_dir = P.paths.brainstorm_export_dir;
 
 % Brainstorm protocol metadata
+%
+% This is used as stage metadata. The actual files are still located by the
+% `brainstorm_db_root` path above.
 P.brainstorm.protocol_name = "eegfmri_R01_ICRej70";
 
 % Only export Brainstorm raw-links corresponding to the manuscript-default

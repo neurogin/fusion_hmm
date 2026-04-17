@@ -7,6 +7,11 @@
 %     2. Brainstorm-facing "clean" outputs with ICA fields cleared
 %     3. run-level ICLabel QC tables
 %
+% Before you run this file:
+%   First open `helpers/stage1_eeg_sensor_settings.m` and fill in the two
+%   placeholder root paths there. Step 10 will not run correctly until that
+%   settings file points to your raw EEGLAB folder and Brainstorm protocol.
+%
 % Manuscript linkage:
 %   - Main Methods 2.2.1
 %   - Supplementary Methods 1.1
@@ -38,7 +43,10 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 % Step 1. Load the stage-1 configuration
 %
-% Edit path placeholders in helpers/stage1_eeg_sensor_settings.m before running.
+% First-run setup:
+%   Open the settings file below and fill it out before running this script:
+%     helpers/stage1_eeg_sensor_settings.m
+%
 % The manuscript-default ICLabel policy is stored there as:
 %   - ic_policy = "reject_artifacts"
 %   - reject_threshold = 0.70
@@ -85,6 +93,7 @@ ensure_dir(qc_tables_dir);
 % Step 4. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 10: ICLabel pruning and clean-set export\n');
+fprintf('  Settings file:        %s\n', config_file);
 fprintf('  Raw EEGLAB input: %s\n', raw_eeglab_dir);
 fprintf('  Stage-1 output root: %s\n', ic_pruned_dir);
 fprintf('  with_ica dir:        %s\n', with_ica_dir);

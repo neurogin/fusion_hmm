@@ -9,6 +9,12 @@ This is the manual or hybrid stage that sits between the two scripted Stage-1 en
 
 It is intentionally a short public-facing guide, not an executable notebook.
 
+## Before You Start
+
+- Fill out `helpers/stage1_eeg_sensor_settings.m` first so the scripted Stage-1 files all point to the same project root and Brainstorm protocol folder.
+- Run `eeg_prune_iclabel_and_export_clean_sets_10.m` first so the clean `*_clean.set` files already exist.
+- Use the same Brainstorm protocol folder that the settings file points to.
+
 ## Manuscript Linkage
 
 - Main Methods 2.2.1
@@ -38,6 +44,8 @@ This file is a short stage-level map to that documentation.
   - `*_clean.set`
 - Brainstorm protocol:
   - `eegfmri_R01_ICRej70`
+
+The scripted export step later looks under the Brainstorm protocol root's `data/` folder for the saved `data_0raw_*.mat` raw-link files.
 
 ## Event Names To Use
 
