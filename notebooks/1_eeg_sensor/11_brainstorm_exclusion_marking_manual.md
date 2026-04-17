@@ -4,8 +4,8 @@
 
 This is the manual/hybrid stage that sits between the two scripted stage-1 entry files:
 
-- `10_eeg_prune_iclabel_and_export_clean_sets.m`
-- `12_export_and_union_merge_brainstorm_exclusions.m`
+- `eeg_prune_iclabel_and_export_clean_sets_10.m`
+- `export_and_union_merge_brainstorm_exclusions_12.m`
 
 It is intentionally a short public-facing guide, not an executable notebook.
 
@@ -58,7 +58,7 @@ The exclusion policy is intentionally conservative:
 
 After Brainstorm marking is complete, the next public stage-1 script:
 
-- `12_export_and_union_merge_brainstorm_exclusions.m`
+- `export_and_union_merge_brainstorm_exclusions_12.m`
 
 will export and merge these annotations into:
 

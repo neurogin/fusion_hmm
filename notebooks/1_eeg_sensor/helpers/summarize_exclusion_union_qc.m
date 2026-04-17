@@ -7,7 +7,7 @@ function summarize_exclusion_union_qc(union_dir, out_dir, varargin)
 %   run-level gating.
 %
 % When it is used:
-%   Called by `13_eeg_run_qc_and_table_s1.m`.
+%   Called by `eeg_run_qc_and_table_s1_13.m`.
 %
 % Key inputs:
 %   - folder containing `*_excl_union.tsv`
@@ -21,6 +21,19 @@ function summarize_exclusion_union_qc(union_dir, out_dir, varargin)
 %   This wrapper keeps the current exclusion-summary behavior unchanged by
 %   delegating to `r01_qc_excl_union_folder.m`.
 
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+
+assert_dependency_exists(fullfile(this_dir, 'r01_qc_excl_union_folder.m'), ...
+    ['Missing preserved Stage-1 exclusion-summary helper:' newline ...
+     '  notebooks/1_eeg_sensor/helpers/r01_qc_excl_union_folder.m']);
+
 r01_qc_excl_union_folder(union_dir, out_dir, varargin{:});
 
+end
+
+function assert_dependency_exists(path_to_file, message_text)
+if exist(path_to_file, 'file') ~= 2
+    error('%s', message_text);
+end
 end

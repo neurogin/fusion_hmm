@@ -6,7 +6,7 @@ function [QC, MAN, EXC] = build_eeg_run_qc_gates_and_manifests(root_raw_eeglab, 
 %   manifest files that support the manuscript-facing Stage-1 outputs.
 %
 % When it is used:
-%   Called by `13_eeg_run_qc_and_table_s1.m`.
+%   Called by `eeg_run_qc_and_table_s1_13.m`.
 %
 % Key inputs:
 %   - raw EEGLAB directory
@@ -21,14 +21,40 @@ function [QC, MAN, EXC] = build_eeg_run_qc_gates_and_manifests(root_raw_eeglab, 
 %
 % Important note:
 %   The current QC behavior, including the explicit EMG-proxy gate that is
-%   kept visible for provenance, remains in
-%   `r01_eeg_runlevel_qc_gates.m`.
+%   kept visible for provenance, remains in the preserved low-level
+%   `r01_eeg_runlevel_qc_gates.m` implementation. That file currently lives
+%   under `notebooks/2_eeg_source/` and is checked explicitly here so the
+%   dependency is visible rather than hidden.
+
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+stage1_dir = fileparts(this_dir);
+repo_root = fileparts(fileparts(stage1_dir));
+stage2_dir = fullfile(repo_root, 'notebooks', '2_eeg_source');
+
+if exist(stage2_dir, 'dir') == 7
+    addpath(stage2_dir);
+end
+
+assert_dependency_exists(fullfile(stage2_dir, 'r01_eeg_runlevel_qc_gates.m'), ...
+    ['Missing preserved Stage-1 QC implementation:' newline ...
+     '  notebooks/2_eeg_source/r01_eeg_runlevel_qc_gates.m' newline ...
+     'The cleaned public Stage-1 QC helper still delegates to that low-level' newline ...
+     'implementation to preserve scientific behavior exactly.']);
 
 [QC, MAN, EXC] = r01_eeg_runlevel_qc_gates( ...
     root_raw_eeglab, ...
     eeg_ic_pruned_dir, ...
     qc_tables_dir, ...
     qc_exclusions_dir, ...
+    'clean_subdir', 'clean_sets', ...
+    'withICA_subdir', 'with_ica', ...
     varargin{:});
 
+end
+
+function assert_dependency_exists(path_to_file, message_text)
+if exist(path_to_file, 'file') ~= 2
+    error('%s', message_text);
+end
 end

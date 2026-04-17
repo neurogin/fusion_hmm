@@ -1,11 +1,4 @@
-% Deprecated compatibility stub.
-%
-% Use the MATLAB-safe public entry file instead:
-%   extract_volgrid_scouts_from_brainstorm_tess_22.m
-error(['This deprecated numbered script is no longer the active public entry point.' newline ...
-       'Run extract_volgrid_scouts_from_brainstorm_tess_22.m instead.']);
-
-% 22_extract_volgrid_scouts_from_brainstorm_tess
+% extract_volgrid_scouts_from_brainstorm_tess_22
 %
 % What this file does:
 %   Read the Brainstorm tess files that already contain the imported
@@ -36,51 +29,49 @@ error(['This deprecated numbered script is no longer the active public entry poi
 % Manual dependency:
 %   Brainstorm source localization and atlas import must already be
 %   complete. See 21_brainstorm_volume_source_and_atlas_import_manual.md.
-%
-% Preserved implementation note:
-%   This public entry script now calls a descriptive public wrapper helper,
-%   while the preserved low-level scout-extraction implementation remains
-%   available underneath for provenance compatibility.
 
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add it to the MATLAB path
 % -------------------------------------------------------------------------
-stage2_dir = fileparts(mfilename('fullpath'));
-if isempty(stage2_dir)
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+if isempty(this_dir)
     error('Could not resolve the stage-2 script location. Run this file from disk.');
 end
-addpath(stage2_dir);
+addpath(this_dir);
 
 % -------------------------------------------------------------------------
-% Step 1. User-editable inputs
+% Step 1. User-editable roots and inputs
 % -------------------------------------------------------------------------
+project_root = '<SET_PROJECT_ROOT>';
 protocol_root = '<SET_BRAINSTORM_PROTOCOL_ROOT>';
+
+stage2_qc_root = fullfile(project_root, '04_qc', 'stage2_eeg_source', 'tables');
 
 scout_filename = 'scout_Schaefer2018_200_7N_dilated_MNI.mat';
 atlas_name_contains = 'atlas-Schaefer2018_desc-200Parcels7Networks';
 kernel_pattern = 'results_MN_EEG_KERNEL_*.mat';
 
-summary_csv = '';
+summary_csv = fullfile(stage2_qc_root, 'batch_volgrid_scout_build.csv');
 overwrite_existing_summary = true;
 
 % -------------------------------------------------------------------------
-% Step 2. Validate the required Brainstorm protocol folder
+% Step 2. Validate inputs and create outputs
 % -------------------------------------------------------------------------
 assert_configured_input_dir(protocol_root, 'protocol_root');
-
-if isempty(summary_csv)
-    summary_csv = fullfile(protocol_root, 'anat', 'batch_volgrid_scout_build.csv');
-end
+assert_configured_input_dir(project_root, 'project_root');
+ensure_parent_dir(summary_csv);
 
 % -------------------------------------------------------------------------
 % Step 3. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 2 / Step 22: Extract Brainstorm volume-grid scouts\n');
+fprintf('  Project root:             %s\n', project_root);
 fprintf('  Brainstorm protocol root: %s\n', protocol_root);
 fprintf('  Scout filename:           %s\n', scout_filename);
 fprintf('  Atlas name filter:        %s\n', atlas_name_contains);
 fprintf('  Kernel pattern:           %s\n', kernel_pattern);
-fprintf('  Summary CSV:              %s\n\n', summary_csv);
+fprintf('  QC summary CSV:           %s\n\n', summary_csv);
 
 % -------------------------------------------------------------------------
 % Step 4. Run the preserved scout-extraction helper logic
@@ -94,11 +85,6 @@ T = batch_extract_volgrid_scouts_from_brainstorm_tess( ...
 % -------------------------------------------------------------------------
 % Step 5. Write a readable build summary for later QC
 % -------------------------------------------------------------------------
-summary_dir = fileparts(summary_csv);
-if ~isempty(summary_dir) && ~exist(summary_dir, 'dir')
-    mkdir(summary_dir);
-end
-
 if exist(summary_csv, 'file') && ~overwrite_existing_summary
     error('Summary CSV already exists and overwrite_existing_summary=false: %s', summary_csv);
 end
@@ -109,7 +95,7 @@ writetable(T, summary_csv);
 % Step 6. Point the user to the next stage
 % -------------------------------------------------------------------------
 fprintf('Wrote scout-build summary: %s\n', summary_csv);
-fprintf('Next scripted step: run 23_export_eeg_parcel_pc1_and_gain_normalize.m.\n');
+fprintf('Next scripted step: run export_eeg_parcel_pc1_and_gain_normalize_23.m.\n');
 
 function assert_configured_input_dir(path_value, label)
 path_char = char(path_value);
@@ -118,5 +104,12 @@ if isempty(strtrim(path_char)) || contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
+end
+end
+
+function ensure_parent_dir(file_path)
+parent_dir = fileparts(file_path);
+if ~isempty(parent_dir) && ~exist(parent_dir, 'dir')
+    mkdir(parent_dir);
 end
 end

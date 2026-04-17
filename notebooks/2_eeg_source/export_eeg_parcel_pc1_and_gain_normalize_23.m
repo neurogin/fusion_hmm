@@ -1,11 +1,4 @@
-% Deprecated compatibility stub.
-%
-% Use the MATLAB-safe public entry file instead:
-%   export_eeg_parcel_pc1_and_gain_normalize_23.m
-error(['This deprecated numbered script is no longer the active public entry point.' newline ...
-       'Run export_eeg_parcel_pc1_and_gain_normalize_23.m instead.']);
-
-% 23_export_eeg_parcel_pc1_and_gain_normalize
+% export_eeg_parcel_pc1_and_gain_normalize_23
 %
 % What this file does:
 %   Export run-wise EEG parcel PCs from Brainstorm volumetric inverse
@@ -25,7 +18,7 @@ error(['This deprecated numbered script is no longer the active public entry poi
 %
 % Inputs expected:
 %   - Brainstorm protocol root with kernel files
-%   - stage-1 cleaned EEGLAB .set files
+%   - Stage-1 cleaned EEGLAB .set files
 %   - subject/session scout MAT files from step 22
 %
 % Outputs written:
@@ -52,18 +45,23 @@ error(['This deprecated numbered script is no longer the active public entry poi
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add it to the MATLAB path
 % -------------------------------------------------------------------------
-stage2_dir = fileparts(mfilename('fullpath'));
-if isempty(stage2_dir)
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+if isempty(this_dir)
     error('Could not resolve the stage-2 script location. Run this file from disk.');
 end
-addpath(stage2_dir);
+addpath(this_dir);
 
 % -------------------------------------------------------------------------
-% Step 1. User-editable inputs
+% Step 1. User-editable roots and inputs
 % -------------------------------------------------------------------------
+project_root = '<SET_PROJECT_ROOT>';
 protocol_root = '<SET_BRAINSTORM_PROTOCOL_ROOT>';
-clean_eeg_dir = '<SET_STAGE1_CLEAN_EEG_DIR>';
-parcel_output_dir = '<SET_STAGE2_PARCEL_OUTPUT_DIR>';
+
+clean_eeg_dir = fullfile(project_root, '02_derivatives', 'stage1_eeg_sensor', 'ic_pruned', 'clean_sets');
+stage2_derivatives_root = fullfile(project_root, '02_derivatives', 'stage2_eeg_source');
+parcel_output_dir = fullfile(stage2_derivatives_root, 'parcel_exports');
+npy_output_dir = fullfile(parcel_output_dir, 'npy');
 
 desc_tag = 'desc-ICRej70';
 kernel_pattern = 'results_MN_EEG_KERNEL_*.mat';
@@ -81,7 +79,6 @@ gain_norm = true;
 gain_cap = [0, Inf];
 
 write_npy = true;
-npy_output_dir = '';
 scale_chunk_rows = 20000;
 
 overwrite_existing_outputs = true;
@@ -89,34 +86,45 @@ verbose_output = true;
 continue_on_fail = false;
 
 % -------------------------------------------------------------------------
-% Step 2. Validate the required input folders
+% Step 2. Validate dependencies, inputs, and outputs
 % -------------------------------------------------------------------------
-assert_configured_input_dir(protocol_root, 'protocol_root');
-assert_configured_input_dir(clean_eeg_dir, 'clean_eeg_dir');
-assert_configured_output_dir(parcel_output_dir, 'parcel_output_dir');
+assert_required_function('pop_loadset', ...
+    'Stage-2 Step 23 needs EEGLAB on the MATLAB path for batch loading of cleaned .set files.');
 
-% writeNPY remains an external dependency. The exporter helper still runs
-% without it, but the downstream alignment-ready .npy outputs will be
-% incomplete if it is missing.
+assert_configured_input_dir(protocol_root, 'protocol_root');
+assert_configured_input_dir(project_root, 'project_root');
+assert_configured_input_dir(clean_eeg_dir, 'clean_eeg_dir');
+ensure_dir(parcel_output_dir);
+if write_npy
+    ensure_dir(npy_output_dir);
+end
+
 if write_npy && exist('writeNPY', 'file') ~= 2
-    warning(['writeNPY is not on the MATLAB path. The preserved helper will skip .npy output, ' ...
-        'which means downstream alignment-ready sidecars will not be created.']);
+    warning(['writeNPY is not on the MATLAB path. The preserved helper can still run,' newline ...
+        'but downstream alignment-ready .npy sidecars, including *_time_sec.npy,' newline ...
+        'will not be created.']);
 end
 
 % -------------------------------------------------------------------------
 % Step 3. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 2 / Step 23: Export EEG parcel PC1 and gain-normalized outputs\n');
+fprintf('  Project root:             %s\n', project_root);
 fprintf('  Brainstorm protocol root: %s\n', protocol_root);
 fprintf('  Stage-1 clean EEG dir:    %s\n', clean_eeg_dir);
+fprintf('  Stage-2 output root:      %s\n', stage2_derivatives_root);
 fprintf('  Parcel output dir:        %s\n', parcel_output_dir);
+fprintf('  NPY output dir:           %s\n', npy_output_dir);
 fprintf('  Desc tag:                 %s\n', desc_tag);
 fprintf('  Scout filename:           %s\n', scout_filename);
 fprintf('  Expected scouts:          %d\n', expected_n_scouts);
 fprintf('  Min vertices:             %d\n', min_vertices);
 fprintf('  Sign convention:          %s\n', sign_convention);
 fprintf('  Gain normalization:       %d\n', gain_norm);
-fprintf('  Write NPY sidecars:       %d\n\n', write_npy);
+fprintf('  Write NPY sidecars:       %d\n', write_npy);
+fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path.' newline ...
+         '  writeNPY is additionally needed if you want the downstream-ready NPY' newline ...
+         '  sidecars, including *_time_sec.npy, from this public script.' newline newline]);
 
 % -------------------------------------------------------------------------
 % Step 4. Run the preserved exporter helper logic
@@ -153,7 +161,7 @@ fprintf('  Coverage summary: %s\n', batch.coverageCsv);
 fprintf('  Manifest:         %s\n', batch.manifestCsv);
 fprintf(['If WriteNPY succeeded, each run now also has a sample-time sidecar named ' ...
     '*_time_sec.npy beside *_PC1_gnorm.npy.\n']);
-fprintf('Next scripted step: run 24_qc_eeg_source_alignment_table_s2.m.\n');
+fprintf('Next scripted step: run qc_eeg_source_alignment_table_s2_24.m.\n');
 
 function assert_configured_input_dir(path_value, label)
 path_char = char(path_value);
@@ -165,12 +173,14 @@ if ~exist(path_char, 'dir')
 end
 end
 
-function assert_configured_output_dir(path_value, label)
-path_char = char(path_value);
-if isempty(strtrim(path_char)) || contains(path_char, '<SET_')
-    error('%s is still using a placeholder path. Edit this script before running.', label);
+function assert_required_function(func_name, message_text)
+if exist(func_name, 'file') ~= 2
+    error('%s', message_text);
 end
-if ~exist(path_char, 'dir')
-    mkdir(path_char);
+end
+
+function ensure_dir(path_value)
+if ~exist(path_value, 'dir')
+    mkdir(path_value);
 end
 end

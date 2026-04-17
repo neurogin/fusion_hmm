@@ -6,7 +6,7 @@ function qc = run_eeg_parcel_export_qc_summaries(outDir)
 %   public notebook `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4`.
 %
 % When it is used:
-%   Run this after `23_export_eeg_parcel_pc1_and_gain_normalize.m` and
+%   Run this after `export_eeg_parcel_pc1_and_gain_normalize_23.m` and
 %   before the Stage-2 QC notebook if the required CSV sidecars do not yet
 %   exist.
 %
@@ -24,6 +24,19 @@ function qc = run_eeg_parcel_export_qc_summaries(outDir)
 % Important note:
 %   This wrapper preserves the current v3 QC behavior and default options.
 %   The underlying implementations remain in the preserved legacy helpers.
+
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+
+assert_dependency_exists(fullfile(this_dir, 'r01_qc_v3_run_timeseries_and_gain_summary.m'), ...
+    ['Missing preserved Stage-2 QC helper:' newline ...
+     '  notebooks/2_eeg_source/r01_qc_v3_run_timeseries_and_gain_summary.m']);
+assert_dependency_exists(fullfile(this_dir, 'r01_qc_v3_sign_convention_parcelpc.m'), ...
+    ['Missing preserved Stage-2 QC helper:' newline ...
+     '  notebooks/2_eeg_source/r01_qc_v3_sign_convention_parcelpc.m']);
+assert_dependency_exists(fullfile(this_dir, 'r01_qc_v3_pve1_hist_and_lowparcels.m'), ...
+    ['Missing preserved Stage-2 QC helper:' newline ...
+     '  notebooks/2_eeg_source/r01_qc_v3_pve1_hist_and_lowparcels.m']);
 
 qc = struct();
 
@@ -43,4 +56,10 @@ qc.sign = r01_qc_v3_sign_convention_parcelpc( ...
     'PreferGNORM', true, ...
     'BottomFrac', 0.05);
 
+end
+
+function assert_dependency_exists(path_to_file, message_text)
+if exist(path_to_file, 'file') ~= 2
+    error('%s', message_text);
+end
 end

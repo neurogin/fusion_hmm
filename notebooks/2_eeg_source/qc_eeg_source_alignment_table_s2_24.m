@@ -1,14 +1,7 @@
-% Deprecated compatibility stub.
-%
-% Use the MATLAB-safe public entry file instead:
-%   qc_eeg_source_alignment_table_s2_24.m
-error(['This deprecated numbered script is no longer the active public entry point.' newline ...
-       'Run qc_eeg_source_alignment_table_s2_24.m instead.']);
-
-% 24_qc_eeg_source_alignment_table_s2
+% qc_eeg_source_alignment_table_s2_24
 %
 % What this file does:
-%   Read the stage-2 parcel coverage summary and write a manuscript-facing
+%   Read the Stage-2 parcel coverage summary and write a manuscript-facing
 %   Table-S2 support CSV describing atlas coverage on the EEG volumetric
 %   source grid.
 %
@@ -36,28 +29,47 @@ error(['This deprecated numbered script is no longer the active public entry poi
 %   manual figure assembly for Figure S1A,B.
 
 % -------------------------------------------------------------------------
-% Step 0. User-editable inputs
+% Step 0. Locate this stage folder and add it to the MATLAB path
 % -------------------------------------------------------------------------
-parcel_output_dir = '<SET_STAGE2_PARCEL_OUTPUT_DIR>';
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+if isempty(this_dir)
+    error('Could not resolve the stage-2 script location. Run this file from disk.');
+end
+addpath(this_dir);
 
-coverage_summary_csv = '';
-scout_build_summary_csv = '';
-table_s2_csv = '';
+% -------------------------------------------------------------------------
+% Step 1. User-editable roots and inputs
+% -------------------------------------------------------------------------
+project_root = '<SET_PROJECT_ROOT>';
+
+stage2_derivatives_root = fullfile(project_root, '02_derivatives', 'stage2_eeg_source');
+parcel_output_dir = fullfile(stage2_derivatives_root, 'parcel_exports');
+stage2_qc_root = fullfile(project_root, '04_qc', 'stage2_eeg_source', 'tables');
+
+coverage_summary_csv = fullfile(parcel_output_dir, 'batch_parcel_coverage_summary_v3.csv');
+scout_build_summary_csv = fullfile(stage2_qc_root, 'batch_volgrid_scout_build.csv');
+table_s2_csv = fullfile(stage2_qc_root, 'table_s2_eeg_atlas_alignment_summary.csv');
 
 % -------------------------------------------------------------------------
-% Step 1. Resolve default file locations
+% Step 2. Resolve directories
 % -------------------------------------------------------------------------
+assert_configured_input_dir(project_root, 'project_root');
 assert_configured_input_dir(parcel_output_dir, 'parcel_output_dir');
-
-if isempty(coverage_summary_csv)
-    coverage_summary_csv = fullfile(parcel_output_dir, 'batch_parcel_coverage_summary_v3.csv');
-end
-if isempty(table_s2_csv)
-    table_s2_csv = fullfile(parcel_output_dir, 'table_s2_eeg_atlas_alignment_summary.csv');
-end
+ensure_parent_dir(table_s2_csv);
 
 % -------------------------------------------------------------------------
-% Step 2. Read the coverage summary written by the preserved exporter
+% Step 3. Print a short run summary for the user
+% -------------------------------------------------------------------------
+fprintf('\nStage 2 / Step 24: Build Table-S2 EEG source-alignment support file\n');
+fprintf('  Project root:          %s\n', project_root);
+fprintf('  Parcel output dir:     %s\n', parcel_output_dir);
+fprintf('  Coverage summary CSV:  %s\n', coverage_summary_csv);
+fprintf('  Scout-build summary:   %s\n', scout_build_summary_csv);
+fprintf('  Table-S2 output CSV:   %s\n\n', table_s2_csv);
+
+% -------------------------------------------------------------------------
+% Step 4. Read the coverage summary written by the preserved exporter
 % -------------------------------------------------------------------------
 if ~exist(coverage_summary_csv, 'file')
     error('Coverage summary CSV not found: %s', coverage_summary_csv);
@@ -73,13 +85,9 @@ required_cols = { ...
 assert_has_columns(coverageT, required_cols, coverage_summary_csv);
 
 % -------------------------------------------------------------------------
-% Step 3. Optionally cross-check the scout-build summary
+% Step 5. Optionally cross-check the scout-build summary
 % -------------------------------------------------------------------------
-if ~isempty(scout_build_summary_csv)
-    if ~exist(scout_build_summary_csv, 'file')
-        error('Scout-build summary CSV not found: %s', scout_build_summary_csv);
-    end
-
+if ~isempty(scout_build_summary_csv) && exist(scout_build_summary_csv, 'file')
     scoutT = readtable(scout_build_summary_csv);
     scout_required_cols = {'sub','ses','nScouts','nVertExpected'};
     assert_has_columns(scoutT, scout_required_cols, scout_build_summary_csv);
@@ -100,10 +108,12 @@ if ~isempty(scout_build_summary_csv)
     if any(grid_size_mismatch, 'omitnan')
         warning('Grid-size mismatch detected between coverage summary and scout-build summary.');
     end
+else
+    fprintf('Scout-build summary not found. Continuing without the optional cross-check.\n');
 end
 
 % -------------------------------------------------------------------------
-% Step 4. Build the manuscript-facing Table-S2 support output
+% Step 6. Build the manuscript-facing Table-S2 support output
 % -------------------------------------------------------------------------
 overlap_rate = coverageT.overlap_vertices ./ max(coverageT.n_assigned_vertices, 1);
 
@@ -129,17 +139,12 @@ tableS2 = table( ...
     'Overlap_vertices','Overlap_rate'});
 
 % -------------------------------------------------------------------------
-% Step 5. Write the Table-S2 support CSV
+% Step 7. Write the Table-S2 support CSV
 % -------------------------------------------------------------------------
-table_s2_dir = fileparts(table_s2_csv);
-if ~isempty(table_s2_dir) && ~exist(table_s2_dir, 'dir')
-    mkdir(table_s2_dir);
-end
-
 writetable(tableS2, table_s2_csv);
 
 % -------------------------------------------------------------------------
-% Step 6. Point the user to the manual/hybrid figure note
+% Step 8. Point the user to the manual/hybrid figure note
 % -------------------------------------------------------------------------
 fprintf('\nStage 2 / Step 24 complete.\n');
 fprintf('Wrote Table-S2 support CSV: %s\n', table_s2_csv);
@@ -160,5 +165,12 @@ function assert_has_columns(T, required_cols, label)
 missing = required_cols(~ismember(required_cols, T.Properties.VariableNames));
 if ~isempty(missing)
     error('Missing required columns in %s: %s', label, strjoin(missing, ', '));
+end
+end
+
+function ensure_parent_dir(file_path)
+parent_dir = fileparts(file_path);
+if ~isempty(parent_dir) && ~exist(parent_dir, 'dir')
+    mkdir(parent_dir);
 end
 end

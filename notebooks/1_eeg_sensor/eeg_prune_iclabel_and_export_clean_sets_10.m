@@ -1,11 +1,4 @@
-% Deprecated compatibility stub.
-%
-% Use the MATLAB-safe public entry file instead:
-%   eeg_prune_iclabel_and_export_clean_sets_10.m
-error(['This deprecated numbered script is no longer the active public entry point.' newline ...
-       'Run eeg_prune_iclabel_and_export_clean_sets_10.m instead.']);
-
-% 10_eeg_prune_iclabel_and_export_clean_sets
+% eeg_prune_iclabel_and_export_clean_sets_10
 %
 % What this file does:
 %   Run the manuscript-default ICLabel pruning step on author-preprocessed
@@ -30,15 +23,16 @@ error(['This deprecated numbered script is no longer the active public entry poi
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add the stage-1 helper path
 % -------------------------------------------------------------------------
-stage1_dir = fileparts(mfilename('fullpath'));
-if isempty(stage1_dir)
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+if isempty(this_dir)
     error('Could not resolve the stage-1 script location. Run this file from disk.');
 end
 
-helper_dir = fullfile(stage1_dir, 'helpers');
+helper_dir = fullfile(this_dir, 'helpers');
 config_file = fullfile(helper_dir, 'stage1_eeg_sensor_settings.m');
 
-addpath(stage1_dir);
+addpath(this_dir);
 addpath(helper_dir);
 
 % -------------------------------------------------------------------------
@@ -53,6 +47,8 @@ P = stage1_eeg_sensor_settings();
 
 raw_eeglab_dir = char(P.paths.raw_eeglab_dir);
 ic_pruned_dir = char(P.paths.ic_pruned_dir);
+with_ica_dir = char(P.paths.with_ica_dir);
+clean_sets_dir = char(P.paths.clean_sets_dir);
 qc_tables_dir = char(P.paths.qc_tables_dir);
 ic_policy = char(P.ic_policy);
 reject_threshold = P.ic_reject_threshold;
@@ -72,20 +68,33 @@ clean_remove_iclabel = true;
 file_pattern = '*.set';
 
 % -------------------------------------------------------------------------
-% Step 3. Validate the required input folder
+% Step 3. Validate the required runtime dependencies and folders
 % -------------------------------------------------------------------------
+assert_required_function('pop_loadset', ...
+    'Stage-1 Step 10 needs EEGLAB on the MATLAB path for batch .set loading and saving.');
+assert_required_function('iclabel', ...
+    'Stage-1 Step 10 needs the ICLabel plugin on the MATLAB path for batch component pruning.');
+
 assert_configured_input_dir(raw_eeglab_dir, 'P.paths.raw_eeglab_dir', config_file);
+ensure_dir(ic_pruned_dir);
+ensure_dir(with_ica_dir);
+ensure_dir(clean_sets_dir);
+ensure_dir(qc_tables_dir);
 
 % -------------------------------------------------------------------------
 % Step 4. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 10: ICLabel pruning and clean-set export\n');
 fprintf('  Raw EEGLAB input: %s\n', raw_eeglab_dir);
-fprintf('  Output directory: %s\n', ic_pruned_dir);
-fprintf('  QC tables dir:    %s\n', qc_tables_dir);
-fprintf('  IC policy:        %s\n', ic_policy);
-fprintf('  Reject threshold: %.2f\n', reject_threshold);
-fprintf('  Reject classes:   %s\n\n', strjoin(cellstr(reject_classes), ', '));
+fprintf('  Stage-1 output root: %s\n', ic_pruned_dir);
+fprintf('  with_ica dir:        %s\n', with_ica_dir);
+fprintf('  clean_sets dir:      %s\n', clean_sets_dir);
+fprintf('  QC tables dir:       %s\n', qc_tables_dir);
+fprintf('  IC policy:           %s\n', ic_policy);
+fprintf('  Reject threshold:    %.2f\n', reject_threshold);
+fprintf('  Reject classes:      %s\n', strjoin(cellstr(reject_classes), ', '));
+fprintf(['  Dependency note: batch execution needs EEGLAB + ICLabel on the MATLAB path.' newline ...
+         '  GUI inspection of the resulting .set files is a separate manual step.' newline newline]);
 
 % -------------------------------------------------------------------------
 % Step 5. Run the preserved pruning/export implementation
@@ -102,7 +111,9 @@ run_iclabel_pruning_and_metadata_export( ...
     'save_withICA', save_withICA, ...
     'save_clean', save_clean, ...
     'clean_remove_iclabel', clean_remove_iclabel, ...
-    'file_pattern', file_pattern);
+    'file_pattern', file_pattern, ...
+    'withICA_subdir', 'with_ica', ...
+    'clean_subdir', 'clean_sets');
 
 % -------------------------------------------------------------------------
 % Step 6. Point the user to the next stage
@@ -117,5 +128,17 @@ if contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
+end
+end
+
+function assert_required_function(func_name, message_text)
+if exist(func_name, 'file') ~= 2
+    error('%s', message_text);
+end
+end
+
+function ensure_dir(path_value)
+if ~exist(path_value, 'dir')
+    mkdir(path_value);
 end
 end

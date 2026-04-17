@@ -20,6 +20,7 @@ At this stage:
 - original notebook files are preserved separately in `_archive_raw_original_names/`
 - manual and hybrid GUI-based steps are documented in `docs/manual_steps.md`
 - active public entry files and active helper layers use descriptive names where practical, while older `r01_` and `Pipeline*` names are retained only for provenance or compatibility
+- for MATLAB script stages, the public entry files now use MATLAB-safe names with the step number at the end; any older number-leading `.m` files that remain are compatibility stubs only
 
 ## Repository workflow folders
 
@@ -79,10 +80,10 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/1_eeg_sensor/`
 
 **Current public-facing stage-1 entry files**
-- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
 - `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
-- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
-- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
+- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
 **Stage-1 active helper location**
 - `notebooks/1_eeg_sensor/helpers/`
@@ -95,6 +96,8 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 
 **Preserved legacy implementations**
 - the original `r01_*` helper files remain in the same stage folders for provenance and compatibility
+- the cleaned public helper layer now checks those preserved low-level files explicitly so the dependency is visible rather than hidden
+- one preserved low-level Stage-1 QC implementation still lives at `notebooks/2_eeg_source/r01_eeg_runlevel_qc_gates.m`; the public Stage-1 helper now checks for that file explicitly before running
 
 **Expected content**
 - ICLabel-based component pruning
@@ -113,6 +116,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - exclusions are limited to `boundary` and manually marked `BAD`
 - `QRS` is not used as a censoring rule unless it falls inside an already excluded interval
 - exported files may also contain `bad_boundary` labels
+- the cleaned public Stage-1 defaults now write to clearer public roots such as:
+  - `02_derivatives/stage1_eeg_sensor/ic_pruned/with_ica/`
+  - `02_derivatives/stage1_eeg_sensor/ic_pruned/clean_sets/`
+  - `02_derivatives/stage1_eeg_sensor/exclusions/brainstorm_exports/`
+  - `02_derivatives/stage1_eeg_sensor/exclusions/union_masks/`
+  - `04_qc/stage1_eeg_sensor/tables/`
 - original stage-1 drivers and provenance copies are preserved separately and are not the public-facing entry points
 
 ---
@@ -132,8 +141,8 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Current public-facing stage-2 entry files**
 - `notebooks/2_eeg_source/20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
 - `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
-- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
 
 **Stage-2 helper files used here**
 - `notebooks/2_eeg_source/batch_extract_volgrid_scouts_from_brainstorm_tess.m`
@@ -157,7 +166,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - this stage is explicitly hybrid
 - Brainstorm handles subject-specific anatomical alignment and volume-grid scout definition
 - downstream scripts should not assume constant source-grid size across subjects
-- the public Table-S2 support file is written by `24_qc_eeg_source_alignment_table_s2.m`
+- the public Table-S2 support file is written by `qc_eeg_source_alignment_table_s2_24.m`
 
 ---
 
@@ -174,7 +183,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/2_eeg_source/`
 
 **Current public-facing stage-2 entry files**
-- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
 - `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Stage-2 helper files used here**
@@ -202,9 +211,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Notes**
 - Brainstorm defines parcel membership on the subject-specific volume grid
 - MATLAB/Python scripts perform parcel PC extraction, metadata export, and QC summaries
-- `23_export_eeg_parcel_pc1_and_gain_normalize.m` preserves the current v3 helper behavior, including PC2 provenance outputs and the restored sample-time sidecar `*_time_sec.npy`
+- `export_eeg_parcel_pc1_and_gain_normalize_23.m` preserves the current v3 helper behavior, including PC2 provenance outputs and the restored sample-time sidecar `*_time_sec.npy`
 - `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` expects the Stage-2 QC sidecars written by `run_eeg_parcel_export_qc_summaries.m`
 - `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` uses the current v3 CSV outputs and does not port the older MAT-schema-specific exploratory cells wholesale
+- the cleaned public Stage-2 MATLAB defaults now use clearer public roots such as:
+  - `02_derivatives/stage2_eeg_source/parcel_exports/`
+  - `04_qc/stage2_eeg_source/tables/`
 
 ---
 

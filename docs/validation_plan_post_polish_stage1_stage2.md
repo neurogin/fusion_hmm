@@ -77,9 +77,9 @@ That avoids a misleading "pass" on a trivial run that does not stress the real l
 
 #### Script to check
 
-- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
-- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
-- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
+- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
+- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
 #### What to do
 
@@ -106,7 +106,7 @@ That avoids a misleading "pass" on a trivial run that does not stress the real l
 
 #### Script to run
 
-- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
 
 #### Smallest practical data subset
 
@@ -147,7 +147,7 @@ The exact output names may include the standard tag:
 
 #### Script to run
 
-- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
 
 #### Smallest practical data subset
 
@@ -193,7 +193,7 @@ Depending on your existing folder layout, these should live in the Stage-1 masks
 
 #### Script to run
 
-- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
 #### Smallest practical data subset
 
@@ -232,7 +232,7 @@ Confirm that the Stage-1 QC area writes the expected run-level support outputs, 
 
 #### Script to run
 
-- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
 
 #### Smallest practical data subset
 
@@ -266,7 +266,7 @@ Confirm that the run writes or refreshes:
 
 #### Script to run
 
-- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
 
 #### Smallest practical data subset
 

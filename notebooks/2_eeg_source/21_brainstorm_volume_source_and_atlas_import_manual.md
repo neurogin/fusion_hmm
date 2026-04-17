@@ -7,8 +7,8 @@ This is the manual/hybrid stage that sits between the public-facing Stage-2 atla
 It sits between:
 
 - `20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
-- `22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `export_eeg_parcel_pc1_and_gain_normalize_23.m`
 
 It is intentionally a short public-facing guide, not an executable notebook.
 
@@ -80,9 +80,9 @@ After the Brainstorm work is complete, the later public Stage-2 scripts expect:
 
 After that manual work is complete:
 
-- `22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `extract_volgrid_scouts_from_brainstorm_tess_22.m`
   extracts subject/session scout files from the Brainstorm tess files
-- `23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `export_eeg_parcel_pc1_and_gain_normalize_23.m`
   uses those scouts plus the kernel files and cleaned EEG to export parcel PCs and QC sidecars
 
 ## Known Project Note
@@ -102,9 +102,9 @@ Keep that exception visible. Do not silently normalize it away during refactor o
 
 ## What Comes Next
 
-1. run `22_extract_volgrid_scouts_from_brainstorm_tess.m`
-2. run `23_export_eeg_parcel_pc1_and_gain_normalize.m`
-3. run `24_qc_eeg_source_alignment_table_s2.m`
+1. run `extract_volgrid_scouts_from_brainstorm_tess_22.m`
+2. run `export_eeg_parcel_pc1_and_gain_normalize_23.m`
+3. run `qc_eeg_source_alignment_table_s2_24.m`
 4. open `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 ## Refactor Note

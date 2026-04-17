@@ -27,6 +27,8 @@ function [QC, MAN, EXC] = r01_eeg_runlevel_qc_gates(root_raw_eeglab, eeg_ic_prun
 %
 % Optional name-value:
 %   'tag'                 (default 'ICRej70')
+%   'clean_subdir'        (default 'clean')
+%   'withICA_subdir'      (default 'withICA')
 %   'min_usable_frac'     (default 0.70)
 %   'max_emg_db'          (default 3.0)
 %   'max_badchan_abs'     (default 10)
@@ -42,6 +44,8 @@ function [QC, MAN, EXC] = r01_eeg_runlevel_qc_gates(root_raw_eeglab, eeg_ic_prun
 % -------------------------
 p = inputParser;
 p.addParameter('tag', 'ICRej70', @(x) ischar(x) || isstring(x));
+p.addParameter('clean_subdir', 'clean', @(x) ischar(x) || isstring(x));
+p.addParameter('withICA_subdir', 'withICA', @(x) ischar(x) || isstring(x));
 p.addParameter('min_usable_frac', 0.70, @(x) isnumeric(x) && isscalar(x) && x>0 && x<=1);
 p.addParameter('max_emg_db', 3.0, @(x) isnumeric(x) && isscalar(x));
 p.addParameter('max_badchan_abs', 10, @(x) isnumeric(x) && isscalar(x) && x>=0);
@@ -54,6 +58,8 @@ p.addParameter('lf_band', [8 13], @(x) isnumeric(x) && numel(x)==2);
 p.parse(varargin{:});
 
 opt.tag = char(p.Results.tag);
+opt.clean_subdir = char(p.Results.clean_subdir);
+opt.withICA_subdir = char(p.Results.withICA_subdir);
 opt.min_usable_frac      = p.Results.min_usable_frac;
 opt.max_emg_db           = p.Results.max_emg_db;
 opt.max_badchan_abs      = p.Results.max_badchan_abs;
@@ -74,8 +80,15 @@ qc_exclusions_dir = char(qc_exclusions_dir);
 % -------------------------
 if ~exist(qc_tables_dir,'dir'); mkdir(qc_tables_dir); end
 
-clean_dir   = fullfile(eeg_ic_pruned_dir, 'clean');
-withICA_dir = fullfile(eeg_ic_pruned_dir, 'withICA');
+clean_dir   = fullfile(eeg_ic_pruned_dir, opt.clean_subdir);
+withICA_dir = fullfile(eeg_ic_pruned_dir, opt.withICA_subdir);
+
+if exist(clean_dir, 'dir') ~= 7
+    clean_dir = resolve_preferred_dir(eeg_ic_pruned_dir, {opt.clean_subdir, 'clean_sets', 'clean'});
+end
+if exist(withICA_dir, 'dir') ~= 7
+    withICA_dir = resolve_preferred_dir(eeg_ic_pruned_dir, {opt.withICA_subdir, 'with_ica', 'withICA'});
+end
 
 if exist('pop_loadset','file') ~= 2
     error('EEGLAB is not on the MATLAB path (pop_loadset missing). Add EEGLAB, then rerun.');
@@ -400,6 +413,17 @@ else
     warning('Drop list exists and overwrite=false: %s', drop_txt);
 end
 
+end
+
+function out_dir = resolve_preferred_dir(parent_dir, candidate_names)
+out_dir = fullfile(parent_dir, char(candidate_names{1}));
+for i = 1:numel(candidate_names)
+    candidate_dir = fullfile(parent_dir, char(candidate_names{i}));
+    if exist(candidate_dir, 'dir') == 7
+        out_dir = candidate_dir;
+        return;
+    end
+end
 end
 
 % =========================================================================

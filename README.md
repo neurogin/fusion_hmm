@@ -86,19 +86,19 @@ See also:
 ### Stage 1. EEG sensor preprocessing and exclusion handling
 Public files in `notebooks/1_eeg_sensor/`:
 
-- `10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `eeg_prune_iclabel_and_export_clean_sets_10.m`
 - `11_brainstorm_exclusion_marking_manual.md`
-- `12_export_and_union_merge_brainstorm_exclusions.m`
-- `13_eeg_run_qc_and_table_s1.m`
+- `export_and_union_merge_brainstorm_exclusions_12.m`
+- `eeg_run_qc_and_table_s1_13.m`
 
 ### Stage 2. EEG source localization, parcel extraction, and source QC
 Public files in `notebooks/2_eeg_source/`:
 
 - `20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
 - `21_brainstorm_volume_source_and_atlas_import_manual.md`
-- `22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `23_export_eeg_parcel_pc1_and_gain_normalize.m`
-- `24_qc_eeg_source_alignment_table_s2.m`
+- `extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `export_eeg_parcel_pc1_and_gain_normalize_23.m`
+- `qc_eeg_source_alignment_table_s2_24.m`
 - `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 ### Stage 3. BOLD parcel extraction and QC
@@ -158,7 +158,9 @@ Each active stage folder contains:
 For the active public helper layer:
 
 - Stage 1 and Stage 2 now use descriptive helper names in the cleaned public workflow
-- the older `r01_` MATLAB implementations remain in place as preserved compatibility/provenance code
+- the MATLAB-safe public scripts now place the step number at the end of the filename, for example `eeg_prune_iclabel_and_export_clean_sets_10.m`
+- older number-leading `.m` filenames may still appear in these folders as compatibility stubs, but they are no longer the main public entry points
+- preserved `r01_` MATLAB implementations remain in place as provenance-compatible low-level code, and the public helper layer now checks those dependencies explicitly instead of assuming they are silently on the MATLAB path
 - later Python stages use stage-specific helper modules with plain-language module headers
 
 Historical notebooks and scripts with names such as `r01_*` or `Pipeline*` remain preserved in the workflow folders or in `notebooks/_archive_raw_original_names/`, but they do not define the main public path.
@@ -185,17 +187,17 @@ fusion_hmm/
 
   notebooks/
     1_eeg_sensor/
-      10_eeg_prune_iclabel_and_export_clean_sets.m
+      eeg_prune_iclabel_and_export_clean_sets_10.m
       11_brainstorm_exclusion_marking_manual.md
-      12_export_and_union_merge_brainstorm_exclusions.m
-      13_eeg_run_qc_and_table_s1.m
+      export_and_union_merge_brainstorm_exclusions_12.m
+      eeg_run_qc_and_table_s1_13.m
       helpers/
     2_eeg_source/
       20_prepare_schaefer200_atlas_for_brainstorm.ipynb
       21_brainstorm_volume_source_and_atlas_import_manual.md
-      22_extract_volgrid_scouts_from_brainstorm_tess.m
-      23_export_eeg_parcel_pc1_and_gain_normalize.m
-      24_qc_eeg_source_alignment_table_s2.m
+      extract_volgrid_scouts_from_brainstorm_tess_22.m
+      export_eeg_parcel_pc1_and_gain_normalize_23.m
+      qc_eeg_source_alignment_table_s2_24.m
       25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb
     3_bold/
     4_alignment/

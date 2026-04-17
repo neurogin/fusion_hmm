@@ -31,6 +31,8 @@ p.addParameter('save_withICA', true, @(x) islogical(x) && isscalar(x));
 p.addParameter('save_clean', true, @(x) islogical(x) && isscalar(x));
 p.addParameter('clean_remove_iclabel', true, @(x) islogical(x) && isscalar(x));
 p.addParameter('file_pattern', '*.set', @(x) ischar(x) || isstring(x));
+p.addParameter('withICA_subdir', 'withICA', @(x) ischar(x) || isstring(x));
+p.addParameter('clean_subdir', 'clean', @(x) ischar(x) || isstring(x));
 p.parse(varargin{:});
 
 ic_policy = string(p.Results.ic_policy);
@@ -43,6 +45,8 @@ save_withICA = p.Results.save_withICA;
 save_clean = p.Results.save_clean;
 clean_remove_iclabel = p.Results.clean_remove_iclabel;
 file_pattern = char(p.Results.file_pattern);
+withICA_subdir = char(p.Results.withICA_subdir);
+clean_subdir = char(p.Results.clean_subdir);
 
 % -----------------------
 % EEGLAB / ICLabel checks
@@ -62,8 +66,8 @@ out_base_dir    = char(out_base_dir);
 qc_table_dir    = char(qc_table_dir);
 
 % Output subfolders
-out_dir_withICA = fullfile(out_base_dir, 'withICA');
-out_dir_clean   = fullfile(out_base_dir, 'clean');
+out_dir_withICA = fullfile(out_base_dir, withICA_subdir);
+out_dir_clean   = fullfile(out_base_dir, clean_subdir);
 
 ensure_dir(out_base_dir);
 ensure_dir(out_dir_withICA);

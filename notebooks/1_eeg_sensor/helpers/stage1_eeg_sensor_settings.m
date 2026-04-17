@@ -50,12 +50,31 @@ P.paths.r01_rerun_root = P.paths.project_root;
 
 % -------------------------------------------------------------------------
 % Derived Stage-1 paths
+%
+% These are the outsider-facing default locations used by the cleaned
+% public workflow. Legacy aliases are kept below where helpful so older
+% provenance helpers can still resolve the same folders.
 % -------------------------------------------------------------------------
 P.paths.raw_eeglab_dir = fullfile(P.paths.project_root, "01_raw", "eeg_eeglab");
-P.paths.ic_pruned_dir = fullfile(P.paths.project_root, "02_derivatives", "eeg_source", "ic_pruned");
-P.paths.bst_export_dir = fullfile(P.paths.project_root, "02_derivatives", "masks", "bst_exports");
-P.paths.qc_tables_dir = fullfile(P.paths.project_root, "04_qc", "tables");
-P.paths.qc_exclusions_dir = fullfile(P.paths.project_root, "04_qc", "exclusions");
+
+P.paths.stage1_derivatives_root = fullfile(P.paths.project_root, "02_derivatives", "stage1_eeg_sensor");
+P.paths.stage1_qc_root = fullfile(P.paths.project_root, "04_qc", "stage1_eeg_sensor");
+
+P.paths.ic_pruned_dir = fullfile(P.paths.stage1_derivatives_root, "ic_pruned");
+P.paths.with_ica_dir = fullfile(P.paths.ic_pruned_dir, "with_ica");
+P.paths.clean_sets_dir = fullfile(P.paths.ic_pruned_dir, "clean_sets");
+
+P.paths.exclusions_root = fullfile(P.paths.stage1_derivatives_root, "exclusions");
+P.paths.brainstorm_export_dir = fullfile(P.paths.exclusions_root, "brainstorm_exports");
+P.paths.union_mask_dir = fullfile(P.paths.exclusions_root, "union_masks");
+
+P.paths.qc_tables_dir = fullfile(P.paths.stage1_qc_root, "tables");
+P.paths.qc_exclusions_dir = fullfile(P.paths.stage1_qc_root, "exclusions");
+
+% Legacy compatibility aliases
+P.paths.withICA_dir = P.paths.with_ica_dir;
+P.paths.clean_dir = P.paths.clean_sets_dir;
+P.paths.bst_export_dir = P.paths.brainstorm_export_dir;
 
 % Brainstorm protocol metadata
 P.brainstorm.protocol_name = "eegfmri_R01_ICRej70";

@@ -141,11 +141,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S1. Run-level summary of EEG retained after preprocessing and exclusion of marked intervals
 **Status:** active public-facing build step
 **Current source file(s):**
-- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
 **Upstream requirements:**
-- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
-- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
+- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
 - Brainstorm manual exclusion marking documented in `docs/manual_steps.md`
 
 **Notes:**
@@ -157,11 +157,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S2. EEG volumetric source-grid atlas alignment and parcel coverage
 **Status:** Hybrid
 **Current source file(s):**
-- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
 
 **Upstream requirements:**
-- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
 - Brainstorm manual/hybrid source workflow documented in `docs/manual_steps.md`
 
 **Expected output:**
@@ -175,7 +175,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Upstream requirements:**
-- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
 - `notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m`
 
 **Notes:**
@@ -297,8 +297,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 **Status:** Hybrid / Manual assembly
 **Current source file(s):**
 - `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
-- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
 - `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
 - `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
 

@@ -1,11 +1,4 @@
-% Deprecated compatibility stub.
-%
-% Use the MATLAB-safe public entry file instead:
-%   eeg_run_qc_and_table_s1_13.m
-error(['This deprecated numbered script is no longer the active public entry point.' newline ...
-       'Run eeg_run_qc_and_table_s1_13.m instead.']);
-
-% 13_eeg_run_qc_and_table_s1
+% eeg_run_qc_and_table_s1_13
 %
 % What this file does:
 %   1. summarize merged exclusion windows at the run level
@@ -27,15 +20,16 @@ error(['This deprecated numbered script is no longer the active public entry poi
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add the stage-1 helper path
 % -------------------------------------------------------------------------
-stage1_dir = fileparts(mfilename('fullpath'));
-if isempty(stage1_dir)
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+if isempty(this_dir)
     error('Could not resolve the stage-1 script location. Run this file from disk.');
 end
 
-helper_dir = fullfile(stage1_dir, 'helpers');
+helper_dir = fullfile(this_dir, 'helpers');
 config_file = fullfile(helper_dir, 'stage1_eeg_sensor_settings.m');
 
-addpath(stage1_dir);
+addpath(this_dir);
 addpath(helper_dir);
 
 % -------------------------------------------------------------------------
@@ -47,7 +41,9 @@ P = stage1_eeg_sensor_settings();
 
 raw_eeglab_dir = char(P.paths.raw_eeglab_dir);
 ic_pruned_dir = char(P.paths.ic_pruned_dir);
-bst_export_dir = char(P.paths.bst_export_dir);
+with_ica_dir = char(P.paths.with_ica_dir);
+clean_sets_dir = char(P.paths.clean_sets_dir);
+union_mask_dir = char(P.paths.union_mask_dir);
 qc_tables_dir = char(P.paths.qc_tables_dir);
 qc_exclusions_dir = char(P.paths.qc_exclusions_dir);
 brainstorm_db_root = char(P.paths.brainstorm_db_root);
@@ -74,11 +70,16 @@ overwrite_existing_outputs = true;
 estimate_run_duration_from_brainstorm = true;
 
 % -------------------------------------------------------------------------
-% Step 3. Validate the required input folders
+% Step 3. Validate the required runtime dependencies and folders
 % -------------------------------------------------------------------------
+assert_required_function('pop_loadset', ...
+    'Stage-1 Step 13 needs EEGLAB on the MATLAB path for batch loading of cleaned .set files.');
+
 assert_configured_input_dir(raw_eeglab_dir, 'P.paths.raw_eeglab_dir', config_file);
 assert_configured_input_dir(ic_pruned_dir, 'P.paths.ic_pruned_dir', config_file);
-assert_configured_input_dir(bst_export_dir, 'P.paths.bst_export_dir', config_file);
+assert_configured_input_dir(union_mask_dir, 'P.paths.union_mask_dir', config_file);
+ensure_dir(qc_tables_dir);
+ensure_dir(qc_exclusions_dir);
 
 bst_db_root_for_qc = '';
 if estimate_run_duration_from_brainstorm
@@ -90,23 +91,25 @@ end
 % Step 4. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 13: Run-level EEG QC and Table S1 support exports\n');
-fprintf('  Union TSV directory:   %s\n', bst_export_dir);
+fprintf('  Raw EEGLAB input:      %s\n', raw_eeglab_dir);
+fprintf('  with_ica dir:          %s\n', with_ica_dir);
+fprintf('  clean_sets dir:        %s\n', clean_sets_dir);
+fprintf('  Union TSV directory:   %s\n', union_mask_dir);
 fprintf('  Exclusion QC dir:      %s\n', qc_exclusions_dir);
 fprintf('  Run-level QC tables:   %s\n', qc_tables_dir);
 fprintf('  Tag:                   %s\n', iclabel_tag);
 fprintf('  Min usable fraction:   %.2f\n', min_usable_frac);
 fprintf('  Max EMG proxy (dB):    %.1f\n', max_emg_db);
 fprintf('  Max bad channels abs:  %d\n', max_badchan_abs);
-fprintf('  Max bad channels frac: %.2f\n\n', max_badchan_frac);
+fprintf('  Max bad channels frac: %.2f\n', max_badchan_frac);
+fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path to' newline ...
+         '  read the cleaned Stage-1 .set files. GUI review of those files is separate.' newline newline]);
 
 % -------------------------------------------------------------------------
 % Step 5. Summarize merged exclusion windows and warning flags
-%
-% This writes excl_union_qc_summary.csv, which the run-level QC helper uses
-% as its preferred source for usable-fraction and exclusion-flag inputs.
 % -------------------------------------------------------------------------
 summarize_exclusion_union_qc( ...
-    bst_export_dir, ...
+    union_mask_dir, ...
     qc_exclusions_dir, ...
     'bst_db_root', bst_db_root_for_qc, ...
     'adjacency_tol_sec', merge_tolerance_sec, ...
@@ -116,9 +119,6 @@ summarize_exclusion_union_qc( ...
 
 % -------------------------------------------------------------------------
 % Step 6. Compute run-level EEG QC tables and include/exclude manifests
-%
-% The preserved helper keeps the current QC gate behavior unchanged,
-% including the explicit max_emg_db threshold noted above.
 % -------------------------------------------------------------------------
 build_eeg_run_qc_gates_and_manifests( ...
     raw_eeglab_dir, ...
@@ -149,5 +149,17 @@ if contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
+end
+end
+
+function assert_required_function(func_name, message_text)
+if exist(func_name, 'file') ~= 2
+    error('%s', message_text);
+end
+end
+
+function ensure_dir(path_value)
+if ~exist(path_value, 'dir')
+    mkdir(path_value);
 end
 end

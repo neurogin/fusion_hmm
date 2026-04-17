@@ -187,16 +187,26 @@ Small differences in exclusion handling can materially affect the retained-data 
 
 The cleaned public-facing stage-1 scripts now live in:
 
-- `notebooks/1_eeg_sensor/10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
 - `notebooks/1_eeg_sensor/11_brainstorm_exclusion_marking_manual.md`
-- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
-- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
+- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
 Important caveats preserved intentionally in the first implementation pass:
 
 - the recovered Brainstorm exporter preserves `BAD`, `boundary`, and `bad_boundary` labels
 - point-shaped Brainstorm events are currently converted to zero-length intervals exactly as in the recovered helper and should be validated against real raw-link MAT files when available
 - the stage-1 QC implementation still contains an explicit `max_emg_db` gate even though the manuscript frames the EMG proxy as descriptive rather than a stand-alone exclusion threshold
+- the public Stage-1 outputs now use outsider-facing defaults such as:
+  - `02_derivatives/stage1_eeg_sensor/ic_pruned/with_ica/`
+  - `02_derivatives/stage1_eeg_sensor/ic_pruned/clean_sets/`
+  - `02_derivatives/stage1_eeg_sensor/exclusions/brainstorm_exports/`
+  - `02_derivatives/stage1_eeg_sensor/exclusions/union_masks/`
+  - `04_qc/stage1_eeg_sensor/tables/`
+- the public Stage-2 MATLAB scripts now default to outsider-facing roots such as:
+  - `02_derivatives/stage2_eeg_source/parcel_exports/`
+  - `04_qc/stage2_eeg_source/tables/`
+- the cleaned public helper layer still uses some preserved `r01_*` low-level implementations, but those dependencies are now checked explicitly rather than assumed silently
 
 These points are documented explicitly and should not be silently harmonized during later cleanup.
 
@@ -396,6 +406,8 @@ The cleaned public workflow now distinguishes between:
 In practice:
 
 - Stage 1 and Stage 2 public entry files now call descriptive helper names
+- the MATLAB-safe public entry scripts now end with the step number, for example `eeg_prune_iclabel_and_export_clean_sets_10.m`
+- older number-leading `.m` filenames may still remain beside them as compatibility stubs, but they are not the main public entry points
 - older `r01_*` MATLAB helpers remain in place underneath where needed so historical code paths still resolve
 - later Python stages keep stage-specific helper modules with plain-language module headers
 

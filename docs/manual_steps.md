@@ -125,8 +125,8 @@ Per run, later exported by MATLAB scripts:
 ## Downstream scripted handoff
 These outputs are consumed by the cleaned Stage-1 public files:
 
-- `notebooks/1_eeg_sensor/12_export_and_union_merge_brainstorm_exclusions.m`
-- `notebooks/1_eeg_sensor/13_eeg_run_qc_and_table_s1.m`
+- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
+- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
 
 ---
 
@@ -336,9 +336,9 @@ This is acceptable, but the downstream exporter must use the correct scout file 
 
 These outputs feed the cleaned public Stage-2 files:
 
-- `notebooks/2_eeg_source/22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `notebooks/2_eeg_source/23_export_eeg_parcel_pc1_and_gain_normalize.m`
-- `notebooks/2_eeg_source/24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
+- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
 - `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 ---
@@ -361,6 +361,14 @@ MATLAB scripts perform:
 - metadata export
 - `.npy` writing
 - coverage and QC summaries
+
+The cleaned public MATLAB entry script for this stage is:
+
+- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
+
+It needs EEGLAB on the MATLAB path for batch loading of the cleaned `.set`
+files from Stage 1. The optional `writeNPY` dependency is also needed if
+you want the downstream-ready `.npy` sidecars, including `*_time_sec.npy`.
 
 ## Components of the workflow
 

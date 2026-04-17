@@ -7,7 +7,7 @@ function T = batch_extract_volgrid_scouts_from_brainstorm_tess(protocolRoot, sco
 %   and writes one standardized scout MAT per subject/session.
 %
 % When it is used:
-%   Called by `22_extract_volgrid_scouts_from_brainstorm_tess.m`.
+%   Called by `extract_volgrid_scouts_from_brainstorm_tess_22.m`.
 %
 % Key inputs:
 %   - Brainstorm protocol root
@@ -23,10 +23,26 @@ function T = batch_extract_volgrid_scouts_from_brainstorm_tess(protocolRoot, sco
 %   This is the descriptive public-facing wrapper. The preserved low-level
 %   implementation remains in `r01_batch_make_volgrid_scouts_from_tess.m`.
 
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+
+assert_dependency_exists(fullfile(this_dir, 'r01_batch_make_volgrid_scouts_from_tess.m'), ...
+    ['Missing preserved Stage-2 batch scout extractor:' newline ...
+     '  notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m']);
+assert_dependency_exists(fullfile(this_dir, 'r01_make_volgrid_scout_from_tess.m'), ...
+    ['Missing preserved Stage-2 one-run scout extractor:' newline ...
+     '  notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m']);
+
 T = r01_batch_make_volgrid_scouts_from_tess( ...
     protocolRoot, ...
     scoutFilename, ...
     atlasNameContains, ...
     kernelPattern);
 
+end
+
+function assert_dependency_exists(path_to_file, message_text)
+if exist(path_to_file, 'file') ~= 2
+    error('%s', message_text);
+end
 end

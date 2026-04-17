@@ -1,11 +1,4 @@
-% Deprecated compatibility stub.
-%
-% Use the MATLAB-safe public entry file instead:
-%   export_and_union_merge_brainstorm_exclusions_12.m
-error(['This deprecated numbered script is no longer the active public entry point.' newline ...
-       'Run export_and_union_merge_brainstorm_exclusions_12.m instead.']);
-
-% 12_export_and_union_merge_brainstorm_exclusions
+% export_and_union_merge_brainstorm_exclusions_12
 %
 % What this file does:
 %   Convert manual Brainstorm exclusion markings into standardized TSV files,
@@ -22,20 +15,22 @@ error(['This deprecated numbered script is no longer the active public entry poi
 % Preserved implementation note:
 %   This public entry file keeps the recovered exporter behavior unchanged,
 %   including its current point-event handling. The low-level export and
-%   merge logic still lives in the preserved helper functions.
+%   merge logic still lives in preserved helper functions, but those
+%   dependencies are now checked explicitly before processing starts.
 
 % -------------------------------------------------------------------------
 % Step 0. Locate this stage folder and add the stage-1 helper path
 % -------------------------------------------------------------------------
-stage1_dir = fileparts(mfilename('fullpath'));
-if isempty(stage1_dir)
+this_file = mfilename('fullpath');
+this_dir = fileparts(this_file);
+if isempty(this_dir)
     error('Could not resolve the stage-1 script location. Run this file from disk.');
 end
 
-helper_dir = fullfile(stage1_dir, 'helpers');
+helper_dir = fullfile(this_dir, 'helpers');
 config_file = fullfile(helper_dir, 'stage1_eeg_sensor_settings.m');
 
-addpath(stage1_dir);
+addpath(this_dir);
 addpath(helper_dir);
 
 % -------------------------------------------------------------------------
@@ -46,7 +41,8 @@ addpath(helper_dir);
 P = stage1_eeg_sensor_settings();
 
 brainstorm_db_root = char(P.paths.brainstorm_db_root);
-bst_export_dir = char(P.paths.bst_export_dir);
+brainstorm_export_dir = char(P.paths.brainstorm_export_dir);
+union_mask_dir = char(P.paths.union_mask_dir);
 file_filter = char(P.file_filter);
 merge_tolerance_sec = P.mask.merge.adjacency_tol_sec;
 min_union_duration_sec = P.mask.merge.min_dur_sec;
@@ -58,16 +54,19 @@ overwrite_existing_outputs = true;
 recursive_bst_scan = true;
 
 % -------------------------------------------------------------------------
-% Step 3. Validate the required Brainstorm folder
+% Step 3. Validate the required Brainstorm folder and create outputs
 % -------------------------------------------------------------------------
 assert_configured_input_dir(brainstorm_db_root, 'P.paths.brainstorm_db_root', config_file);
+ensure_dir(brainstorm_export_dir);
+ensure_dir(union_mask_dir);
 
 % -------------------------------------------------------------------------
 % Step 4. Print a short run summary for the user
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 12: Export and union-merge Brainstorm exclusions\n');
 fprintf('  Brainstorm DB root: %s\n', brainstorm_db_root);
-fprintf('  Export directory:   %s\n', bst_export_dir);
+fprintf('  Brainstorm exports: %s\n', brainstorm_export_dir);
+fprintf('  Union-mask output:  %s\n', union_mask_dir);
 fprintf('  File filter:        %s\n', file_filter);
 fprintf('  Labels kept:        BAD, boundary, bad_boundary\n');
 fprintf('  Merge tolerance:    %.3f sec\n', merge_tolerance_sec);
@@ -75,12 +74,10 @@ fprintf('  Min union duration: %.3f sec\n\n', min_union_duration_sec);
 
 % -------------------------------------------------------------------------
 % Step 5. Export Brainstorm BAD / boundary labels to per-run TSV files
-%
-% The preserved exporter helper is intentionally used as-is here.
 % -------------------------------------------------------------------------
 batch_export_brainstorm_exclusion_events( ...
     brainstorm_db_root, ...
-    bst_export_dir, ...
+    brainstorm_export_dir, ...
     'overwrite', overwrite_existing_outputs, ...
     'file_filter', file_filter, ...
     'recursive', recursive_bst_scan);
@@ -89,7 +86,8 @@ batch_export_brainstorm_exclusion_events( ...
 % Step 6. Merge exported exclusions into one union interval list per run
 % -------------------------------------------------------------------------
 batch_merge_exclusion_union_masks( ...
-    bst_export_dir, ...
+    brainstorm_export_dir, ...
+    union_mask_dir, ...
     'adjacency_tol_sec', merge_tolerance_sec, ...
     'min_dur_sec', min_union_duration_sec, ...
     'labels', ["BAD","boundary","bad_boundary"], ...
@@ -99,7 +97,7 @@ batch_merge_exclusion_union_masks( ...
 % Step 7. Point the user to the next stage
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 12 complete.\n');
-fprintf('Next scripted step: run 13_eeg_run_qc_and_table_s1.m.\n');
+fprintf('Next scripted step: run eeg_run_qc_and_table_s1_13.m.\n');
 
 function assert_configured_input_dir(path_value, label, config_file)
 path_char = char(path_value);
@@ -108,5 +106,11 @@ if contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
+end
+end
+
+function ensure_dir(path_value)
+if ~exist(path_value, 'dir')
+    mkdir(path_value);
 end
 end
