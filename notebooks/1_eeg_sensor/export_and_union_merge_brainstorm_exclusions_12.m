@@ -46,7 +46,7 @@ addpath(helper_dir);
 % -------------------------------------------------------------------------
 P = stage1_eeg_sensor_settings();
 
-brainstorm_db_root = char(P.paths.brainstorm_db_root);
+brainstorm_protocol_root = char(P.paths.brainstorm_protocol_root);
 brainstorm_export_dir = char(P.paths.brainstorm_export_dir);
 union_mask_dir = char(P.paths.union_mask_dir);
 file_filter = char(P.file_filter);
@@ -62,7 +62,7 @@ recursive_bst_scan = true;
 % -------------------------------------------------------------------------
 % Step 3. Validate the required Brainstorm folder and create outputs
 % -------------------------------------------------------------------------
-assert_configured_input_dir(brainstorm_db_root, 'P.paths.brainstorm_db_root', config_file);
+assert_configured_input_dir(brainstorm_protocol_root, 'P.paths.brainstorm_protocol_root', config_file);
 ensure_dir(brainstorm_export_dir);
 ensure_dir(union_mask_dir);
 
@@ -71,21 +71,22 @@ ensure_dir(union_mask_dir);
 % -------------------------------------------------------------------------
 fprintf('\nStage 1 / Step 12: Export and union-merge Brainstorm exclusions\n');
 fprintf('  Settings file:        %s\n', config_file);
-fprintf('  Brainstorm DB root: %s\n', brainstorm_db_root);
+fprintf('  Brainstorm protocol root: %s\n', brainstorm_protocol_root);
 fprintf('  Brainstorm exports: %s\n', brainstorm_export_dir);
 fprintf('  Union-mask output:  %s\n', union_mask_dir);
 fprintf('  File filter:        %s\n', file_filter);
 fprintf('  Labels kept:        BAD, boundary, bad_boundary\n');
 fprintf('  Merge tolerance:    %.3f sec\n', merge_tolerance_sec);
 fprintf('  Min union duration: %.3f sec\n', min_union_duration_sec);
-fprintf(['  This script expects Brainstorm raw-link MAT files under:' newline ...
-         '    <brainstorm_db_root>\\data\\...' newline newline]);
+fprintf(['  This script expects the actual Brainstorm protocol folder here,' newline ...
+         '  with raw-link MAT files under:' newline ...
+         '    <brainstorm_protocol_root>\\data\\...' newline newline]);
 
 % -------------------------------------------------------------------------
 % Step 5. Export Brainstorm BAD / boundary labels to per-run TSV files
 % -------------------------------------------------------------------------
 batch_export_brainstorm_exclusion_events( ...
-    brainstorm_db_root, ...
+    brainstorm_protocol_root, ...
     brainstorm_export_dir, ...
     'overwrite', overwrite_existing_outputs, ...
     'file_filter', file_filter, ...

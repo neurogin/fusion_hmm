@@ -149,8 +149,9 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
 - `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
 
-**Stage-2 helper files used here**
-- `notebooks/2_eeg_source/batch_extract_volgrid_scouts_from_brainstorm_tess.m`
+**Stage-2 active helper location**
+- `notebooks/2_eeg_source/helpers/`
+  - `batch_extract_volgrid_scouts_from_brainstorm_tess.m`
 - preserved low-level implementation: `notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m`
 - preserved one-run implementation: `notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m`
 
@@ -191,9 +192,11 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
 - `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
-**Stage-2 helper files used here**
-- `notebooks/2_eeg_source/batch_export_eeg_parcel_pc_outputs.m`
-- `notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m`
+**Stage-2 active helper location**
+- `notebooks/2_eeg_source/helpers/`
+  - `batch_export_eeg_parcel_pc_outputs.m`
+  - `run_eeg_parcel_export_qc_summaries.m`
+  - `ensure_eeglab_ready.m`
 - preserved low-level export implementation: `notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m`
 - preserved one-run export implementation: `notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m`
 - preserved QC implementations:
@@ -217,7 +220,7 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - Brainstorm defines parcel membership on the subject-specific volume grid
 - MATLAB/Python scripts perform parcel PC extraction, metadata export, and QC summaries
 - `export_eeg_parcel_pc1_and_gain_normalize_23.m` preserves the current v3 helper behavior, including PC2 provenance outputs and the restored sample-time sidecar `*_time_sec.npy`
-- `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` expects the Stage-2 QC sidecars written by `run_eeg_parcel_export_qc_summaries.m`
+- `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` expects the Stage-2 QC sidecars written by `helpers/run_eeg_parcel_export_qc_summaries.m`
 - `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb` uses the current v3 CSV outputs and does not port the older MAT-schema-specific exploratory cells wholesale
 - the cleaned public Stage-2 MATLAB defaults now use clearer public roots such as:
   - `02_derivatives/stage2_eeg_source/parcel_exports/`

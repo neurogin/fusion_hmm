@@ -176,7 +176,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 
 **Upstream requirements:**
 - `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
-- `notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m`
+- `notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m`
 
 **Notes:**
 - the public Stage-2 QC notebook reads the CSV sidecars written by the descriptive Stage-2 QC helper

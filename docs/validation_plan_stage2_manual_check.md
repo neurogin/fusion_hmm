@@ -9,7 +9,7 @@ It covers:
 - [extract_volgrid_scouts_from_brainstorm_tess_22.m](/C:/fusion_hmm/notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m)
 - [export_eeg_parcel_pc1_and_gain_normalize_23.m](/C:/fusion_hmm/notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m)
 - [qc_eeg_source_alignment_table_s2_24.m](/C:/fusion_hmm/notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m)
-- [run_eeg_parcel_export_qc_summaries.m](/C:/fusion_hmm/notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m)
+- [run_eeg_parcel_export_qc_summaries.m](/C:/fusion_hmm/notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m)
 - [25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb](/C:/fusion_hmm/notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb)
 - the active Stage-2 helper layer in [notebooks/2_eeg_source](/C:/fusion_hmm/notebooks/2_eeg_source)
 
@@ -73,9 +73,9 @@ These are the highest-value outputs to inspect because they would reveal a real 
 - Step 23 finds `pop_loadset` on the MATLAB path.
 - If you want NPY outputs, Step 23 also finds `writeNPY`.
 - The wrapper helpers resolve without manual path hacks:
-  - `batch_extract_volgrid_scouts_from_brainstorm_tess`
-  - `batch_export_eeg_parcel_pc_outputs`
-  - `run_eeg_parcel_export_qc_summaries`
+  - `helpers/batch_extract_volgrid_scouts_from_brainstorm_tess`
+  - `helpers/batch_export_eeg_parcel_pc_outputs`
+  - `helpers/run_eeg_parcel_export_qc_summaries`
 
 #### Fast-fail sign
 
@@ -285,7 +285,7 @@ with matching sample counts
 
 #### Script to run
 
-- [run_eeg_parcel_export_qc_summaries.m](/C:/fusion_hmm/notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m)
+- [run_eeg_parcel_export_qc_summaries.m](/C:/fusion_hmm/notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m)
 
 #### Smallest practical subset
 
@@ -431,7 +431,7 @@ Stop early and fix configuration or helper wiring if you see any of these:
 - `*_time_sec.npy` length does not match the first dimension of `*_PC1_gnorm.npy`
 - `batch_parcel_coverage_summary_v3.csv` is missing required columns used by Step 24
 - Step 24 errors on missing coverage-summary columns
-- `run_eeg_parcel_export_qc_summaries.m` fails because it cannot find parcel MAT outputs
+- `helpers/run_eeg_parcel_export_qc_summaries.m` fails because it cannot find parcel MAT outputs
 - Notebook 25 errors on missing QC CSV sidecars
 
 ## Bottom Line

@@ -25,11 +25,19 @@ function batch = batch_export_eeg_parcel_pc_outputs(protocolRoot, outDir, vararg
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
+stage2_dir = fileparts(this_dir);
 
-assert_dependency_exists(fullfile(this_dir, 'r01_batch_export_eeg_parcel_pc_v3.m'), ...
+if ~isempty(stage2_dir)
+    addpath(stage2_dir);
+end
+if ~isempty(this_dir)
+    addpath(this_dir);
+end
+
+assert_dependency_exists(fullfile(stage2_dir, 'r01_batch_export_eeg_parcel_pc_v3.m'), ...
     ['Missing preserved Stage-2 batch parcel exporter:' newline ...
      '  notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m']);
-assert_dependency_exists(fullfile(this_dir, 'r01_export_parcel_pc1_one_run_v3.m'), ...
+assert_dependency_exists(fullfile(stage2_dir, 'r01_export_parcel_pc1_one_run_v3.m'), ...
     ['Missing preserved Stage-2 one-run parcel exporter:' newline ...
      '  notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m']);
 

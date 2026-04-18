@@ -25,11 +25,19 @@ function T = batch_extract_volgrid_scouts_from_brainstorm_tess(protocolRoot, sco
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
+stage2_dir = fileparts(this_dir);
 
-assert_dependency_exists(fullfile(this_dir, 'r01_batch_make_volgrid_scouts_from_tess.m'), ...
+if ~isempty(stage2_dir)
+    addpath(stage2_dir);
+end
+if ~isempty(this_dir)
+    addpath(this_dir);
+end
+
+assert_dependency_exists(fullfile(stage2_dir, 'r01_batch_make_volgrid_scouts_from_tess.m'), ...
     ['Missing preserved Stage-2 batch scout extractor:' newline ...
      '  notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m']);
-assert_dependency_exists(fullfile(this_dir, 'r01_make_volgrid_scout_from_tess.m'), ...
+assert_dependency_exists(fullfile(stage2_dir, 'r01_make_volgrid_scout_from_tess.m'), ...
     ['Missing preserved Stage-2 one-run scout extractor:' newline ...
      '  notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m']);
 

@@ -29,19 +29,22 @@
 %   manual figure assembly for Figure S1A,B.
 
 % -------------------------------------------------------------------------
-% Step 0. Locate this stage folder and add it to the MATLAB path
+% Step 0. Locate this stage folder and add the local helper path
 % -------------------------------------------------------------------------
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
 if isempty(this_dir)
     error('Could not resolve the stage-2 script location. Run this file from disk.');
 end
+
+helper_dir = fullfile(this_dir, 'helpers');
 addpath(this_dir);
+addpath(helper_dir);
 
 % -------------------------------------------------------------------------
 % Step 1. User-editable roots and inputs
 % -------------------------------------------------------------------------
-project_root = '<SET_PROJECT_ROOT>';
+project_root = '<SET_PROJECT_ROOT>'; % Main project folder that contains the Stage-2 parcel outputs under 02_derivatives and will receive Table-S2 support output under 04_qc
 
 stage2_derivatives_root = fullfile(project_root, '02_derivatives', 'stage2_eeg_source');
 parcel_output_dir = fullfile(stage2_derivatives_root, 'parcel_exports');
@@ -99,13 +102,14 @@ if ~isempty(scout_build_summary_csv) && exist(scout_build_summary_csv, 'file')
         'MergeKeys', true, ...
         'Type', 'left');
 
-    scout_count_mismatch = joined.n_scouts ~= joined.nScouts;
-    grid_size_mismatch = joined.TessNbVertices ~= joined.nVertExpected | joined.nVert_gridloc ~= joined.nVertExpected;
+    scout_count_mismatch = compare_without_nan(joined.n_scouts, joined.nScouts);
+    grid_size_mismatch = compare_without_nan(joined.TessNbVertices, joined.nVertExpected) | ...
+        compare_without_nan(joined.nVert_gridloc, joined.nVertExpected);
 
-    if any(scout_count_mismatch, 'omitnan')
+    if any_true_without_nan(scout_count_mismatch)
         warning('Scout-count mismatch detected between coverage summary and scout-build summary.');
     end
-    if any(grid_size_mismatch, 'omitnan')
+    if any_true_without_nan(grid_size_mismatch)
         warning('Grid-size mismatch detected between coverage summary and scout-build summary.');
     end
 else
@@ -166,6 +170,21 @@ missing = required_cols(~ismember(required_cols, T.Properties.VariableNames));
 if ~isempty(missing)
     error('Missing required columns in %s: %s', label, strjoin(missing, ', '));
 end
+end
+
+function mismatch = compare_without_nan(left_values, right_values)
+left_values = double(left_values);
+right_values = double(right_values);
+
+valid = ~(isnan(left_values) | isnan(right_values));
+mismatch = false(size(left_values));
+mismatch(valid) = left_values(valid) ~= right_values(valid);
+end
+
+function tf = any_true_without_nan(values)
+values = values(:);
+values = values(~isnan(values));
+tf = any(values);
 end
 
 function ensure_parent_dir(file_path)

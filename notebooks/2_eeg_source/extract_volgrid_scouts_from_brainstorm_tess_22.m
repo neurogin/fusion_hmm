@@ -31,20 +31,23 @@
 %   complete. See 21_brainstorm_volume_source_and_atlas_import_manual.md.
 
 % -------------------------------------------------------------------------
-% Step 0. Locate this stage folder and add it to the MATLAB path
+% Step 0. Locate this stage folder and add the local helper path
 % -------------------------------------------------------------------------
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
 if isempty(this_dir)
     error('Could not resolve the stage-2 script location. Run this file from disk.');
 end
+
+helper_dir = fullfile(this_dir, 'helpers');
 addpath(this_dir);
+addpath(helper_dir);
 
 % -------------------------------------------------------------------------
 % Step 1. User-editable roots and inputs
 % -------------------------------------------------------------------------
-project_root = '<SET_PROJECT_ROOT>';
-protocol_root = '<SET_BRAINSTORM_PROTOCOL_ROOT>';
+project_root = '<SET_PROJECT_ROOT>'; % Main project folder that contains 02_derivatives and 04_qc for this repo run
+brainstorm_protocol_root = '<SET_BRAINSTORM_PROTOCOL_ROOT>'; % Actual Brainstorm protocol folder that directly contains data\ and anat\
 
 stage2_qc_root = fullfile(project_root, '04_qc', 'stage2_eeg_source', 'tables');
 
@@ -58,7 +61,7 @@ overwrite_existing_summary = true;
 % -------------------------------------------------------------------------
 % Step 2. Validate inputs and create outputs
 % -------------------------------------------------------------------------
-assert_configured_input_dir(protocol_root, 'protocol_root');
+assert_configured_input_dir(brainstorm_protocol_root, 'brainstorm_protocol_root');
 assert_configured_input_dir(project_root, 'project_root');
 ensure_parent_dir(summary_csv);
 
@@ -67,7 +70,7 @@ ensure_parent_dir(summary_csv);
 % -------------------------------------------------------------------------
 fprintf('\nStage 2 / Step 22: Extract Brainstorm volume-grid scouts\n');
 fprintf('  Project root:             %s\n', project_root);
-fprintf('  Brainstorm protocol root: %s\n', protocol_root);
+fprintf('  Brainstorm protocol root: %s\n', brainstorm_protocol_root);
 fprintf('  Scout filename:           %s\n', scout_filename);
 fprintf('  Atlas name filter:        %s\n', atlas_name_contains);
 fprintf('  Kernel pattern:           %s\n', kernel_pattern);
@@ -77,7 +80,7 @@ fprintf('  QC summary CSV:           %s\n\n', summary_csv);
 % Step 4. Run the preserved scout-extraction helper logic
 % -------------------------------------------------------------------------
 T = batch_extract_volgrid_scouts_from_brainstorm_tess( ...
-    protocol_root, ...
+    brainstorm_protocol_root, ...
     scout_filename, ...
     atlas_name_contains, ...
     kernel_pattern);

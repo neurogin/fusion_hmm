@@ -78,10 +78,9 @@ file_pattern = '*.set';
 % -------------------------------------------------------------------------
 % Step 3. Validate the required runtime dependencies and folders
 % -------------------------------------------------------------------------
-assert_required_function('pop_loadset', ...
-    'Stage-1 Step 10 needs EEGLAB on the MATLAB path for batch .set loading and saving.');
-assert_required_function('iclabel', ...
-    'Stage-1 Step 10 needs the ICLabel plugin on the MATLAB path for batch component pruning.');
+ensure_eeglab_ready( ...
+    'stage_label', 'Stage-1 Step 10', ...
+    'require_iclabel', true);
 
 assert_configured_input_dir(raw_eeglab_dir, 'P.paths.raw_eeglab_dir', config_file);
 ensure_dir(ic_pruned_dir);
@@ -103,6 +102,7 @@ fprintf('  IC policy:           %s\n', ic_policy);
 fprintf('  Reject threshold:    %.2f\n', reject_threshold);
 fprintf('  Reject classes:      %s\n', strjoin(cellstr(reject_classes), ', '));
 fprintf(['  Dependency note: batch execution needs EEGLAB + ICLabel on the MATLAB path.' newline ...
+         '  This script initializes EEGLAB in no-GUI mode for batch use.' newline ...
          '  GUI inspection of the resulting .set files is a separate manual step.' newline newline]);
 
 % -------------------------------------------------------------------------
@@ -137,12 +137,6 @@ if contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
-end
-end
-
-function assert_required_function(func_name, message_text)
-if exist(func_name, 'file') ~= 2
-    error('%s', message_text);
 end
 end
 

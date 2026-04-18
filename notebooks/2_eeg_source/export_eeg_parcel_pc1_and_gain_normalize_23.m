@@ -43,20 +43,23 @@
 %   when WriteNPY=true.
 
 % -------------------------------------------------------------------------
-% Step 0. Locate this stage folder and add it to the MATLAB path
+% Step 0. Locate this stage folder and add the local helper path
 % -------------------------------------------------------------------------
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);
 if isempty(this_dir)
     error('Could not resolve the stage-2 script location. Run this file from disk.');
 end
+
+helper_dir = fullfile(this_dir, 'helpers');
 addpath(this_dir);
+addpath(helper_dir);
 
 % -------------------------------------------------------------------------
 % Step 1. User-editable roots and inputs
 % -------------------------------------------------------------------------
-project_root = '<SET_PROJECT_ROOT>';
-protocol_root = '<SET_BRAINSTORM_PROTOCOL_ROOT>';
+project_root = '<SET_PROJECT_ROOT>'; % Main project folder that contains the Stage-1 outputs and will receive Stage-2 derivatives and QC tables
+brainstorm_protocol_root = '<SET_BRAINSTORM_PROTOCOL_ROOT>'; % Actual Brainstorm protocol folder that directly contains data\ and anat\
 
 clean_eeg_dir = fullfile(project_root, '02_derivatives', 'stage1_eeg_sensor', 'ic_pruned', 'clean_sets');
 stage2_derivatives_root = fullfile(project_root, '02_derivatives', 'stage2_eeg_source');
@@ -88,10 +91,9 @@ continue_on_fail = false;
 % -------------------------------------------------------------------------
 % Step 2. Validate dependencies, inputs, and outputs
 % -------------------------------------------------------------------------
-assert_required_function('pop_loadset', ...
-    'Stage-2 Step 23 needs EEGLAB on the MATLAB path for batch loading of cleaned .set files.');
+ensure_eeglab_ready('stage_label', 'Stage-2 Step 23');
 
-assert_configured_input_dir(protocol_root, 'protocol_root');
+assert_configured_input_dir(brainstorm_protocol_root, 'brainstorm_protocol_root');
 assert_configured_input_dir(project_root, 'project_root');
 assert_configured_input_dir(clean_eeg_dir, 'clean_eeg_dir');
 ensure_dir(parcel_output_dir);
@@ -110,7 +112,7 @@ end
 % -------------------------------------------------------------------------
 fprintf('\nStage 2 / Step 23: Export EEG parcel PC1 and gain-normalized outputs\n');
 fprintf('  Project root:             %s\n', project_root);
-fprintf('  Brainstorm protocol root: %s\n', protocol_root);
+fprintf('  Brainstorm protocol root: %s\n', brainstorm_protocol_root);
 fprintf('  Stage-1 clean EEG dir:    %s\n', clean_eeg_dir);
 fprintf('  Stage-2 output root:      %s\n', stage2_derivatives_root);
 fprintf('  Parcel output dir:        %s\n', parcel_output_dir);
@@ -123,6 +125,7 @@ fprintf('  Sign convention:          %s\n', sign_convention);
 fprintf('  Gain normalization:       %d\n', gain_norm);
 fprintf('  Write NPY sidecars:       %d\n', write_npy);
 fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path.' newline ...
+         '  This script initializes EEGLAB in no-GUI mode for batch use.' newline ...
          '  writeNPY is additionally needed if you want the downstream-ready NPY' newline ...
          '  sidecars, including *_time_sec.npy, from this public script.' newline newline]);
 
@@ -130,7 +133,7 @@ fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path.' n
 % Step 4. Run the preserved exporter helper logic
 % -------------------------------------------------------------------------
 batch = batch_export_eeg_parcel_pc_outputs( ...
-    protocol_root, ...
+    brainstorm_protocol_root, ...
     parcel_output_dir, ...
     'EEGCleanDir', clean_eeg_dir, ...
     'KernelPattern', kernel_pattern, ...
@@ -170,12 +173,6 @@ if isempty(strtrim(path_char)) || contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
-end
-end
-
-function assert_required_function(func_name, message_text)
-if exist(func_name, 'file') ~= 2
-    error('%s', message_text);
 end
 end
 

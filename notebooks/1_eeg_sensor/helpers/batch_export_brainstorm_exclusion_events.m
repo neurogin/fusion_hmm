@@ -1,4 +1,4 @@
-function batch_export_brainstorm_exclusion_events(bst_db_root, out_dir, varargin)
+function batch_export_brainstorm_exclusion_events(brainstorm_protocol_root, out_dir, varargin)
 %BATCH_EXPORT_BRAINSTORM_EXCLUSION_EVENTS Public Stage-1 batch exclusion exporter.
 %
 % What this helper does:
@@ -9,7 +9,7 @@ function batch_export_brainstorm_exclusion_events(bst_db_root, out_dir, varargin
 %   Called by `export_and_union_merge_brainstorm_exclusions_12.m`.
 %
 % Key inputs:
-%   - Brainstorm database root
+%   - Brainstorm protocol root that directly contains `data\` and `anat\`
 %   - output directory for exported TSV files
 %   - the same name-value options used in the preserved batch workflow
 %
@@ -50,9 +50,9 @@ if ~exist(out_dir, 'dir')
     mkdir(out_dir);
 end
 
-data_root = fullfile(bst_db_root, 'data');
+data_root = fullfile(brainstorm_protocol_root, 'data');
 if ~exist(data_root, 'dir')
-    error('Could not find Brainstorm data folder: %s', data_root);
+    error('Could not find the Brainstorm protocol data folder: %s', data_root);
 end
 
 if recursive

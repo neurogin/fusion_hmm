@@ -27,7 +27,7 @@ The highest-risk changes are the ones that rewired the active public-facing scri
 ### Stage 2 risk points
 
 - The public entry scripts now call wrapper helpers for scout extraction and parcel export.
-- The parcel-export QC path is now exposed through `run_eeg_parcel_export_qc_summaries.m`.
+- The parcel-export QC path is now exposed through `helpers/run_eeg_parcel_export_qc_summaries.m`.
 - The public QC notebook now expects the new helper path to be the way users produce its prerequisite QC files.
 - The verified `*_time_sec.npy` sidecar must still be written correctly, because Stage 4 depends on it directly.
 
@@ -329,7 +329,7 @@ This is the critical deterministic rule that Stage 4 expects.
 
 #### Scripts / notebook to run
 
-- `notebooks/2_eeg_source/run_eeg_parcel_export_qc_summaries.m`
+- `notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m`
 - `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 #### Smallest practical data subset

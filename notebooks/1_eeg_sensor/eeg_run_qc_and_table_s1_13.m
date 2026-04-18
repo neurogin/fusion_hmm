@@ -54,7 +54,7 @@ clean_sets_dir = char(P.paths.clean_sets_dir);
 union_mask_dir = char(P.paths.union_mask_dir);
 qc_tables_dir = char(P.paths.qc_tables_dir);
 qc_exclusions_dir = char(P.paths.qc_exclusions_dir);
-brainstorm_db_root = char(P.paths.brainstorm_db_root);
+brainstorm_protocol_root = char(P.paths.brainstorm_protocol_root);
 iclabel_tag = char(P.iclabel_tag);
 
 min_usable_frac = P.qc.run.min_usable_frac;
@@ -80,8 +80,7 @@ estimate_run_duration_from_brainstorm = true;
 % -------------------------------------------------------------------------
 % Step 3. Validate the required runtime dependencies and folders
 % -------------------------------------------------------------------------
-assert_required_function('pop_loadset', ...
-    'Stage-1 Step 13 needs EEGLAB on the MATLAB path for batch loading of cleaned .set files.');
+ensure_eeglab_ready('stage_label', 'Stage-1 Step 13');
 
 assert_configured_input_dir(raw_eeglab_dir, 'P.paths.raw_eeglab_dir', config_file);
 assert_configured_input_dir(ic_pruned_dir, 'P.paths.ic_pruned_dir', config_file);
@@ -89,10 +88,10 @@ assert_configured_input_dir(union_mask_dir, 'P.paths.union_mask_dir', config_fil
 ensure_dir(qc_tables_dir);
 ensure_dir(qc_exclusions_dir);
 
-bst_db_root_for_qc = '';
+brainstorm_protocol_root_for_qc = '';
 if estimate_run_duration_from_brainstorm
-    assert_configured_input_dir(brainstorm_db_root, 'P.paths.brainstorm_db_root', config_file);
-    bst_db_root_for_qc = brainstorm_db_root;
+    assert_configured_input_dir(brainstorm_protocol_root, 'P.paths.brainstorm_protocol_root', config_file);
+    brainstorm_protocol_root_for_qc = brainstorm_protocol_root;
 end
 
 % -------------------------------------------------------------------------
@@ -111,8 +110,9 @@ fprintf('  Min usable fraction:   %.2f\n', min_usable_frac);
 fprintf('  Max EMG proxy (dB):    %.1f\n', max_emg_db);
 fprintf('  Max bad channels abs:  %d\n', max_badchan_abs);
 fprintf('  Max bad channels frac: %.2f\n', max_badchan_frac);
-fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path to' newline ...
-         '  read the cleaned Stage-1 .set files. GUI review of those files is separate.' newline ...
+fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path.' newline ...
+         '  This script initializes EEGLAB in no-GUI mode to read the cleaned' newline ...
+         '  Stage-1 .set files. GUI review of those files is separate.' newline ...
          '  This script writes run-level QC tables and include/exclude manifests.' newline newline]);
 
 % -------------------------------------------------------------------------
@@ -121,7 +121,7 @@ fprintf(['  Dependency note: batch execution needs EEGLAB on the MATLAB path to'
 summarize_exclusion_union_qc( ...
     union_mask_dir, ...
     qc_exclusions_dir, ...
-    'bst_db_root', bst_db_root_for_qc, ...
+    'brainstorm_protocol_root', brainstorm_protocol_root_for_qc, ...
     'adjacency_tol_sec', merge_tolerance_sec, ...
     'max_excl_frac_warn', max_excl_frac_warn, ...
     'max_interval_sec_warn', max_interval_sec_warn, ...
@@ -159,12 +159,6 @@ if contains(path_char, '<SET_')
 end
 if ~exist(path_char, 'dir')
     error('%s does not exist: %s', label, path_char);
-end
-end
-
-function assert_required_function(func_name, message_text)
-if exist(func_name, 'file') ~= 2
-    error('%s', message_text);
 end
 end
 

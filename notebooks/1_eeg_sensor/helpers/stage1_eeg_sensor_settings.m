@@ -3,7 +3,7 @@ function P = stage1_eeg_sensor_settings()
 %
 % Before you run any Stage-1 script:
 %   1. Set `P.paths.project_root` below.
-%   2. Set `P.paths.brainstorm_db_root` below.
+%   2. Set `P.paths.brainstorm_protocol_root` below.
 %   3. Save this file.
 %
 % What those two required paths mean:
@@ -15,12 +15,13 @@ function P = stage1_eeg_sensor_settings()
 %         <project_root>\02_derivatives\stage1_eeg_sensor\
 %         <project_root>\04_qc\stage1_eeg_sensor\
 %
-%   - `P.paths.brainstorm_db_root`
-%       The Brainstorm protocol folder for this study. This folder must
-%       contain Brainstorm's `data\` subfolder underneath it, because the
-%       Stage-1 export script scans:
-%         <brainstorm_db_root>\data\...
-%       for the saved `data_0raw_*.mat` raw-link files.
+%   - `P.paths.brainstorm_protocol_root`
+%       The actual Brainstorm protocol folder for this study. This folder
+%       must directly contain both:
+%         <brainstorm_protocol_root>\data\
+%         <brainstorm_protocol_root>\anat\
+%       because the Stage-1 and Stage-2 scripts read Brainstorm files from
+%       those protocol subfolders.
 %
 % What this helper returns:
 %   One struct `P` containing:
@@ -50,8 +51,9 @@ P.historical.iclabel_brain_threshold = 0.60;
 %
 % These are the only placeholders most users need to change.
 % -------------------------------------------------------------------------
-P.paths.project_root = "<SET_PROJECT_ROOT>";          % Main project folder containing 01_raw, 02_derivatives, and 04_qc
-P.paths.brainstorm_db_root = "<SET_BRAINSTORM_DB_ROOT>"; % Brainstorm protocol folder that contains the data\ subfolder
+P.paths.project_root = "<SET_PROJECT_ROOT>"; % Main project folder containing 01_raw, 02_derivatives, and 04_qc
+P.paths.brainstorm_protocol_root = "<SET_BRAINSTORM_PROTOCOL_ROOT>"; % Brainstorm protocol folder that directly contains data\ and anat\
+P.paths.brainstorm_db_root = P.paths.brainstorm_protocol_root; % Legacy compatibility alias for older provenance code
 
 % Legacy compatibility alias preserved for older provenance code.
 P.paths.r01_rerun_root = P.paths.project_root;
@@ -89,7 +91,7 @@ P.paths.bst_export_dir = P.paths.brainstorm_export_dir;
 % Brainstorm protocol metadata
 %
 % This is used as stage metadata. The actual files are still located by the
-% `brainstorm_db_root` path above.
+% `brainstorm_protocol_root` path above.
 P.brainstorm.protocol_name = "eegfmri_R01_ICRej70";
 
 % Only export Brainstorm raw-links corresponding to the manuscript-default
