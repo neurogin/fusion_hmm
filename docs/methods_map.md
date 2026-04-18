@@ -152,8 +152,10 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Stage-2 active helper location**
 - `notebooks/2_eeg_source/helpers/`
   - `batch_extract_volgrid_scouts_from_brainstorm_tess.m`
-- preserved low-level implementation: `notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m`
-- preserved one-run implementation: `notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m`
+  - `make_volgrid_scout_from_brainstorm_tess.m`
+- preserved `r01_*` compatibility wrappers:
+  - `notebooks/2_eeg_source/r01_batch_make_volgrid_scouts_from_tess.m`
+  - `notebooks/2_eeg_source/r01_make_volgrid_scout_from_tess.m`
 
 **Expected content**
 - Brainstorm source workflow support files
@@ -195,11 +197,15 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 **Stage-2 active helper location**
 - `notebooks/2_eeg_source/helpers/`
   - `batch_export_eeg_parcel_pc_outputs.m`
+  - `export_parcel_pc1_one_run.m`
   - `run_eeg_parcel_export_qc_summaries.m`
+  - `summarize_run_timeseries_gain_qc.m`
+  - `summarize_sign_convention_qc.m`
+  - `summarize_pve1_histogram_and_lowparcel_qc.m`
   - `ensure_eeglab_ready.m`
-- preserved low-level export implementation: `notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m`
-- preserved one-run export implementation: `notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m`
-- preserved QC implementations:
+- preserved `r01_*` compatibility wrappers:
+  - `notebooks/2_eeg_source/r01_batch_export_eeg_parcel_pc_v3.m`
+  - `notebooks/2_eeg_source/r01_export_parcel_pc1_one_run_v3.m`
   - `notebooks/2_eeg_source/r01_qc_v3_run_timeseries_and_gain_summary.m`
   - `notebooks/2_eeg_source/r01_qc_v3_sign_convention_parcelpc.m`
   - `notebooks/2_eeg_source/r01_qc_v3_pve1_hist_and_lowparcels.m`
