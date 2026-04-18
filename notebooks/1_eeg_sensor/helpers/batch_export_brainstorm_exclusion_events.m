@@ -88,7 +88,7 @@ for i = 1:numel(rawfiles)
     if exist(out_tsv,'file') && ~overwrite
         fprintf('[%d/%d] SKIP (exists): %s\n', i, numel(rawfiles), out_tsv);
         n_skip = n_skip + 1;
-        summary(end+1,:) = make_summary_row(in_mat, out_tsv, 'skipped', NaN, NaN, NaN, NaN, NaN, NaN); %#ok<AGROW>
+        summary(end+1,:) = make_summary_row(in_mat, out_tsv, 'skipped', NaN, NaN, NaN, NaN, NaN, NaN); 
         continue;
     end
 
@@ -115,12 +115,12 @@ for i = 1:numel(rawfiles)
         end
 
         n_ok = n_ok + 1;
-        summary(end+1,:) = make_summary_row(in_mat, out_tsv, 'ok', nBAD, nBnd, nBB, total_excl, min_t, max_t); %#ok<AGROW>
+        summary(end+1,:) = make_summary_row(in_mat, out_tsv, 'ok', nBAD, nBnd, nBB, total_excl, min_t, max_t); 
 
     catch ME
         n_fail = n_fail + 1;
         warning('FAILED export for %s\n  %s', in_mat, ME.message);
-        summary(end+1,:) = make_summary_row(in_mat, out_tsv, 'fail', NaN, NaN, NaN, NaN, NaN, NaN, ME.message); %#ok<AGROW>
+        summary(end+1,:) = make_summary_row(in_mat, out_tsv, 'fail', NaN, NaN, NaN, NaN, NaN, NaN, ME.message); 
     end
 end
 

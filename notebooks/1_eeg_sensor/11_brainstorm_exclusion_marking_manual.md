@@ -1,7 +1,7 @@
 # Compatibility Note
 
-Use the MATLAB-safe public Stage-1 manual handoff file instead:
+Use the active public Stage-1 manual handoff file instead:
 
-- `brainstorm_exclusion_marking_manual_11.md`
+- `step11_brainstorm_exclusion_marking_manual.md`
 
 This older number-leading filename is kept only as a compatibility pointer.

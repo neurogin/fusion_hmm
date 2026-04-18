@@ -144,9 +144,9 @@ This also means that the external MATLAB `writeNPY` dependency is practically re
 ### 5.5 Stage-3 uses two atlas branches for different purposes
 The cleaned public-facing Stage-3 workflow keeps two related but distinct atlas branches visible:
 
-- `30_map_schaefer200_to_bold_run_grids.ipynb`
+- `step30_map_schaefer200_to_bold_run_grids.ipynb`
   - standalone atlas-preservation QC and overlay provenance
-- `31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
   - the authoritative parcel-export path
 
 The recovered Stage-3 provenance shows that the parcel-export path is anchored to the exporter-side frozen `res-02` Schaefer atlas in `parcel_pc1_v6/atlas_source/`.
@@ -187,10 +187,10 @@ Small differences in exclusion handling can materially affect the retained-data 
 
 The cleaned public-facing stage-1 scripts now live in:
 
-- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `notebooks/1_eeg_sensor/brainstorm_exclusion_marking_manual_11.md`
-- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
-- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
+- `notebooks/1_eeg_sensor/step10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/step11_brainstorm_exclusion_marking_manual.md`
+- `notebooks/1_eeg_sensor/step12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/step13_eeg_run_qc_and_table_s1.m`
 
 Important caveats preserved intentionally in the first implementation pass:
 
@@ -406,8 +406,8 @@ The cleaned public workflow now distinguishes between:
 In practice:
 
 - Stage 1 and Stage 2 public entry files now call descriptive helper names
-- the MATLAB-safe public entry scripts now end with the step number, for example `eeg_prune_iclabel_and_export_clean_sets_10.m`
-- older number-leading `.m` filenames may still remain beside them as compatibility stubs, but they are not the main public entry points
+- the active public-facing top-level files now use `stepNN_*` names, for example `step10_eeg_prune_iclabel_and_export_clean_sets.m` or `step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- older pre-step filenames may still remain beside them as compatibility stubs or pointer files, but they are not the main public entry points
 - older `r01_*` MATLAB helpers remain in place underneath where needed so historical code paths still resolve
 - later Python stages keep stage-specific helper modules with plain-language module headers
 
@@ -486,3 +486,4 @@ During development, the EEG-to-BOLD alignment step was explored under more than 
 In this repository, `intermediate` is the canonical public alignment branch. It reflects the compromise policy used in the final analysis: stricter than the earlier lenient branch, but not as restrictive as the earlier strict branch. The final public fusion dataset used downstream is therefore the `intermediate`, `nolags`, `minlen15` branch.
 
 The earlier `lenient` and `strict` variants are part of development/provenance history and may still appear in older notebooks, paths, or comments, but they are not the main public manuscript path.
+

@@ -29,9 +29,9 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure 1. Timestamp-based alignment and construction of the final no-lag, 15-TR-minimum EEG-BOLD fusion dataset
 **Status:** Hybrid / Manual assembly
 **Current source file(s):**
-- `notebooks/4_alignment/40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
-- `notebooks/4_alignment/41_build_final_no_lag_fusion_observation_segments.ipynb`
-- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+- `notebooks/4_alignment/step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
+- `notebooks/4_alignment/step41_build_final_no_lag_fusion_observation_segments.ipynb`
+- `notebooks/4_alignment/step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 **Expected components:**
 - alignment schematic
@@ -39,7 +39,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - retained-TR mask illustration
 
 **Notes:**
-- `42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb` writes support plots and a manifest under `manuscript_support/figure1_support/`
+- `step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb` writes support plots and a manifest under `manuscript_support/figure1_support/`
 - final Figure 1 still includes schematic and layout decisions that remain hybrid/manual rather than one-click scripted
 
 ---
@@ -51,7 +51,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - possibly `notebooks/8_figures/` later
 
 **Current public-facing source file(s):**
-- `notebooks/5_hmm_selection/52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+- `notebooks/5_hmm_selection/step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
 
 **Expected components:**
 - free-energy curve
@@ -69,7 +69,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure 3. Final-state dynamics of the full-data K = 3 fusion HMM
 **Status:** active public-facing review notebook available
 **Current source file(s):**
-- `notebooks/6_hmm_final/61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
+- `notebooks/6_hmm_final/step61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
 
 **Expected components:**
 - subject-level FO
@@ -79,7 +79,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - state-signature similarity review
 
 **Notes:**
-- built from the saved final-fit outputs written by `60_fit_final_k3_fusion_hmm.ipynb`
+- built from the saved final-fit outputs written by `step60_fit_final_k3_fusion_hmm.ipynb`
 - gamma-raster-style provenance still exists in preserved umbrella notebooks, but those do not define the main public Stage-6 workflow
 
 ---
@@ -87,8 +87,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure 4. State-wise BOLD network organization
 **Status:** active public-facing reconstruction notebook available
 **Current source file(s):**
-- `notebooks/6_hmm_final/62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
-- optional panel-export support: `notebooks/6_hmm_final/65_optional_export_figure4_figure5_panels.ipynb`
+- `notebooks/6_hmm_final/step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+- optional panel-export support: `notebooks/6_hmm_final/step65_optional_export_figure4_figure5_panels.ipynb`
 
 **Expected components:**
 - BOLD block matrices
@@ -104,8 +104,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure 5. Descriptive cross-modal BOLD-EEG block structure
 **Status:** active public-facing reconstruction notebook available
 **Current source file(s):**
-- `notebooks/6_hmm_final/63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
-- optional panel-export support: `notebooks/6_hmm_final/65_optional_export_figure4_figure5_panels.ipynb`
+- `notebooks/6_hmm_final/step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+- optional panel-export support: `notebooks/6_hmm_final/step65_optional_export_figure4_figure5_panels.ipynb`
 
 **Expected components:**
 - cross-modal block matrices
@@ -122,7 +122,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure 6. Parcelized cortical maps of dominant and contrast BOLD state organization
 **Status:** active public-facing map notebook available
 **Current source file(s):**
-- `notebooks/6_hmm_final/64_build_parcelized_cortical_state_maps.ipynb`
+- `notebooks/6_hmm_final/step64_build_parcelized_cortical_state_maps.ipynb`
 
 **Expected components:**
 - S2 nodal mean connectivity map
@@ -141,11 +141,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S1. Run-level summary of EEG retained after preprocessing and exclusion of marked intervals
 **Status:** active public-facing build step
 **Current source file(s):**
-- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
+- `notebooks/1_eeg_sensor/step13_eeg_run_qc_and_table_s1.m`
 
 **Upstream requirements:**
-- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
+- `notebooks/1_eeg_sensor/step10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/step12_export_and_union_merge_brainstorm_exclusions.m`
 - Brainstorm manual exclusion marking documented in `docs/manual_steps.md`
 
 **Notes:**
@@ -157,11 +157,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S2. EEG volumetric source-grid atlas alignment and parcel coverage
 **Status:** Hybrid
 **Current source file(s):**
-- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
+- `notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m`
 
 **Upstream requirements:**
-- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
-- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
+- `notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m`
 - Brainstorm manual/hybrid source workflow documented in `docs/manual_steps.md`
 
 **Expected output:**
@@ -172,14 +172,14 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S3. EEG parcel-feature export after volumetric source localization and atlas-aligned scout generation
 **Status:** Hybrid
 **Current source file(s):**
-- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Upstream requirements:**
-- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
-- `notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m`
+- `notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/step25_generate_eeg_parcel_export_qc_sidecars.m`
 
 **Notes:**
-- the public Stage-2 QC notebook reads the CSV sidecars written by the descriptive Stage-2 QC helper
+- the public Stage-2 QC notebook reads the CSV sidecars written by `step25_generate_eeg_parcel_export_qc_sidecars.m` through the descriptive helper layer
 - the preserved lower-level `r01_qc_v3_*` MATLAB implementations remain available underneath for provenance and compatibility
 
 **Expected output:**
@@ -190,9 +190,9 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S4. BOLD parcel extraction and atlas preservation
 **Status:** active public-facing build step
 **Current source file(s):**
-- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
-- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
-- `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
+- `notebooks/3_bold/step30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/step32_build_table_s4_bold_parcel_atlas_summary.ipynb`
 
 **Notes:**
 - built by joining exporter `dataset_index.csv` with atlas-preservation `qc_atlas_on_boldgrid_summary.csv`
@@ -202,8 +202,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S5. Motion burden and nuisance-model composition for BOLD preprocessing
 **Status:** active public-facing build step
 **Current source file(s):**
-- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
-- `notebooks/3_bold/33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+- `notebooks/3_bold/step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/step33_build_table_s5_and_figure_s5_bold_qc.ipynb`
 
 **Notes:**
 - numeric fields come from exporter `dataset_index.csv`
@@ -214,8 +214,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S6. Parameters defining the final no-lag, 15-TR-minimum fusion-HMM dataset
 **Status:** active public-facing build step
 **Current source file(s):**
-- `notebooks/4_alignment/40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
-- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+- `notebooks/4_alignment/step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
+- `notebooks/4_alignment/step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 **Upstream requirements:**
 - cleaned Stage-2 EEG parcel NPY exports, including `*_PC1_gnorm.npy` and `*_time_sec.npy`
@@ -234,8 +234,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S7. Run-level summary of the final no-lag, 15-TR-minimum fusion dataset
 **Status:** active public-facing build step
 **Current source file(s):**
-- `notebooks/4_alignment/41_build_final_no_lag_fusion_observation_segments.ipynb`
-- `notebooks/4_alignment/42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+- `notebooks/4_alignment/step41_build_final_no_lag_fusion_observation_segments.ipynb`
+- `notebooks/4_alignment/step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 **Expected output:**
 - `manuscript_support/table_s7_final_dataset_run_summary.csv`
@@ -251,7 +251,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 - `notebooks/5_hmm_selection/`
 
 **Current public-facing source file(s):**
-- `notebooks/5_hmm_selection/52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+- `notebooks/5_hmm_selection/step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
 
 **Notes:**
 - built from `summary_byK_selected.tsv`, `K_selection_recommendation.json`, and the active per-K shortlist outputs under `K03/` and `K05/`
@@ -261,8 +261,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S9. Final-model fitting parameters and QC for the full-data K = 3 fusion HMM
 **Status:** active public-facing fit and review notebooks available
 **Current source file(s):**
-- `notebooks/6_hmm_final/60_fit_final_k3_fusion_hmm.ipynb`
-- `notebooks/6_hmm_final/61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
+- `notebooks/6_hmm_final/step60_fit_final_k3_fusion_hmm.ipynb`
+- `notebooks/6_hmm_final/step61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
 
 **Notes:**
 - built from root-level final-fit outputs such as `run_meta.json`, `preproc_meta.json`, `seed_candidates.tsv`, `topM_seeds.json`, `run_metrics.tsv`, `subject_metrics.tsv`, `dwell_from_A.tsv`, and `qc_summary.json`
@@ -272,7 +272,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S10. Ranked BOLD network contrasts relative to S2
 **Status:** active public-facing reconstruction notebook available
 **Current source file(s):**
-- `notebooks/6_hmm_final/62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+- `notebooks/6_hmm_final/step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
 
 **Notes:**
 - ranked BOLD network contrasts are written relative to the explicit reference state used by the physiology notebook
@@ -283,7 +283,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Table S11. Ranked cross-modal contrasts relative to S2
 **Status:** active public-facing reconstruction notebook available
 **Current source file(s):**
-- `notebooks/6_hmm_final/63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+- `notebooks/6_hmm_final/step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
 
 **Notes:**
 - ranked cross-modal contrasts are written relative to the reference-state logic preserved from the mixed provenance notebook
@@ -296,11 +296,11 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure S1. Multimodal atlas alignment for EEG source space and BOLD voxel space
 **Status:** Hybrid / Manual assembly
 **Current source file(s):**
-- `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
-- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
-- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
-- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
-- `notebooks/3_bold/32_build_table_s4_bold_parcel_atlas_summary.ipynb`
+- `notebooks/2_eeg_source/step21_brainstorm_volume_source_and_atlas_import_manual.md`
+- `notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/3_bold/step30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/step32_build_table_s4_bold_parcel_atlas_summary.ipynb`
 
 **Notes:**
 - final assembly still likely uses Brainstorm screenshots and later BOLD-side outputs
@@ -310,7 +310,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure S2. Run-wise median EEG parcel-PC1 scale after gain normalization
 **Status:** Hybrid
 **Current source file(s):**
-- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Expected output:**
 - `fig_s2_gain_pc1_scale_after_gnorm.png`
@@ -320,7 +320,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure S3. Pooled distribution of PVE1 across runs and parcels
 **Status:** Hybrid
 **Current source file(s):**
-- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Expected output:**
 - `fig_s3_pve1_histogram_pooled.png`
@@ -330,7 +330,7 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure S4. Run-wise PVE1 quantiles
 **Status:** Hybrid
 **Current source file(s):**
-- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 **Expected output:**
 - `fig_s4_pve1_run_quantiles.png`
@@ -340,8 +340,8 @@ As notebooks are reviewed and cleaned, each entry should be updated to show:
 ## Figure S5. BOLD QC reconstruction from exporter sidecars
 **Status:** reconstructed from recovered provenance
 **Current source file(s):**
-- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
-- `notebooks/3_bold/33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+- `notebooks/3_bold/step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/step33_build_table_s5_and_figure_s5_bold_qc.ipynb`
 
 **Notes:**
 - built from exporter QC sidecars that are present in the recovered Stage-3 outputs
@@ -369,3 +369,4 @@ As Codex reviews the notebooks, this file should be updated to include for each 
 - exact output files
 - whether final assembly is scripted, hybrid, or manual
 - whether the asset is already reproducible from the current repo state
+

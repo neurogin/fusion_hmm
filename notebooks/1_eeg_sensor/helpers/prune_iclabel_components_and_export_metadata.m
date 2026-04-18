@@ -316,12 +316,12 @@ for i = 1:numel(set_files)
         tag, ...
         thr_brain, thr_rej, ...
         char(strjoin(rej_classes, '|')) ...
-        }; %#ok<AGROW>
+        }; 
 
     list_rows(end+1,:) = { ...
         char(sub), char(ses), char(run), ...
         char(keepListStr), char(dropListStr) ...
-        }; %#ok<AGROW>
+        }; 
 end
 
 % Write summary tables
@@ -379,9 +379,9 @@ function stem = make_stem(sub, ses, run)
 % Keep compatibility with your prior naming:
 %   sub-XX_ses-YY[_run-ZZ]
 parts = strings(0,1);
-if strlength(sub) > 0; parts(end+1) = sub; end %#ok<AGROW>
-if strlength(ses) > 0; parts(end+1) = ses; end %#ok<AGROW>
-if strlength(run) > 0; parts(end+1) = run; end %#ok<AGROW>
+if strlength(sub) > 0; parts(end+1) = sub; end 
+if strlength(ses) > 0; parts(end+1) = ses; end 
+if strlength(run) > 0; parts(end+1) = run; end 
 if isempty(parts)
     error('Could not parse sub/ses from filename; add run token or adjust parse logic.');
 end
@@ -395,7 +395,7 @@ for k = 1:numel(rej_classes)
     if isempty(hit)
         error('Unknown ICLabel class in reject_classes: %s', rej_classes(k));
     end
-    idx(end+1) = hit; %#ok<AGROW>
+    idx(end+1) = hit; 
 end
 idx = unique(idx);
 end

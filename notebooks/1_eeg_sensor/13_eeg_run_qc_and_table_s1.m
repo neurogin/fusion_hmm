@@ -1,6 +1,6 @@
 % Compatibility stub.
 %
 % Use the MATLAB-safe public entry file instead:
-%   eeg_run_qc_and_table_s1_13.m
+%   step13_eeg_run_qc_and_table_s1.m
 error(['This numbered compatibility file is not the active public entry point.' newline ...
-       'Run eeg_run_qc_and_table_s1_13.m instead.']);
+       'Run step13_eeg_run_qc_and_table_s1.m instead.']);

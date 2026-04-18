@@ -9,7 +9,7 @@ function batch = batch_export_eeg_parcel_pc_outputs(protocolRoot, outDir, vararg
 %   tables used by the later Stage-2 and Stage-4 steps.
 %
 % When it is used:
-%   Called by `export_eeg_parcel_pc1_and_gain_normalize_23.m`.
+%   Called by `step23_export_eeg_parcel_pc1_and_gain_normalize.m`.
 %
 % Key inputs:
 %   - Brainstorm protocol root
@@ -188,9 +188,9 @@ for i = 1:numel(kernelFiles)
             parcelNamesSaved = true;
         end
 
-        rawMats(end+1, 1) = string(outRawMat); %#ok<AGROW>
-        runTags(end+1, 1) = string(runTag); %#ok<AGROW>
-        kgainMed(end+1, 1) = double(diagOut.kVertNorm_median); %#ok<AGROW>
+        rawMats(end+1, 1) = string(outRawMat); 
+        runTags(end+1, 1) = string(runTag); 
+        kgainMed(end+1, 1) = double(diagOut.kVertNorm_median); 
 
         fprintf(['[%d/%d] RAW OK %s | rows/vert=%g | EEGchStd=%.4g | ' ...
                  'kVertNorm=%.4g | PC1std=%.4g\n'], ...
@@ -204,7 +204,7 @@ for i = 1:numel(kernelFiles)
             diagOut.MinVertices, diagOut.n_valid_parcels, diagOut.n_valid_parcels / max(1, diagOut.nScouts), ...
             diagOut.TessNbVertices, diagOut.nVert_gridloc, diagOut.scout_vertex_min, diagOut.scout_vertex_max, ...
             diagOut.n_assigned_vertices, diagOut.overlap_vertex_count, diagOut.rows_per_vertex ...
-        }; %#ok<AGROW>
+        }; 
 
         gainRows(end+1, :) = { ...
             runTag, sub, ses, ...
@@ -213,7 +213,7 @@ for i = 1:numel(kernelFiles)
             diagOut.m1_norm_median, diagOut.pc1_std_median, ...
             diagOut.pve1_median, diagOut.pve1_q10, diagOut.pve1_q90, ...
             diagOut.n_flipped_pc1, diagOut.elapsed_sec, outRawMat ...
-        }; %#ok<AGROW>
+        }; 
 
     catch ME
         fprintf(2, '[%d/%d] FAIL %s | %s\n', i, numel(kernelFiles), runTag, ME.message);
@@ -313,7 +313,7 @@ for i = 1:numel(rawMats)
 
     manifestRows(end+1, :) = { ...
         runTag, rawMat, gnormMat, scale, kgainMedGlobal, pc1n, pc2n ...
-    }; %#ok<AGROW>
+    }; 
 
     if opt.Verbose
         fprintf('[GNORM] %s scale=%.6g -> %s\n', runTag, scale, gnormMat);

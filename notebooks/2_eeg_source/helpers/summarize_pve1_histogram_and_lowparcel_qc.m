@@ -102,9 +102,9 @@ for i = 1:numel(matFiles)
         continue;
     end
 
-    all_pve1 = [all_pve1; pve_u]; %#ok<AGROW>
-    all_pid = [all_pid; pid_u]; %#ok<AGROW>
-    all_run = [all_run; repmat(runTag, numel(pve_u), 1)]; %#ok<AGROW>
+    all_pve1 = [all_pve1; pve_u]; 
+    all_pid = [all_pid; pid_u]; 
+    all_run = [all_run; repmat(runTag, numel(pve_u), 1)]; 
 
     q10 = quantile(pve_u, 0.10);
     q25 = quantile(pve_u, 0.25);
@@ -120,7 +120,7 @@ for i = 1:numel(matFiles)
         runTag, mode, numel(pve_u), ...
         q10, q25, q50, q75, q90, ...
         frac_lt10, frac_lt20, frac_lt30 ...
-    }; %#ok<AGROW>
+    }; 
 
     thr = quantile(pve_u, opt.BottomFrac);
     lowMask = (pve_u <= thr);

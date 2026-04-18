@@ -86,52 +86,53 @@ See also:
 ### Stage 1. EEG sensor preprocessing and exclusion handling
 Public files in `notebooks/1_eeg_sensor/`:
 
-- `eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `brainstorm_exclusion_marking_manual_11.md`
-- `export_and_union_merge_brainstorm_exclusions_12.m`
-- `eeg_run_qc_and_table_s1_13.m`
+- `step10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `step11_brainstorm_exclusion_marking_manual.md`
+- `step12_export_and_union_merge_brainstorm_exclusions.m`
+- `step13_eeg_run_qc_and_table_s1.m`
 
 ### Stage 2. EEG source localization, parcel extraction, and source QC
 Public files in `notebooks/2_eeg_source/`:
 
-- `20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
-- `21_brainstorm_volume_source_and_atlas_import_manual.md`
-- `extract_volgrid_scouts_from_brainstorm_tess_22.m`
-- `export_eeg_parcel_pc1_and_gain_normalize_23.m`
-- `qc_eeg_source_alignment_table_s2_24.m`
-- `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `step20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
+- `step21_brainstorm_volume_source_and_atlas_import_manual.md`
+- `step22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `step23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `step24_qc_eeg_source_alignment_table_s2.m`
+- `step25_generate_eeg_parcel_export_qc_sidecars.m`
+- `step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 ### Stage 3. BOLD parcel extraction and QC
 Public files in `notebooks/3_bold/`:
 
-- `30_map_schaefer200_to_bold_run_grids.ipynb`
-- `31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
-- `32_build_table_s4_bold_parcel_atlas_summary.ipynb`
-- `33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+- `step30_map_schaefer200_to_bold_run_grids.ipynb`
+- `step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `step32_build_table_s4_bold_parcel_atlas_summary.ipynb`
+- `step33_build_table_s5_and_figure_s5_bold_qc.ipynb`
 
 ### Stage 4. EEG-BOLD alignment and retained-segment construction
 Public files in `notebooks/4_alignment/`:
 
-- `40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
-- `41_build_final_no_lag_fusion_observation_segments.ipynb`
-- `42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+- `step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
+- `step41_build_final_no_lag_fusion_observation_segments.ipynb`
+- `step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 ### Stage 5. LOSO model-order selection
 Public files in `notebooks/5_hmm_selection/`:
 
-- `50_run_loso_k_sweep_model_selection.ipynb`
-- `51_run_loso_shortlist_stability_checks.ipynb`
-- `52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+- `step50_run_loso_k_sweep_model_selection.ipynb`
+- `step51_run_loso_shortlist_stability_checks.ipynb`
+- `step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
 
 ### Stage 6. Final full-data K = 3 fit and downstream reconstructions
 Public files in `notebooks/6_hmm_final/`:
 
-- `60_fit_final_k3_fusion_hmm.ipynb`
-- `61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
-- `62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
-- `63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
-- `64_build_parcelized_cortical_state_maps.ipynb`
-- optional: `65_optional_export_figure4_figure5_panels.ipynb`
+- `step60_fit_final_k3_fusion_hmm.ipynb`
+- `step61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
+- `step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
+- `step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
+- `step64_build_parcelized_cortical_state_maps.ipynb`
+- optional: `step65_optional_export_figure4_figure5_panels.ipynb`
 
 ## Manual and hybrid steps
 
@@ -158,8 +159,8 @@ Each active stage folder contains:
 For the active public helper layer:
 
 - Stage 1 and Stage 2 now use descriptive helper names in the cleaned public workflow
-- the MATLAB-safe public scripts now place the step number at the end of the filename, for example `eeg_prune_iclabel_and_export_clean_sets_10.m`
-- older number-leading `.m` filenames may still appear in these folders as compatibility stubs, but they are no longer the main public entry points
+- the active public-facing top-level files now use `stepNN_*` names across MATLAB, notebook, and manual-handoff files
+- older pre-step filenames may still appear in these folders as compatibility stubs or pointer files, but they are no longer the main public entry points
 - preserved `r01_` MATLAB implementations remain in place as provenance-compatible low-level code, and the public helper layer now checks those dependencies explicitly instead of assuming they are silently on the MATLAB path
 - later Python stages use stage-specific helper modules with plain-language module headers
 
@@ -187,18 +188,19 @@ fusion_hmm/
 
   notebooks/
     1_eeg_sensor/
-      eeg_prune_iclabel_and_export_clean_sets_10.m
-      brainstorm_exclusion_marking_manual_11.md
-      export_and_union_merge_brainstorm_exclusions_12.m
-      eeg_run_qc_and_table_s1_13.m
+      step10_eeg_prune_iclabel_and_export_clean_sets.m
+      step11_brainstorm_exclusion_marking_manual.md
+      step12_export_and_union_merge_brainstorm_exclusions.m
+      step13_eeg_run_qc_and_table_s1.m
       helpers/
     2_eeg_source/
-      20_prepare_schaefer200_atlas_for_brainstorm.ipynb
-      21_brainstorm_volume_source_and_atlas_import_manual.md
-      extract_volgrid_scouts_from_brainstorm_tess_22.m
-      export_eeg_parcel_pc1_and_gain_normalize_23.m
-      qc_eeg_source_alignment_table_s2_24.m
-      25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb
+      step20_prepare_schaefer200_atlas_for_brainstorm.ipynb
+      step21_brainstorm_volume_source_and_atlas_import_manual.md
+      step22_extract_volgrid_scouts_from_brainstorm_tess.m
+      step23_export_eeg_parcel_pc1_and_gain_normalize.m
+      step24_qc_eeg_source_alignment_table_s2.m
+      step25_generate_eeg_parcel_export_qc_sidecars.m
+      step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb
     3_bold/
     4_alignment/
     5_hmm_selection/
@@ -226,3 +228,4 @@ In particular:
 - historical provenance notebooks are preserved even when they are no longer the main public entry points
 
 For the most detailed practical caveats, see `docs/reproducibility_notes.md`.
+

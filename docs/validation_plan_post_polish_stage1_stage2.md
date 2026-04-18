@@ -27,8 +27,8 @@ The highest-risk changes are the ones that rewired the active public-facing scri
 ### Stage 2 risk points
 
 - The public entry scripts now call wrapper helpers for scout extraction and parcel export.
-- The parcel-export QC path is now exposed through `helpers/run_eeg_parcel_export_qc_summaries.m`.
-- The public QC notebook now expects the new helper path to be the way users produce its prerequisite QC files.
+- The parcel-export QC path is now exposed through `step25_generate_eeg_parcel_export_qc_sidecars.m`.
+- The public Stage-2 notebook now expects that visible Step-25 MATLAB wrapper to be the way users produce its prerequisite QC files.
 - The verified `*_time_sec.npy` sidecar must still be written correctly, because Stage 4 depends on it directly.
 
 ### Lower-risk changes
@@ -77,14 +77,14 @@ That avoids a misleading "pass" on a trivial run that does not stress the real l
 
 #### Script to check
 
-- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
-- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
-- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
+- `notebooks/1_eeg_sensor/step10_eeg_prune_iclabel_and_export_clean_sets.m`
+- `notebooks/1_eeg_sensor/step12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/step13_eeg_run_qc_and_table_s1.m`
 
 #### What to do
 
 - Open the scripts and set the editable roots in `stage1_eeg_sensor_settings.m`.
-- Confirm that the raw EEGLAB input folder, Brainstorm database root, derivative roots, and QC roots all point where you expect.
+- Confirm that the raw EEGLAB input folder, Brainstorm protocol root, derivative roots, and QC roots all point where you expect.
 - Confirm that MATLAB can resolve the helper folder and the legacy helper folder.
 
 #### Must-check signal
@@ -106,7 +106,7 @@ That avoids a misleading "pass" on a trivial run that does not stress the real l
 
 #### Script to run
 
-- `notebooks/1_eeg_sensor/eeg_prune_iclabel_and_export_clean_sets_10.m`
+- `notebooks/1_eeg_sensor/step10_eeg_prune_iclabel_and_export_clean_sets.m`
 
 #### Smallest practical data subset
 
@@ -147,7 +147,7 @@ The exact output names may include the standard tag:
 
 #### Script to run
 
-- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
+- `notebooks/1_eeg_sensor/step12_export_and_union_merge_brainstorm_exclusions.m`
 
 #### Smallest practical data subset
 
@@ -193,7 +193,7 @@ Depending on your existing folder layout, these should live in the Stage-1 masks
 
 #### Script to run
 
-- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
+- `notebooks/1_eeg_sensor/step13_eeg_run_qc_and_table_s1.m`
 
 #### Smallest practical data subset
 
@@ -232,7 +232,7 @@ Confirm that the Stage-1 QC area writes the expected run-level support outputs, 
 
 #### Script to run
 
-- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
+- `notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m`
 
 #### Smallest practical data subset
 
@@ -266,7 +266,7 @@ Confirm that the run writes or refreshes:
 
 #### Script to run
 
-- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
+- `notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m`
 
 #### Smallest practical data subset
 
@@ -329,8 +329,8 @@ This is the critical deterministic rule that Stage 4 expects.
 
 #### Scripts / notebook to run
 
-- `notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m`
-- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `notebooks/2_eeg_source/step25_generate_eeg_parcel_export_qc_sidecars.m`
+- `notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 #### Smallest practical data subset
 
@@ -512,3 +512,4 @@ If you only have time for a very small validation pass, do these four things fir
 4. Confirm that `length(time_sec)` matches the number of rows in `PC1_gnorm.npy` and that `time_sec(1) == 0`.
 
 Those four checks will catch most practical breakage introduced by the new public/helper layer.
+

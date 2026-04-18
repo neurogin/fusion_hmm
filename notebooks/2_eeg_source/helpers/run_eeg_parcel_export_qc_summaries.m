@@ -3,10 +3,11 @@ function qc = run_eeg_parcel_export_qc_summaries(outDir)
 %
 % What this helper does:
 %   Runs the active descriptive Stage-2 QC helpers that feed the cleaned
-%   public notebook `25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4`.
+%   public notebook `step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4`.
 %
 % When it is used:
-%   Run this after `export_eeg_parcel_pc1_and_gain_normalize_23.m` and
+%   The public Stage-2 workflow calls this helper from
+%   `step25_generate_eeg_parcel_export_qc_sidecars.m` after Step 23 and
 %   before the Stage-2 QC notebook if the required CSV sidecars do not yet
 %   exist.
 %

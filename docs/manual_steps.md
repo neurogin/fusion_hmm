@@ -27,8 +27,8 @@ It reflects the final paper workflow and the current practical procedure used in
 
 Use this file together with the stage-specific public files:
 
-- Stage 1 manual handoff: `notebooks/1_eeg_sensor/brainstorm_exclusion_marking_manual_11.md`
-- Stage 2 manual handoff: `notebooks/2_eeg_source/21_brainstorm_volume_source_and_atlas_import_manual.md`
+- Stage 1 manual handoff: `notebooks/1_eeg_sensor/step11_brainstorm_exclusion_marking_manual.md`
+- Stage 2 manual handoff: `notebooks/2_eeg_source/step21_brainstorm_volume_source_and_atlas_import_manual.md`
 
 The public MATLAB and notebook entry files point back here when a step remains genuinely manual or hybrid.
 
@@ -125,8 +125,8 @@ Per run, later exported by MATLAB scripts:
 ## Downstream scripted handoff
 These outputs are consumed by the cleaned Stage-1 public files:
 
-- `notebooks/1_eeg_sensor/export_and_union_merge_brainstorm_exclusions_12.m`
-- `notebooks/1_eeg_sensor/eeg_run_qc_and_table_s1_13.m`
+- `notebooks/1_eeg_sensor/step12_export_and_union_merge_brainstorm_exclusions.m`
+- `notebooks/1_eeg_sensor/step13_eeg_run_qc_and_table_s1.m`
 
 ---
 
@@ -336,10 +336,11 @@ This is acceptable, but the downstream exporter must use the correct scout file 
 
 These outputs feed the cleaned public Stage-2 files:
 
-- `notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m`
-- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
-- `notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m`
-- `notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- `notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m`
+- `notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m`
+- `notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m`
+- `notebooks/2_eeg_source/step25_generate_eeg_parcel_export_qc_sidecars.m`
+- `notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
 
 ---
 
@@ -364,7 +365,7 @@ MATLAB scripts perform:
 
 The cleaned public MATLAB entry script for this stage is:
 
-- `notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m`
+- `notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m`
 
 It needs EEGLAB on the MATLAB path for batch loading of the cleaned `.set`
 files from Stage 1. The optional `writeNPY` dependency is also needed if
@@ -441,8 +442,8 @@ This is important context for the multimodal alignment described in the manuscri
 
 This BOLD-side atlas note feeds the cleaned public Stage-3 files:
 
-- `notebooks/3_bold/30_map_schaefer200_to_bold_run_grids.ipynb`
-- `notebooks/3_bold/31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
+- `notebooks/3_bold/step30_map_schaefer200_to_bold_run_grids.ipynb`
+- `notebooks/3_bold/step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
 
 ---
 
@@ -482,3 +483,4 @@ When working with this repository:
 - keep manuscript terminology aligned with the actual workflow
 - document manual dependencies explicitly in notebooks and docs
 - preserve output provenance wherever possible
+

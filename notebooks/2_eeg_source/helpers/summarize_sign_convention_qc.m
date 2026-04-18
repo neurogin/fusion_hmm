@@ -215,7 +215,7 @@ for kf = 1:numel(matFiles)
 
         nTested = nTested + 1;
         nPass = nPass + double(pass);
-        corrVals(end+1, 1) = r_tc; %#ok<AGROW>
+        corrVals(end+1, 1) = r_tc; 
 
         if isfinite(r_neg_raw) && r_neg_raw >= opt.CorrThr
             nRawNegHigh = nRawNegHigh + 1;
@@ -226,7 +226,7 @@ for kf = 1:numel(matFiles)
             nVertices(p), nRows(p), ...
             double(r_tc), double(r_raw), double(r_neg_raw), logical(pass), ...
             double(tcflip), double(tref), double(vpre) ...
-        }; %#ok<AGROW>
+        }; 
     end
 
     if nTested == 0
@@ -241,7 +241,7 @@ for kf = 1:numel(matFiles)
         char(runTag), char(mode), double(sum(validMask)), double(nTested), double(nPass), double(passRate), ...
         double(median(finiteCorr)), double(min(finiteCorr)), double(prctile(finiteCorr, 10)), ...
         double(nRawNegHigh / nTested) ...
-    }; %#ok<AGROW>
+    }; 
 
     if opt.Verbose
         fprintf('  Tested=%d | Pass=%d | PassRate=%.3f | CorrTCfix median=%.4f min=%.4f\n', ...

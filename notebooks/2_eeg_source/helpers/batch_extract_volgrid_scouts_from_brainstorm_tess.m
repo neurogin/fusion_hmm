@@ -7,7 +7,7 @@ function T = batch_extract_volgrid_scouts_from_brainstorm_tess(protocolRoot, sco
 %   and writes one standardized scout MAT per subject/session.
 %
 % When it is used:
-%   Called by `extract_volgrid_scouts_from_brainstorm_tess_22.m`.
+%   Called by `step22_extract_volgrid_scouts_from_brainstorm_tess.m`.
 %
 % Key inputs:
 %   - Brainstorm protocol root
@@ -98,7 +98,7 @@ for i = 1:numel(kernelFiles)
         char(diag.atlasName), ...
         double(diag.nScouts), double(diag.nEmptyScouts), ...
         double(diag.vertexIndexMin), double(diag.vertexIndexMax), double(diag.nVertExpected) ...
-    }; %#ok<AGROW>
+    }; 
 end
 
 T = cell2table(rows, 'VariableNames', { ...

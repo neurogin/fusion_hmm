@@ -6,11 +6,11 @@ This memo is a practical manual validation checklist for the active public-facin
 
 It covers:
 
-- [extract_volgrid_scouts_from_brainstorm_tess_22.m](/C:/fusion_hmm/notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m)
-- [export_eeg_parcel_pc1_and_gain_normalize_23.m](/C:/fusion_hmm/notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m)
-- [qc_eeg_source_alignment_table_s2_24.m](/C:/fusion_hmm/notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m)
-- [run_eeg_parcel_export_qc_summaries.m](/C:/fusion_hmm/notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m)
-- [25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb](/C:/fusion_hmm/notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb)
+- [step22_extract_volgrid_scouts_from_brainstorm_tess.m](/C:/fusion_hmm/notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m)
+- [step23_export_eeg_parcel_pc1_and_gain_normalize.m](/C:/fusion_hmm/notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m)
+- [step24_qc_eeg_source_alignment_table_s2.m](/C:/fusion_hmm/notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m)
+- [step25_generate_eeg_parcel_export_qc_sidecars.m](/C:/fusion_hmm/notebooks/2_eeg_source/step25_generate_eeg_parcel_export_qc_sidecars.m)
+- [step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb](/C:/fusion_hmm/notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb)
 - the active Stage-2 helper layer in [notebooks/2_eeg_source](/C:/fusion_hmm/notebooks/2_eeg_source)
 
 The goal is not to rerun the whole cohort. The goal is to run a small number of smoke tests that would quickly show whether the public Stage-2 layer still writes the expected scout, parcel, NPY, and QC outputs, and whether those outputs still match downstream Stage-4 expectations.
@@ -23,8 +23,8 @@ Run the checks in this order:
 2. Step 22 scout-extraction smoke test
 3. Step 23 parcel-export smoke test
 4. Step 24 Table-S2 support smoke test
-5. Stage-2 QC-helper smoke test
-6. Stage-2 notebook 25 smoke test
+5. Step 25 QC-sidecar smoke test
+6. Step 26 notebook smoke test
 7. Fast downstream Stage-4 compatibility check
 
 This order gives you fast failure if there is a path problem, a missing helper, or a broken output schema.
@@ -54,9 +54,9 @@ These are the highest-value outputs to inspect because they would reveal a real 
 
 #### What to open
 
-- [extract_volgrid_scouts_from_brainstorm_tess_22.m](/C:/fusion_hmm/notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m)
-- [export_eeg_parcel_pc1_and_gain_normalize_23.m](/C:/fusion_hmm/notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m)
-- [qc_eeg_source_alignment_table_s2_24.m](/C:/fusion_hmm/notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m)
+- [step22_extract_volgrid_scouts_from_brainstorm_tess.m](/C:/fusion_hmm/notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m)
+- [step23_export_eeg_parcel_pc1_and_gain_normalize.m](/C:/fusion_hmm/notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m)
+- [step24_qc_eeg_source_alignment_table_s2.m](/C:/fusion_hmm/notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m)
 
 #### Smallest practical check
 
@@ -86,7 +86,7 @@ These are the highest-value outputs to inspect because they would reveal a real 
 
 #### Script to run
 
-- [extract_volgrid_scouts_from_brainstorm_tess_22.m](/C:/fusion_hmm/notebooks/2_eeg_source/extract_volgrid_scouts_from_brainstorm_tess_22.m)
+- [step22_extract_volgrid_scouts_from_brainstorm_tess.m](/C:/fusion_hmm/notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m)
 
 #### Smallest practical subset
 
@@ -135,7 +135,7 @@ Choose a case that already reached later stages before, so you have something kn
 
 #### Script to run
 
-- [export_eeg_parcel_pc1_and_gain_normalize_23.m](/C:/fusion_hmm/notebooks/2_eeg_source/export_eeg_parcel_pc1_and_gain_normalize_23.m)
+- [step23_export_eeg_parcel_pc1_and_gain_normalize.m](/C:/fusion_hmm/notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m)
 
 #### Smallest practical subset
 
@@ -241,7 +241,7 @@ with matching sample counts
 
 #### Script to run
 
-- [qc_eeg_source_alignment_table_s2_24.m](/C:/fusion_hmm/notebooks/2_eeg_source/qc_eeg_source_alignment_table_s2_24.m)
+- [step24_qc_eeg_source_alignment_table_s2.m](/C:/fusion_hmm/notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m)
 
 #### Smallest practical subset
 
@@ -281,11 +281,11 @@ with matching sample counts
 
 - the coverage-summary schema still matches what Step 24 expects, with no missing-column error
 
-### 5. QC-helper smoke test
+### 5. Step 25 QC-sidecar smoke test
 
 #### Script to run
 
-- [run_eeg_parcel_export_qc_summaries.m](/C:/fusion_hmm/notebooks/2_eeg_source/helpers/run_eeg_parcel_export_qc_summaries.m)
+- [step25_generate_eeg_parcel_export_qc_sidecars.m](/C:/fusion_hmm/notebooks/2_eeg_source/step25_generate_eeg_parcel_export_qc_sidecars.m)
 
 #### Smallest practical subset
 
@@ -303,19 +303,19 @@ Under the parcel-output directory:
 
 #### What to check
 
-- the helper runs from the public name, not only from the legacy `r01_*` entry points
+- the public Step 25 wrapper runs successfully and writes the QC sidecars through the helper layer
 - it does not fail to find `*_parcelPC_gnorm.mat` or `*_parcelPC_raw.mat`
 - each of the five expected QC sidecars is written
 
 #### Downstream compatibility signal
 
-- Notebook 25 can load these files without any path or naming edits beyond the one top-level `parcel_output_dir`
+- Step 26 can load these files without any path or naming edits beyond the one top-level `parcel_output_dir`
 
-### 6. Notebook 25 smoke test
+### 6. Step 26 notebook smoke test
 
 #### Notebook to run
 
-- [25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb](/C:/fusion_hmm/notebooks/2_eeg_source/25_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb)
+- [step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb](/C:/fusion_hmm/notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb)
 
 #### Smallest practical subset
 
@@ -336,6 +336,7 @@ Optional extra QC figures may also appear.
 #### What to check
 
 - the notebook no longer errors out on missing prerequisite QC CSVs
+- the notebook errors early with a plain-language message if `parcel_output_dir` is set to the nested `npy` folder instead of the parent `parcel_exports` folder
 - `table_s3_eeg_parcel_extraction_summary.csv` is written
 - the table contains the expected summary fields:
   - `Run`
@@ -357,7 +358,7 @@ Optional extra QC figures may also appear.
 
 #### Downstream compatibility signal
 
-- the public QC helper path is sufficient for notebook 25, with no need to call old `r01_*` entry points manually
+- the public Step 25 plus Step 26 path is sufficient, with no need to call old `r01_*` entry points manually
 
 ## Downstream Compatibility Checks
 
@@ -431,8 +432,8 @@ Stop early and fix configuration or helper wiring if you see any of these:
 - `*_time_sec.npy` length does not match the first dimension of `*_PC1_gnorm.npy`
 - `batch_parcel_coverage_summary_v3.csv` is missing required columns used by Step 24
 - Step 24 errors on missing coverage-summary columns
-- `helpers/run_eeg_parcel_export_qc_summaries.m` fails because it cannot find parcel MAT outputs
-- Notebook 25 errors on missing QC CSV sidecars
+- `step25_generate_eeg_parcel_export_qc_sidecars.m` fails because the underlying helper cannot find parcel MAT outputs
+- Notebook Step 26 errors on missing QC CSV sidecars or on a mispointed `parcel_output_dir`
 
 ## Bottom Line
 
