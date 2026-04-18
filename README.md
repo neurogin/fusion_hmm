@@ -201,10 +201,31 @@ fusion_hmm/
       step24_qc_eeg_source_alignment_table_s2.m
       step25_generate_eeg_parcel_export_qc_sidecars.m
       step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb
+      helpers/
     3_bold/
+      step30_map_schaefer200_to_bold_run_grids.ipynb
+      step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb
+      step32_build_table_s4_bold_parcel_atlas_summary.ipynb
+      step33_build_table_s5_and_figure_s5_bold_qc.ipynb
+      helpers/
     4_alignment/
+      step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb
+      step41_build_final_no_lag_fusion_observation_segments.ipynb
+      step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb
+      helpers/
     5_hmm_selection/
+      step50_run_loso_k_sweep_model_selection.ipynb
+      step51_run_loso_shortlist_stability_checks.ipynb
+      step52_build_figure2_and_table_s8_model_selection_summary.ipynb
+      helpers/
     6_hmm_final/
+      step60_fit_final_k3_fusion_hmm.ipynb
+      step61_review_final_k3_fit_qc_and_state_dynamics.ipynb
+      step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb
+      step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb
+      step64_build_parcelized_cortical_state_maps.ipynb
+      step65_optional_export_figure4_figure5_panels.ipynb
+      helpers/
     7_summaries/
     8_figures/
     9_tables/

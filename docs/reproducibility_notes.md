@@ -312,7 +312,7 @@ Important public-facing execution assumptions include:
 - XLA-off execution in the preserved source notebooks
 - memory-growth or explicit GPU-memory-cap handling
 - chunk/resume logic to reduce long-session failures
-- WSL-style or other local path cleanup by the public wrappers
+- WSL-style or other local path cleanup preserved from the original Stage-5 notebooks, now surfaced through the public step notebook settings
 
 CPU-only execution is possible in code, but it may be much slower than the original GPU-oriented workflow.
 

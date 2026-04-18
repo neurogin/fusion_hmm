@@ -256,8 +256,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/3_bold/step33_build_table_s5_and_figure_s5_bold_qc.ipynb`
 
 **Stage-3 helper modules**
-- `notebooks/3_bold/stage3_bold_export_helpers.py`
-- `notebooks/3_bold/stage3_bold_summary_helpers.py`
+- `notebooks/3_bold/helpers/stage3_bold_export_helpers.py`
+- `notebooks/3_bold/helpers/stage3_bold_summary_helpers.py`
+
+**Compatibility note**
+- the step notebooks now load the active Stage-3 helper layer from the local `helpers/` folder
+- root-level copies of those helper module names may still remain beside the notebooks as secondary compatibility or provenance files
 
 **Expected content**
 - nuisance design construction
@@ -299,8 +303,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/4_alignment/step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 **Stage-4 helper files used here**
-- `notebooks/4_alignment/stage4_alignment_helpers.py`
-- `notebooks/4_alignment/stage4_segment_helpers.py`
+- `notebooks/4_alignment/helpers/stage4_alignment_helpers.py`
+- `notebooks/4_alignment/helpers/stage4_segment_helpers.py`
+
+**Compatibility note**
+- the step notebooks now load the active Stage-4 helper layer from the local `helpers/` folder
+- root-level copies of those helper module names may still remain beside the notebooks as secondary compatibility or provenance files
 
 **Expected content**
 - raw-to-preprocessed EEG timeline reconciliation
@@ -347,7 +355,13 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/5_hmm_selection/step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
 
 **Stage-5 helper files used here**
-- `notebooks/5_hmm_selection/stage5_hmm_selection_helpers.py`
+- `notebooks/5_hmm_selection/stage5_hmm_selection_helpers.py`:
+  used by `step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+
+**Compatibility note**
+- `step50_run_loso_k_sweep_model_selection.ipynb` and `step51_run_loso_shortlist_stability_checks.ipynb` now contain the public execution logic directly
+- the preserved `R01_*` Stage-5 notebooks remain provenance copies rather than active public entry points
+- `stage5_hmm_selection_helpers.py` remains an active same-directory helper for the Stage-5 summary notebook
 
 **Expected content**
 - K sweep over candidate model orders
@@ -388,7 +402,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - optional: `notebooks/6_hmm_final/step65_optional_export_figure4_figure5_panels.ipynb`
 
 **Stage-6 helper files used here**
-- `notebooks/6_hmm_final/stage6_hmm_final_helpers.py`
+- no helper module is required by the main Stage-6 public notebooks
+
+**Compatibility note**
+- `step60_fit_final_k3_fusion_hmm.ipynb` through `step65_optional_export_figure4_figure5_panels.ipynb` now contain the public execution logic directly
+- the preserved `R01_PipelineE_*` and `PipelineE_*` notebooks remain provenance copies rather than active public entry points
+- `stage6_hmm_final_helpers.py` remains only as secondary compatibility or provenance utility code
 
 **Expected content**
 - final retained dataset loading
