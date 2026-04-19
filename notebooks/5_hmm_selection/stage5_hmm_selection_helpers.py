@@ -7,26 +7,25 @@ This module supports the public Stage-5 notebooks that:
 
 Main inputs:
 - the canonical Stage-4 `intermediate + nolags + minlen15` segment outputs
-- preserved source notebooks used as compute backends
+- saved Stage-5 screening and shortlist outputs
 
 Main outputs:
-- wrapped K-sweep outputs
+- K-sweep tables and plots
 - shortlist-stability outputs
 - model-selection summary tables and figures
 
 Important note:
-- these helpers wrap the preserved TensorFlow and `osl_dynamics` notebooks
-  rather than replacing their scientific logic
+- the public notebooks keep the user-facing setup and interpretation visible
+- the dense TensorFlow and `osl_dynamics` machinery now lives in normal
+  same-directory Python backend modules rather than preserved provenance
+  notebooks
 - the final choice of `K = 3` remains a documented scientific decision, not
   a single automatic rule
 """
 
 from __future__ import annotations
 
-import contextlib
-import io
 import json
-import re
 from pathlib import Path
 from typing import Any
 
@@ -35,96 +34,30 @@ import numpy as np
 import pandas as pd
 from matplotlib.gridspec import GridSpec
 
-
-def _display_fallback(obj: Any) -> None:
-    try:
-        from IPython.display import display as ipy_display
-
-        ipy_display(obj)
-    except Exception:
-        print(obj)
+from stage5_k_sweep_backend import KSweepBackendConfig, run_loso_k_sweep_backend
+from stage5_shortlist_backend import ShortlistBackendConfig, run_loso_shortlist_backend
 
 
-def path_expr(path: str | Path | None) -> str:
-    if path is None:
-        return "None"
-    return f"Path({str(Path(path))!r})"
+def _maybe_read_table(path: str | Path, sep: str = "\t") -> pd.DataFrame | None:
+    """Read a table if it exists, otherwise return None."""
+    path = Path(path)
+    if not path.exists():
+        return None
+    return pd.read_csv(path, sep=sep)
 
 
-def literal_expr(value: Any) -> str:
-    if isinstance(value, (str, Path)) or value is None:
-        return path_expr(value) if isinstance(value, Path) or value is None else repr(value)
-    return repr(value)
+def _maybe_read_json(path: str | Path) -> dict[str, Any] | None:
+    """Read a JSON file if it exists, otherwise return None."""
+    path = Path(path)
+    if not path.exists():
+        return None
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _load_code_cells(notebook_path: str | Path) -> list[str]:
-    notebook_path = Path(notebook_path)
-    if not notebook_path.exists():
-        raise FileNotFoundError(f"Notebook not found: {notebook_path}")
-
-    data = json.loads(notebook_path.read_text(encoding="utf-8"))
-    cells = []
-    for cell in data.get("cells", []):
-        if cell.get("cell_type") == "code":
-            cells.append("".join(cell.get("source", [])))
-    if not cells:
-        raise ValueError(f"No code cells found in {notebook_path}")
-    return cells
-
-
-def _patch_assignments(source: str, assignment_exprs: dict[str, str]) -> str:
-    patched = source
-    for key, expr in assignment_exprs.items():
-        pattern = re.compile(rf"(?m)^({re.escape(key)}\s*=\s*).*$")
-        patched, count = pattern.subn(rf"\1{expr}", patched, count=1)
-        if count == 0:
-            raise ValueError(f"Could not find assignment for {key!r} in source user-input cell.")
-    return patched
-
-
-def execute_source_notebook(
-    source_notebook: str | Path,
+def run_public_k_sweep_step(
     *,
-    cell0_overrides: dict[str, str],
-    suppress_user_input_output: bool = True,
-) -> dict[str, Any]:
-    source_notebook = Path(source_notebook)
-    code_cells = _load_code_cells(source_notebook)
-
-    namespace: dict[str, Any] = {
-        "__name__": "__main__",
-        "display": _display_fallback,
-    }
-
-    first_code = _patch_assignments(code_cells[0], cell0_overrides)
-    compiled_name = source_notebook.name
-
-    if suppress_user_input_output:
-        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            exec(compile(first_code, f"{compiled_name}::cell0", "exec"), namespace)
-    else:
-        exec(compile(first_code, f"{compiled_name}::cell0", "exec"), namespace)
-
-    print("Using source notebook:", source_notebook.name)
-    for key in sorted(cell0_overrides):
-        if key in namespace:
-            print(f"  {key}: {namespace[key]}")
-
-    try:
-        for cell_index, source in enumerate(code_cells[1:], start=1):
-            exec(compile(source, f"{compiled_name}::cell{cell_index}", "exec"), namespace)
-    except SystemExit as exc:
-        # The preserved provenance notebooks use SystemExit for chunk/resume completion.
-        print(f"[INFO] Source notebook exited early: {exc}")
-
-    return namespace
-
-
-def run_wrapped_k_sweep_source(
-    *,
-    source_notebook: str | Path,
-    final_root: str | Path,
-    out_root: str | Path,
+    segments_root: str | Path,
+    model_selection_root: str | Path,
     data_variant: str = "intermediate",
     feature_mode: str = "nolags",
     minlen: int = 15,
@@ -136,28 +69,53 @@ def run_wrapped_k_sweep_source(
     debug_k_grid: list[int] | None = None,
     debug_seeds: list[int] | None = None,
 ) -> dict[str, Any]:
-    cell0_overrides = {
-        "DATA_VARIANT": repr(data_variant),
-        "FEATURE_MODE": repr(feature_mode),
-        "MINLEN": str(int(minlen)),
-        "FINAL_ROOT": path_expr(final_root),
-        "MANIFEST_TSV": path_expr(manifest_tsv),
-        "OUT_ROOT": path_expr(out_root),
-        "K_GRID": repr(k_grid if k_grid is not None else list(range(2, 13))),
-        "GPU_MEMORY_LIMIT_MB": repr(gpu_memory_limit_mb),
-        "MAX_NEW_PAIRS_PER_RUN": repr(max_new_pairs_per_run),
-        "DEBUG_MAX_FOLDS": repr(debug_max_folds),
-        "DEBUG_K_GRID": repr(debug_k_grid),
-        "DEBUG_SEEDS": repr(debug_seeds),
+    """Run the public Step-50 screening workflow using the active Python backend."""
+    backend_result = run_loso_k_sweep_backend(
+        KSweepBackendConfig(
+            segments_root=segments_root,
+            model_selection_root=model_selection_root,
+            data_variant=data_variant,
+            feature_mode=feature_mode,
+            minlen=minlen,
+            manifest_tsv=manifest_tsv,
+            k_grid=k_grid,
+            max_new_pairs_per_run=max_new_pairs_per_run,
+            gpu_memory_limit_mb=gpu_memory_limit_mb,
+            debug_max_folds=debug_max_folds,
+            debug_k_grid=debug_k_grid,
+            debug_seeds=debug_seeds,
+        )
+    )
+
+    final_root = Path(segments_root) / data_variant
+    out_root = Path(model_selection_root) / f"{data_variant}_{feature_mode}_minlen{minlen}"
+    manifest_value = backend_result.get("manifest_tsv", "")
+    return {
+        "backend_module": "stage5_k_sweep_backend.py",
+        "backend_status": backend_result.get("status", ""),
+        "backend_message": backend_result.get("chunk_message", ""),
+        "final_root": str(final_root),
+        "out_root": str(out_root),
+        "manifest_tsv": str(manifest_value) if manifest_value is not None else "",
+        "available_outputs": {
+            "cv_results_tsv": str(out_root / "cv_results.tsv"),
+            "cv_candidates_long_tsv": str(out_root / "cv_candidates_long.tsv"),
+            "summary_byK_selected_tsv": str(out_root / "summary_byK_selected.tsv"),
+            "summary_byK_candidates_tsv": str(out_root / "summary_byK_candidates.tsv"),
+            "paired_tests_vs_bestK_tsv": str(out_root / "paired_tests_vs_bestK.tsv"),
+            "k_selection_recommendation_json": str(out_root / "K_selection_recommendation.json"),
+        },
+        "summary_byk_selected_df": _maybe_read_table(out_root / "summary_byK_selected.tsv"),
+        "summary_byk_candidates_df": _maybe_read_table(out_root / "summary_byK_candidates.tsv"),
+        "paired_tests_df": _maybe_read_table(out_root / "paired_tests_vs_bestK.tsv"),
+        "recommendation": _maybe_read_json(out_root / "K_selection_recommendation.json"),
     }
-    return execute_source_notebook(source_notebook, cell0_overrides=cell0_overrides)
 
 
-def run_wrapped_shortlist_source(
+def run_public_shortlist_step(
     *,
-    source_notebook: str | Path,
-    final_root: str | Path,
-    out_root: str | Path,
+    segments_root: str | Path,
+    shortlist_output_root: str | Path,
     k_list: list[int],
     data_variant: str = "intermediate",
     feature_mode: str = "nolags",
@@ -169,21 +127,47 @@ def run_wrapped_shortlist_source(
     debug_subjects: list[str] | None = None,
     debug_seeds: list[int] | None = None,
 ) -> dict[str, Any]:
-    cell0_overrides = {
-        "K_LIST": repr(list(k_list)),
-        "DATA_VARIANT": repr(data_variant),
-        "FEATURE_MODE": repr(feature_mode),
-        "MINLEN": str(int(minlen)),
-        "FINAL_ROOT": path_expr(final_root),
-        "MANIFEST_TSV": path_expr(manifest_tsv),
-        "OUT_ROOT": path_expr(out_root),
-        "GPU_MEMORY_LIMIT_MB": repr(gpu_memory_limit_mb),
-        "MAX_NEW_FOLDS_PER_RUN": repr(max_new_folds_per_run),
-        "FORCE_RERUN_HELDOUTS": repr(force_rerun_heldouts or []),
-        "DEBUG_SUBJECTS": repr(debug_subjects),
-        "DEBUG_SEEDS": repr(debug_seeds),
+    """Run the public Step-51 shortlist workflow using the active Python backend."""
+    backend_result = run_loso_shortlist_backend(
+        ShortlistBackendConfig(
+            segments_root=segments_root,
+            shortlist_output_root=shortlist_output_root,
+            k_list=k_list,
+            data_variant=data_variant,
+            feature_mode=feature_mode,
+            minlen=minlen,
+            manifest_tsv=manifest_tsv,
+            max_new_folds_per_run=max_new_folds_per_run,
+            gpu_memory_limit_mb=gpu_memory_limit_mb,
+            force_rerun_heldouts=force_rerun_heldouts or [],
+            debug_subjects=debug_subjects,
+            debug_seeds=debug_seeds,
+        )
+    )
+
+    final_root = Path(segments_root) / data_variant
+    out_root = Path(shortlist_output_root) / f"PipelineD_C2_{data_variant}_{feature_mode}_minlen{minlen}"
+    manifest_value = backend_result.get("manifest_tsv", "")
+    per_k_outputs: dict[int, dict[str, Any]] = {}
+    for K in k_list:
+        k_dir = out_root / f"K{int(K):02d}"
+        per_k_outputs[int(K)] = {
+            "k_dir": str(k_dir),
+            "state_matching_scores_df": _maybe_read_table(k_dir / "state_matching_scores.tsv"),
+            "fold_summaries_table_matched_df": _maybe_read_table(k_dir / "fold_summaries_table_matched.tsv"),
+            "invalid_folds_df": _maybe_read_table(k_dir / "invalid_folds.tsv"),
+            "reference_fold_txt": str(k_dir / "reference_fold.txt"),
+        }
+
+    return {
+        "backend_module": "stage5_shortlist_backend.py",
+        "backend_status": backend_result.get("status", ""),
+        "backend_message": backend_result.get("chunk_message", ""),
+        "final_root": str(final_root),
+        "out_root": str(out_root),
+        "manifest_tsv": str(manifest_value) if manifest_value is not None else "",
+        "per_k_outputs": per_k_outputs,
     }
-    return execute_source_notebook(source_notebook, cell0_overrides=cell0_overrides)
 
 
 def _require_file(path: str | Path, label: str) -> Path:
@@ -230,6 +214,7 @@ def build_figure2_and_table_s8_summary(
     figsize: tuple[float, float] = (12, 10),
     dpi: int = 200,
 ) -> dict[str, str]:
+    """Build the manuscript-facing Figure 2 support plot and compact Table S8 CSV."""
     ksweep_output_dir = Path(ksweep_output_dir)
     stability_output_dir = Path(stability_output_dir)
     summary_output_dir = Path(summary_output_dir)
@@ -311,18 +296,8 @@ def build_figure2_and_table_s8_summary(
         linewidth=2,
         capsize=4,
     )
-    ax1.axhline(
-        one_se_threshold,
-        linestyle="--",
-        linewidth=2,
-        label=f"1-SE threshold ({one_se_threshold:.2f})",
-    )
-    ax1.axvline(
-        one_se_k,
-        linestyle=":",
-        linewidth=2,
-        label=f"Smallest within 1-SE: K={one_se_k}",
-    )
+    ax1.axhline(one_se_threshold, linestyle="--", linewidth=2, label=f"1-SE threshold ({one_se_threshold:.2f})")
+    ax1.axvline(one_se_k, linestyle=":", linewidth=2, label=f"Smallest within 1-SE: K={one_se_k}")
     for k in annotate_ks:
         if int(k) in sel["K"].values:
             y = sel.loc[sel["K"] == int(k), "fe_test_mean"].iloc[0]

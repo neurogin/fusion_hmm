@@ -355,13 +355,14 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/5_hmm_selection/step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
 
 **Stage-5 helper files used here**
-- `notebooks/5_hmm_selection/stage5_hmm_selection_helpers.py`:
-  used by `step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+- `notebooks/5_hmm_selection/stage5_hmm_selection_helpers.py`
+- `notebooks/5_hmm_selection/stage5_k_sweep_backend.py`
+- `notebooks/5_hmm_selection/stage5_shortlist_backend.py`
 
 **Compatibility note**
-- `step50_run_loso_k_sweep_model_selection.ipynb` and `step51_run_loso_shortlist_stability_checks.ipynb` now contain the public execution logic directly
-- the preserved `R01_*` Stage-5 notebooks remain provenance copies rather than active public entry points
-- `stage5_hmm_selection_helpers.py` remains an active same-directory helper for the Stage-5 summary notebook
+- `step50_run_loso_k_sweep_model_selection.ipynb` and `step51_run_loso_shortlist_stability_checks.ipynb` keep the public user-facing setup and stage narrative visible while delegating the dense TensorFlow and `osl_dynamics` machinery into same-directory Python backend modules
+- the preserved `R01_*` Stage-5 notebooks remain provenance copies rather than active compute backends or public entry points
+- `stage5_hmm_selection_helpers.py` remains the public orchestration/helper layer, while `stage5_k_sweep_backend.py` and `stage5_shortlist_backend.py` hold the active backend execution code
 
 **Expected content**
 - K sweep over candidate model orders

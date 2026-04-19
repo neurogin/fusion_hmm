@@ -1,1 +1,5 @@
 _local_recovery_examples/
+
+_scratch_stage5_backend_extracts/
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
