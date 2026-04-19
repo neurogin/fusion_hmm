@@ -137,6 +137,12 @@ def run_atlas_on_boldgrid(
     raw_bids_root: str | Path | None = None,
     make_overlay_pngs: bool = True,
 ) -> pd.DataFrame:
+    """Resample the frozen Schaefer atlas onto each run's BOLD grid.
+
+    This is the standalone atlas-preservation QC branch used by Step 30.
+    It writes per-run atlas-on-grid NIfTI files plus a summary CSV, but it
+    does not define the atlas used by the main parcel-export path in Step 31.
+    """
     fmri_root = Path(fmri_root)
     out_root = Path(out_root)
     atlas_nii = Path(atlas_nii)
@@ -397,6 +403,13 @@ def run_bold_parcel_export(
     save_qc_figs: bool = True,
     save_qc_sidecars: bool = True,
 ) -> pd.DataFrame:
+    """Run the authoritative Stage-3 BOLD parcel export workflow.
+
+    This function freezes the recovered atlas branch, builds the preserved
+    nuisance-regression design, extracts one parcel PC1 time series per
+    Schaefer parcel, and writes the run-level QC sidecars used later for
+    Table S5 and Figure S5 support.
+    """
     fmri_root = Path(fmri_root)
     out_root = Path(out_root)
     if bold_preference is None:
@@ -407,6 +420,12 @@ def run_bold_parcel_export(
         (out_root / subdir).mkdir(parents=True, exist_ok=True)
 
     def build_design_matrix(confounds: pd.DataFrame, meta: dict) -> tuple[np.ndarray, list[str], dict, np.ndarray]:
+        """Build the preserved nuisance design for one run.
+
+        The design keeps the recovered manuscript choices explicit:
+        continuous confounds first, then FD/DVARS spike regressors, then any
+        retained motion-outlier columns, plus the intercept.
+        """
         def _expand_mask(mask: np.ndarray, pre: int = 0, post: int = 2) -> np.ndarray:
             n_tr = mask.shape[0]
             out = mask.copy()
@@ -526,6 +545,13 @@ def run_bold_parcel_export(
         return (Y - X @ beta).astype(np.float32)
 
     def parcel_pc1(Y_resid: np.ndarray, atlas_lbl_3d: np.ndarray, mask_3d: np.ndarray) -> tuple[np.ndarray, np.ndarray, dict]:
+        """Extract one parcel summary time series per atlas label.
+
+        The preserved fallback rule is:
+        use the first principal component when enough voxels are available,
+        otherwise fall back to the parcel mean, and mark truly undersupported
+        parcels as all-NaN.
+        """
         if atlas_lbl_3d.shape != mask_3d.shape:
             raise ValueError(f"atlas/mask mismatch {atlas_lbl_3d.shape} vs {mask_3d.shape}")
 
@@ -608,6 +634,8 @@ def run_bold_parcel_export(
     print("TSV frozen:", atlas_tsv_frozen)
 
     rows: list[dict] = []
+    # Process each run independently so the saved outputs and QC sidecars
+    # stay easy to audit run by run.
     for func_dir in _discover_func_dirs(fmri_root):
         run_tag = _infer_export_run_tag(func_dir)
         bold_file = _pick_bold_file(func_dir, bold_preference)

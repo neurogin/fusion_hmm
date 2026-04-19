@@ -38,6 +38,7 @@ def build_table_s4_bold_parcel_atlas_summary(
     atlas_qc_csv: str | Path,
     out_csv: str | Path,
 ) -> pd.DataFrame:
+    """Join exporter metadata with atlas-preservation QC for Table S4."""
     dataset_index_csv = Path(dataset_index_csv)
     atlas_qc_csv = Path(atlas_qc_csv)
     out_csv = Path(out_csv)
@@ -75,6 +76,7 @@ def build_table_s5_bold_motion_nuisance_summary(
     out_csv: str | Path,
     manual_notes_by_run: dict[str, str] | None = None,
 ) -> pd.DataFrame:
+    """Build the manuscript-facing motion and nuisance summary table."""
     dataset_index_csv = Path(dataset_index_csv)
     out_csv = Path(out_csv)
     manual_notes_by_run = manual_notes_by_run or {}
@@ -105,6 +107,7 @@ def build_figure_s5_reconstructed_from_exporter_qc(
     out_root: str | Path,
     out_png: str | Path,
 ) -> dict[str, str]:
+    """Rebuild the available Figure-S5-style QC figure from saved sidecars."""
     out_root = Path(out_root)
     out_png = Path(out_png)
 
@@ -163,6 +166,7 @@ def build_table_s5_and_figure_s5_bold_qc(
     figure_s5_png: str | Path,
     manual_notes_by_run: dict[str, str] | None = None,
 ) -> tuple[pd.DataFrame, dict[str, str]]:
+    """Write both the Table S5 support CSV and the reconstructed Figure S5."""
     out_root = Path(out_root)
     table = build_table_s5_bold_motion_nuisance_summary(
         dataset_index_csv=out_root / "dataset_index.csv",

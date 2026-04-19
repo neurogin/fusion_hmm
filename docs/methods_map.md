@@ -256,12 +256,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/3_bold/step33_build_table_s5_and_figure_s5_bold_qc.ipynb`
 
 **Stage-3 helper modules**
-- `notebooks/3_bold/helpers/stage3_bold_export_helpers.py`
-- `notebooks/3_bold/helpers/stage3_bold_summary_helpers.py`
+- `notebooks/3_bold/stage3_bold_export_helpers.py`
+- `notebooks/3_bold/stage3_bold_summary_helpers.py`
 
 **Compatibility note**
-- the step notebooks now load the active Stage-3 helper layer from the local `helpers/` folder
-- root-level copies of those helper module names may still remain beside the notebooks as secondary compatibility or provenance files
+- the active Stage-3 step notebooks now use the same-directory helper modules directly
+- helper-folder copies may still remain as secondary compatibility or provenance files
 
 **Expected content**
 - nuisance design construction
