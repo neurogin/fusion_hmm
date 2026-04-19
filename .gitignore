@@ -3,3 +3,7 @@ _local_recovery_examples/
 _scratch_stage5_backend_extracts/
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
+
+_scratch_stage6_backend_extracts/
+_scratch_stage6_generate.ps1
+_scratch_stage6_repair_modules.ps1

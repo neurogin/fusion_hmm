@@ -403,12 +403,18 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - optional: `notebooks/6_hmm_final/step65_optional_export_figure4_figure5_panels.ipynb`
 
 **Stage-6 helper files used here**
-- no helper module is required by the main Stage-6 public notebooks
+- `notebooks/6_hmm_final/stage6_hmm_final_helpers.py`
+- `notebooks/6_hmm_final/stage6_final_fit_backend.py`
+- `notebooks/6_hmm_final/stage6_review_backend.py`
+- `notebooks/6_hmm_final/stage6_bold_state_backend.py`
+- `notebooks/6_hmm_final/stage6_crossmodal_backend.py`
+- `notebooks/6_hmm_final/stage6_brainmaps_backend.py`
+- optional: `notebooks/6_hmm_final/stage6_panel_export_backend.py`
 
 **Compatibility note**
-- `step60_fit_final_k3_fusion_hmm.ipynb` through `step65_optional_export_figure4_figure5_panels.ipynb` now contain the public execution logic directly
-- the preserved `R01_PipelineE_*` and `PipelineE_*` notebooks remain provenance copies rather than active public entry points
-- `stage6_hmm_final_helpers.py` remains only as secondary compatibility or provenance utility code
+- `step60_fit_final_k3_fusion_hmm.ipynb` through `step65_optional_export_figure4_figure5_panels.ipynb` remain the public-facing entry points with the user-editable setup and scientific framing visible near the top
+- the active runtime/backend logic now lives in the same-directory Stage-6 helper and backend modules listed above
+- the preserved `R01_PipelineE_*` and `PipelineE_*` notebooks remain provenance copies rather than active public backends
 
 **Expected content**
 - final retained dataset loading
