@@ -31,6 +31,7 @@ import pandas as pd
 
 
 def contiguous_true_segments(mask_bool: np.ndarray) -> list[tuple[int, int]]:
+    """Convert a 1D keep mask into contiguous `[start, end)` TR segments."""
     mask = np.asarray(mask_bool).astype(bool)
     if mask.ndim != 1:
         raise ValueError("mask must be 1D")
@@ -74,6 +75,7 @@ def finite_rows_mask(*arrays_2d: np.ndarray) -> np.ndarray:
 
 
 def resolve_mode_spec(feature_mode: str) -> dict[str, object]:
+    """Translate the public feature-mode label into the preserved file/lag conventions."""
     mode = feature_mode.lower()
     if mode == "lags":
         return {"feature_mode": "lags", "lags_tr": (-1, 0, 1), "ltag": "lags-1_0_1", "eeg_file": "eeg_power_tr_lags.npy"}
@@ -83,6 +85,7 @@ def resolve_mode_spec(feature_mode: str) -> dict[str, object]:
 
 
 def audit_segment_inputs(per_run_dir: str | Path, feature_mode: str, minlen: int) -> pd.DataFrame:
+    """Report which per-run alignment products are present before segment export begins."""
     per_run_dir = Path(per_run_dir)
     spec = resolve_mode_spec(feature_mode)
     runs = sorted([p.name for p in per_run_dir.iterdir() if p.is_dir()])
@@ -117,6 +120,7 @@ def build_segments_dataset(
     out_root: str | Path | None = None,
     make_plots: bool = True,
 ) -> dict[str, object]:
+    """Build the retained segment arrays, manifest, and QC summaries for one feature branch."""
     per_run_dir = Path(per_run_dir)
     spec = resolve_mode_spec(feature_mode)
     if out_root is None:
@@ -258,6 +262,7 @@ def build_table_s6_alignment_parameters(
     minlen: int,
     out_csv: str | Path,
 ) -> pd.DataFrame:
+    """Turn the saved Step-40 parameter record into the manuscript-facing Table S6 CSV."""
     with open(alignment_parameters_json, "r", encoding="utf-8") as handle:
         params = json.load(handle)
 
@@ -307,6 +312,7 @@ def build_table_s7_run_level_summary(
     out_csv: str | Path,
     minlen: int,
 ) -> pd.DataFrame:
+    """Build the run-level retained-data summary used for manuscript Table S7."""
     df = pd.read_csv(per_run_segments_csv).sort_values("run").reset_index(drop=True)
     table = pd.DataFrame(
         {
@@ -331,6 +337,7 @@ def build_final_dataset_summary(
     manifest_tsv: str | Path,
     out_json: str | Path,
 ) -> dict[str, object]:
+    """Summarize the canonical retained dataset from the saved segment manifest."""
     manifest = pd.read_csv(manifest_tsv, sep="\t")
     if manifest.empty:
         summary = {"n_runs": 0, "n_segments": 0, "retained_TRs": 0, "usable_minutes": 0.0, "n_features": 0}
@@ -358,6 +365,7 @@ def build_figure1_support_outputs(
     out_dir: str | Path,
     minlen: int,
 ) -> dict[str, str]:
+    """Write the scripted plots and manifest that support hybrid/manual Figure 1 assembly."""
     alignment_output_dir = Path(alignment_output_dir)
     segment_root = Path(segment_root)
     out_dir = Path(out_dir)

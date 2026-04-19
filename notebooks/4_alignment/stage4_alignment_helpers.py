@@ -47,6 +47,7 @@ def _find_col(df: pd.DataFrame, candidates: list[str] | tuple[str, ...]) -> str 
 
 
 def ensure_2d_time_major(x: np.ndarray, n_parcels_expected: int = 200) -> np.ndarray:
+    """Return a time-by-parcel array, transposing only when the parcel axis is obvious."""
     if x.ndim != 2:
         raise ValueError(f"Expected 2D array, got shape {x.shape}")
     n_time, n_parcels = x.shape
@@ -62,6 +63,7 @@ def ensure_2d_time_major(x: np.ndarray, n_parcels_expected: int = 200) -> np.nda
 
 
 def run_id_from_fname(fname: str) -> str | None:
+    """Extract the `sub-XX_ses-YY` run identifier used throughout the public pipeline."""
     match = re.search(r"(sub-\d+_ses-\d+)", fname)
     return match.group(1) if match else None
 
@@ -82,6 +84,7 @@ def discover_input_maps(
     eeg_parcel_npy_dir: str | Path,
     bold_parcel_npy_dir: str | Path,
 ) -> dict[str, dict[str, Path]]:
+    """Collect the run-level files required before a Stage-4 alignment can proceed."""
     raw_events_dir = Path(raw_events_dir)
     preproc_events_dir = Path(preproc_events_dir)
     excl_union_dir = Path(excl_union_dir)
@@ -99,6 +102,7 @@ def discover_input_maps(
 
 
 def build_run_input_audit(input_maps: dict[str, dict[str, Path]]) -> pd.DataFrame:
+    """Summarize which runs have every Stage-4 prerequisite available on disk."""
     all_runs = sorted({run for mapping in input_maps.values() for run in mapping.keys()})
     rows: list[dict[str, object]] = []
     required = ["bold", "eeg_pc1", "eeg_time", "raw_events", "preproc_events", "excl_union"]
@@ -123,6 +127,7 @@ def extract_event_times(
     label_cols: tuple[str, ...] = ("trial_type", "value", "type"),
     time_cols: list[str] | None = None,
 ) -> np.ndarray:
+    """Read event times from a TSV while tolerating the label/time column variants seen in practice."""
     if time_cols is None:
         time_cols = ["onset", "start", "start_sec", "time", "latency_sec", "latency"]
 
@@ -212,6 +217,12 @@ def build_segment_offsets_from_matches(
     interval_matches: list[tuple[int, int]],
     min_matches: int = 5,
 ) -> tuple[list[dict[str, float]], dict[str, float | int]]:
+    """Estimate piecewise raw-to-preprocessed offsets from matched R128 interval sequences.
+
+    Important preserved behavior:
+    the active split threshold inside this function remains hard-coded at 0.5 s,
+    even though the public notebook still exposes `OFFSET_JUMP_THR`.
+    """
     if len(interval_matches) < min_matches:
         raise ValueError("Too few interval matches to build a stable mapping.")
 
@@ -254,6 +265,12 @@ def build_segment_offsets_from_matches(
 
 
 def align_raw_preproc(raw_events_tsv: str | Path, preproc_events_tsv: str | Path, dt_tol_sec: float = 0.15):
+    """Build the preserved raw-to-preprocessed EEG time mapping for one run.
+
+    The alignment depends on recurring `R128` events in both raw and preprocessed
+    event TSVs, then re-expresses the mapping relative to the first raw `S1`
+    event used as the absolute anchor.
+    """
     raw_df = _read_tsv(Path(raw_events_tsv))
     pre_df = _read_tsv(Path(preproc_events_tsv))
 
@@ -424,6 +441,7 @@ def build_keep_masks(
     hybrid_min_cov: float,
     hybrid_min_block_frac: float,
 ):
+    """Apply the preserved base and hybrid Stage-4 TR-retention rules."""
     n_tr = len(tr_edges) - 1
     excl_dur = compute_tr_excl_dur(tr_edges, union_raw)
     excl_frac = excl_dur / tr_sec
@@ -700,6 +718,7 @@ def process_one_run_alignment(
     plot_run_set: set[str],
     example_parcel_index: int,
 ) -> dict[str, object]:
+    """Run the full preserved Stage-4 alignment workflow for one run and save its products."""
     bold_pc = np.load(input_maps["bold"][run])
     bold_pc = ensure_2d_time_major(bold_pc)
     n_tr = bold_pc.shape[0]
@@ -917,6 +936,7 @@ def run_alignment_batch(
     plot_runs: set[str] | list[str] | tuple[str, ...],
     example_parcel_index: int,
 ) -> dict[str, object]:
+    """Process every ready run, then write the public audit and QC summaries for Step 40."""
     alignment_output_dir = Path(alignment_output_dir)
     out_runs = alignment_output_dir / "per_run"
     out_qc = alignment_output_dir / "qc"

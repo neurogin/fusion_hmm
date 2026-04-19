@@ -303,12 +303,12 @@ Unless otherwise noted, refactoring and code organization should follow this fin
 - `notebooks/4_alignment/step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
 
 **Stage-4 helper files used here**
-- `notebooks/4_alignment/helpers/stage4_alignment_helpers.py`
-- `notebooks/4_alignment/helpers/stage4_segment_helpers.py`
+- `notebooks/4_alignment/stage4_alignment_helpers.py`
+- `notebooks/4_alignment/stage4_segment_helpers.py`
 
 **Compatibility note**
-- the step notebooks now load the active Stage-4 helper layer from the local `helpers/` folder
-- root-level copies of those helper module names may still remain beside the notebooks as secondary compatibility or provenance files
+- the step notebooks now load the active Stage-4 helper modules from the main Stage-4 folder so the public notebooks read more directly
+- copies under `notebooks/4_alignment/helpers/` may still remain as secondary compatibility or provenance files
 
 **Expected content**
 - raw-to-preprocessed EEG timeline reconciliation
