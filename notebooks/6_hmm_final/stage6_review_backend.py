@@ -6,13 +6,7 @@ stays focused on the public-facing interpretation of the step."""
 
 from __future__ import annotations
 
-
-def _display_fallback(obj):
-    try:
-        from IPython.display import display as ipy_display
-        ipy_display(obj)
-    except Exception:
-        print(obj)
+from stage6_backend_common import load_json_file
 
 
 def run_final_review_backend(
@@ -22,8 +16,6 @@ def run_final_review_backend(
 ):
     """Review saved final-fit outputs and rebuild the main QC/state-dynamics figures."""
     from pathlib import Path
-    from pathlib import Path
-    import json
     import numpy as np
     import pandas as pd
     import matplotlib.pyplot as plt
@@ -32,14 +24,13 @@ def run_final_review_backend(
     FINAL_DIR = RESULT_ROOT / 'final'
     OUT_FIG_DIR = Path(review_output_root)
     OUT_FIG_DIR.mkdir(exist_ok=True, parents=True)
-    
-    display = _display_fallback
-    
+
     plt.rcParams['figure.dpi'] = 130
     plt.rcParams['axes.spines.top'] = False
     plt.rcParams['axes.spines.right'] = False
-    
+
     def require_file(label, *candidates):
+        """Return the first existing result file or raise a clear error."""
         for p in candidates:
             p = Path(p)
             if p.exists():
@@ -50,10 +41,7 @@ def run_final_review_backend(
     print('RESULT_ROOT:', RESULT_ROOT)
     print('FINAL_DIR   :', FINAL_DIR)
     print('OUT_FIG_DIR :', OUT_FIG_DIR)
-    # ---- notebook cell 2 ----
-    # ------------------------------
-    # Resolve and load saved PipelineE outputs
-    # ------------------------------
+    # Resolve and load the saved final-fit outputs.
     QC_PATH         = require_file('qc_summary.json', RESULT_ROOT / 'qc_summary.json')
     REFIT_PATH      = require_file('refit_results.json', FINAL_DIR / 'refit_results.json', RESULT_ROOT / 'refit_results.json')
     SUBJECT_PATH    = require_file('subject_metrics.tsv', RESULT_ROOT / 'subject_metrics.tsv')
@@ -64,11 +52,8 @@ def run_final_review_backend(
     MEANS_PATH      = require_file('means_pca.npy', FINAL_DIR / 'means_pca.npy', RESULT_ROOT / 'means_pca.npy')
     COVS_PATH       = require_file('covs_pca.npy', FINAL_DIR / 'covs_pca.npy', RESULT_ROOT / 'covs_pca.npy')
     
-    with open(QC_PATH, 'r', encoding='utf-8') as f:
-        qc = json.load(f)
-    
-    with open(REFIT_PATH, 'r', encoding='utf-8') as f:
-        refit = json.load(f)
+    qc = load_json_file(QC_PATH)
+    refit = load_json_file(REFIT_PATH)
     
     subject_metrics = pd.read_csv(SUBJECT_PATH, sep='\t')
     run_metrics     = pd.read_csv(RUN_PATH, sep='\t')
@@ -99,10 +84,7 @@ def run_final_review_backend(
     print('means_pca shape      :', means_pca.shape)
     print('covs_pca shape       :', covs_pca.shape)
     
-    # ---- notebook cell 3 ----
-    # ------------------------------
-    # Helpers
-    # ------------------------------
+    # Small numerical helpers for the saved review summaries.
     STATE_COLS = ['FO_s01', 'FO_s02', 'FO_s03']
     STATE_NAMES = ['S1', 'S2', 'S3']
     
@@ -146,25 +128,21 @@ def run_final_review_backend(
                 out[j, i] = c
         return out
     
-    # ---- notebook cell 5 ----
     qc_df = pd.DataFrame([qc]).T
     qc_df.columns = ['value']
     qc_df
-    
-    # ---- notebook cell 6 ----
+
     refit_df = pd.DataFrame(refit).sort_values('fe').reset_index(drop=True)
     refit_df
-    
-    # ---- notebook cell 8 ----
+
     subject_metrics = subject_metrics.copy()
     run_metrics = run_metrics.copy()
     
     subject_metrics['dominant_state'] = dominant_state_labels(subject_metrics)
     run_metrics['dominant_state'] = dominant_state_labels(run_metrics)
-    
+
     subject_metrics
-    
-    # ---- notebook cell 9 ----
+
     subject_summary = {
         'n_subjects': int(len(subject_metrics)),
         'n_runs': int(len(run_metrics)),
@@ -177,18 +155,15 @@ def run_final_review_backend(
         'subject_neff_median': float(subject_metrics['neff'].median()),
     }
     subject_summary
-    
-    # ---- notebook cell 10 ----
+
     # Rank subjects by how dominant S2 is
     subject_ranked = subject_metrics.sort_values('FO_s02', ascending=False).reset_index(drop=True)
     subject_ranked[['subject', 'n_runs', 'total_T', 'FO_s01', 'FO_s02', 'FO_s03', 'FO_max', 'n_active', 'neff']]
-    
-    # ---- notebook cell 11 ----
+
     # Show multi-run subjects to check within-subject consistency across sessions
     multi_run = run_metrics.groupby('subject').filter(lambda x: len(x) > 1).copy()
     multi_run.sort_values(['subject', 'run'])
-    
-    # ---- notebook cell 12 ----
+
     # Within-subject run-to-run spread for subjects with multiple runs
     rows = []
     for subject, df in run_metrics.groupby('subject'):
@@ -200,12 +175,10 @@ def run_final_review_backend(
     
     run_spread = pd.DataFrame(rows)
     run_spread
-    
-    # ---- notebook cell 14 ----
+
     A_df = pd.DataFrame(A, index=STATE_NAMES, columns=STATE_NAMES)
     A_df
-    
-    # ---- notebook cell 15 ----
+
     pi = stationary_distribution(A)
     outgoing_excl_self = 1.0 - np.diag(A)
     expected_dwell_tr = dwell_from_transition_matrix(A)
@@ -219,8 +192,7 @@ def run_final_review_backend(
     })
     transition_summary['expected_dwell_sec_if_TR_2p1'] = transition_summary['expected_dwell_TR'] * 2.1
     transition_summary
-    
-    # ---- notebook cell 16 ----
+
     # Compare stationary distribution from A to the final seed's FO distribution from refit_results.json
     best_refit = refit_df.iloc[0].copy()
     fo_final = np.array(best_refit['fo'], dtype=float)
@@ -231,13 +203,11 @@ def run_final_review_backend(
         'difference': fo_final - pi,
     })
     compare_fo
-    
-    # ---- notebook cell 18 ----
+
     sig_corr = pairwise_row_corr(state_sig)
     sig_corr_df = pd.DataFrame(sig_corr, index=STATE_NAMES, columns=STATE_NAMES)
     sig_corr_df
-    
-    # ---- notebook cell 19 ----
+
     # Optional: mean norms and covariance traces in PCA space
     rows = []
     for k in range(3):
@@ -248,8 +218,7 @@ def run_final_review_backend(
         })
     state_scale_df = pd.DataFrame(rows)
     state_scale_df
-    
-    # ---- notebook cell 21 ----
+
     # Subject-level stacked occupancy plot
     fig, ax = plt.subplots(figsize=(10, 5))
     plot_df = subject_metrics.sort_values('FO_s02', ascending=False).reset_index(drop=True)
@@ -265,8 +234,7 @@ def run_final_review_backend(
     fig.tight_layout()
     fig.savefig(OUT_FIG_DIR / 'subject_fractional_occupancy_stacked.png', bbox_inches='tight')
     plt.show()
-    
-    # ---- notebook cell 22 ----
+
     # Run-level occupancy plot
     fig, ax = plt.subplots(figsize=(11, 5))
     plot_df = run_metrics.sort_values('FO_s02', ascending=False).reset_index(drop=True)
@@ -282,8 +250,7 @@ def run_final_review_backend(
     fig.tight_layout()
     fig.savefig(OUT_FIG_DIR / 'run_fractional_occupancy_stacked.png', bbox_inches='tight')
     plt.show()
-    
-    # ---- notebook cell 23 ----
+
     # Transition matrix heatmap
     fig, ax = plt.subplots(figsize=(5, 4))
     im = ax.imshow(A, aspect='auto')
@@ -299,8 +266,7 @@ def run_final_review_backend(
     fig.tight_layout()
     fig.savefig(OUT_FIG_DIR / 'transition_matrix_A.png', bbox_inches='tight')
     plt.show()
-    
-    # ---- notebook cell 24 ----
+
     # Dwell times from A
     fig, ax = plt.subplots(figsize=(6, 4))
     ax.bar(dwell_from_A['state'], dwell_from_A['dwell_A_sec'])
@@ -309,8 +275,7 @@ def run_final_review_backend(
     fig.tight_layout()
     fig.savefig(OUT_FIG_DIR / 'dwell_time_seconds.png', bbox_inches='tight')
     plt.show()
-    
-    # ---- notebook cell 25 ----
+
     # Signature correlation heatmap
     fig, ax = plt.subplots(figsize=(5, 4))
     im = ax.imshow(sig_corr, vmin=-1, vmax=1, aspect='auto')
@@ -326,8 +291,7 @@ def run_final_review_backend(
     fig.tight_layout()
     fig.savefig(OUT_FIG_DIR / 'state_signature_correlation.png', bbox_inches='tight')
     plt.show()
-    
-    # ---- notebook cell 27 ----
+
     subj_dom_counts = subject_metrics['dominant_state'].value_counts().sort_index().to_dict()
     run_dom_counts = run_metrics['dominant_state'].value_counts().sort_index().to_dict()
     

@@ -46,8 +46,7 @@ def run_final_fit_backend(
     SEGMENT_BRANCH_ROOT = SEGMENTS_ROOT / DATA_VARIANT
     FINAL_MODEL_OUTPUT_ROOT = FINAL_MODEL_ROOT / f"PipelineE_final_K{K_FINAL:02d}_{DATA_VARIANT}_{FEATURE_MODE}_minlen{MINLEN}"
     
-    # ---- cleaned public configuration bridge ----
-    from pathlib import Path
+    # Fixed public configuration for the canonical Stage-6 final fit.
     import os, json
     
     FINAL_ROOT = SEGMENT_BRANCH_ROOT
@@ -107,9 +106,8 @@ def run_final_fit_backend(
     print("SEQ_LEN/STEP/BATCH:", SEQ_LEN, STEP_SIZE, BATCH_SIZE)
     print("SEEDS:", SEEDS[:5], "...", f"(n={len(SEEDS)})")
     print("Two-stage:", TWO_STAGE_TRAIN_TRANS, "| TOPM_REFINES:", TOPM_REFINES)
-    # ---- notebook cell 2 ----
     # =========================
-    # Cell 1 — Imports + manifest resolution + basic QC + provenance
+    # Imports, manifest resolution, and basic QC
     # =========================
     import gc, math, json, re
     from pathlib import Path
@@ -233,9 +231,8 @@ def run_final_fit_backend(
     (OUT_ROOT / "run_meta.json").write_text(json.dumps(run_meta, indent=2))
     print("Wrote:", OUT_ROOT / "run_meta.json")
     
-    # ---- notebook cell 3 ----
     # =========================
-    # Cell 2 — TF GPU config (PipelineD-style hardening)
+    # TensorFlow runtime setup
     # =========================
     try:
         tf.config.threading.set_intra_op_parallelism_threads(1)
@@ -277,9 +274,8 @@ def run_final_fit_backend(
     _ = tf.matmul(tf.random.normal((64,64)), tf.random.normal((64,64)))
     print("TF OK")
     
-    # ---- notebook cell 4 ----
     # =========================
-    # Cell 3 — Helpers (global preproc + datasets + signatures + collapse + matching)
+    # Helper functions for preprocessing, fitting, and QC
     # =========================
     from scipy.optimize import linear_sum_assignment
     
@@ -664,9 +660,8 @@ def run_final_fit_backend(
         fit_one_stage(m2, train_ds, steps_tr, callbacks())
         return m2
     
-    # ---- notebook cell 5 ----
     # =========================
-    # Cell 4 — Build FULL dataset (load + runwise zscore + global preproc + Data)
+    # Build the full retained dataset
     # =========================
     X_all_raw = load_segments_from_manifest(manifest)
     
@@ -719,9 +714,8 @@ def run_final_fit_backend(
     print("Global PCA meta:", meta)
     print("windows:", nwin, "| steps_per_epoch:", steps, "| drop_remainder:", drop_rem)
     
-    # ---- notebook cell 6 ----
     # =========================
-    # Cell 5 — Seed screening (one-stage; fast) + per-seed artifact save
+    # Seed screening and per-seed artifact saving
     # =========================
     K = int(K_FINAL)
     cfg = make_config(K, int(meta["D_pca"]))
@@ -821,9 +815,8 @@ def run_final_fit_backend(
     
     print("TOPM:", [t["seed"] for t in topM])
     
-    # ---- notebook cell 7 ----
     # =========================
-    # Cell 6 — Two-stage refit on TOP-M seeds + numeric guards + choose final best seed
+    # Two-stage refit and final seed choice
     # =========================
     topM = json.loads((OUT_ROOT / "topM_seeds.json").read_text())
     
@@ -946,9 +939,8 @@ def run_final_fit_backend(
     
     print("Saved final artifacts to:", final_dir)
     
-    # ---- notebook cell 8 ----
     # =========================
-    # Cell 7 — Decode Gamma/Viterbi per run + compute run/subject metrics
+    # Decode Gamma and Viterbi outputs per run
     # =========================
     from collections import defaultdict
     
@@ -1053,9 +1045,8 @@ def run_final_fit_backend(
     }).to_csv(OUT_ROOT / "dwell_from_A.tsv", sep="\t", index=False)
     print("Wrote:", OUT_ROOT / "dwell_from_A.tsv")
     
-    # ---- notebook cell 9 ----
     # =========================
-    # Cell 8 — Seed-to-seed identifiability (signatures + A)
+    # Seed-to-seed identifiability summaries
     # =========================
     seed_dirs = sorted([p for p in (OUT_ROOT / "seeds").glob("seed_*") if p.is_dir()])
     ok_seeds, sigs, As = [], [], []

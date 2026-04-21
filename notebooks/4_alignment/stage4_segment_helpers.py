@@ -44,6 +44,7 @@ def contiguous_true_segments(mask_bool: np.ndarray) -> list[tuple[int, int]]:
 
 
 def filter_segments_by_minlen(segs: list[tuple[int, int]], minlen: int) -> list[tuple[int, int]]:
+    """Keep only contiguous segments whose TR length meets the requested minimum."""
     return [(start, end) for (start, end) in segs if (end - start) >= int(minlen)]
 
 

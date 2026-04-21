@@ -5,13 +5,8 @@ It preserves the parcelized cortical-map logic while keeping the public notebook
 
 from __future__ import annotations
 
-
-def _display_fallback(obj):
-    try:
-        from IPython.display import display as ipy_display
-        ipy_display(obj)
-    except Exception:
-        print(obj)
+from stage6_backend_common import display_or_print
+from stage6_matrix_utils import compute_nodal_mean_r, compute_symmetric_limits, infer_ut_matrix_size, ut_to_square
 
 
 def run_brainmaps_backend(
@@ -25,8 +20,8 @@ def run_brainmaps_backend(
 ):
     """Build parcelized cortical state maps from saved final-fit outputs."""
     from pathlib import Path
-    from pathlib import Path
-    import json, math, warnings
+    import json
+    import warnings
     
     import numpy as np
     import pandas as pd
@@ -37,9 +32,9 @@ def run_brainmaps_backend(
     warnings.filterwarnings("ignore", category=RuntimeWarning)
     pd.set_option("display.max_rows", 300)
     pd.set_option("display.max_columns", 300)
-    
-    display = _display_fallback
-    
+
+    display = display_or_print
+
     try:
         import nibabel as nib
     except Exception as e:
@@ -69,7 +64,6 @@ def run_brainmaps_backend(
     ATLAS_TSV = TF_TPL_DIR / "tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-200Parcels7Networks_dseg.tsv"
     ATLAS_TXT = TF_TPL_DIR / "tpl-MNI152NLin2009cAsym_atlas-Schaefer2018_desc-200Parcels7Networks_dseg.txt"
     STATE_SIGNATURE_FILE = FINAL_DIR / "state_signature_ut_boldcorr.npy"
-    STATE_SUMMARY_FILE = RESULT_ROOT / "state_summary_table.tsv"
     OUT_DIR = Path(map_output_root)
     FIG_DIR = OUT_DIR / "figures"
     TAB_DIR = OUT_DIR / "tables"
@@ -98,29 +92,9 @@ def run_brainmaps_backend(
     print("ATLAS_NII  :", ATLAS_NII)
     print("ATLAS_TSV  :", ATLAS_TSV)
     print("OUT_DIR    :", OUT_DIR)
-    # ---- notebook cell 1 (helper section onward) ----
-    # =========================
-    # Helpers
-    # =========================
-    
-    def infer_n_from_ut_length(m):
-        n = int((1 + math.sqrt(1 + 8 * m)) / 2)
-        if n * (n - 1) // 2 != m:
-            raise ValueError(f"Upper-triangle length {m} does not match any n x n matrix")
-        return n
-    
-    
-    def ut_to_square(vec, fill_diag=1.0):
-        vec = np.asarray(vec)
-        n = infer_n_from_ut_length(vec.size)
-        M = np.zeros((n, n), dtype=float)
-        iu = np.triu_indices(n, 1)
-        M[iu] = vec
-        M[(iu[1], iu[0])] = vec
-        np.fill_diagonal(M, fill_diag)
-        return M
-    
-    
+
+    # Surface-specific helpers remain local because they depend on nilearn and
+    # the plotting conventions for this optional map-building step.
     def parse_network(label):
         parts = str(label).split("_")
         return parts[2] if len(parts) >= 4 else "Unknown"
@@ -162,12 +136,6 @@ def run_brainmaps_backend(
         return out
     
     
-    def compute_nodal_mean_r(mat):
-        tmp = mat.copy().astype(float)
-        np.fill_diagonal(tmp, np.nan)
-        return np.nanmean(tmp, axis=1)
-    
-    
     def project_label_img_to_surface(label_img, mesh, interpolation="nearest"):
         # Try robust nearest-label projection across nilearn versions
         try:
@@ -203,13 +171,6 @@ def run_brainmaps_backend(
         return out
     
     
-    def compute_symmetric_limits(arrays, quantile=0.98):
-        vals = np.concatenate([np.ravel(np.asarray(a)) for a in arrays])
-        vals = vals[np.isfinite(vals)]
-        vmax = np.quantile(np.abs(vals), quantile)
-        return float(vmax)
-    
-    
     def add_network_legend(fig, network_order, network_colors, loc=(0.5, 0.02), ncol=4):
         handles = [mpatches.Patch(color=network_colors[n], label=n) for n in network_order]
         fig.legend(handles=handles, loc="lower center", ncol=ncol, frameon=False, bbox_to_anchor=loc)
@@ -233,7 +194,7 @@ def run_brainmaps_backend(
     
     state_ut = np.load(STATE_SIGNATURE_FILE)
     K, M = state_ut.shape
-    n_parc = infer_n_from_ut_length(M)
+    n_parc = infer_ut_matrix_size(M)
     print("state_signature_ut_boldcorr shape:", state_ut.shape)
     print("n_states:", K)
     print("n_parcels:", n_parc)
@@ -466,27 +427,8 @@ def run_brainmaps_backend(
         print("Saved:", TAB_DIR / f"{safe_name}_top_parcels.tsv")
         display(out.head(20))
     
-    """
-    ## Recommended manuscript use
-    
-    For the manuscript, I would use these as:
-    
-    - **Supplementary brain-map figure**
-      - reference Schaefer-7 map
-      - **S2 nodal mean connectivity**
-      - **S1 − S2** contrast
-      - **S3 − S2** contrast
-    
-    This keeps the main text focused on:
-    - state dynamics
-    - network block heatmaps
-    - ranked network contrasts
-    
-    and uses the surface maps as anatomically intuitive support.
-    
-    """
-    
-    # ---- notebook cell 2 (optional Option-B branch) ----
+   
+
     if INCLUDE_OPTION_B:
         # =========================
         # OPTION B (corrected):

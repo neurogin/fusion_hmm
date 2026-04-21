@@ -6,6 +6,10 @@ This module holds the active Python implementation behind
 It preserves the original shortlist training, refit, and cross-fold matching
 logic while removing the old dependence on executing preserved provenance
 notebooks at runtime.
+
+The main outputs are the per-K fold summaries, matched state-similarity tables,
+and other shortlist products that feed the manuscript-facing comparison in
+Step 52.
 """
 
 from __future__ import annotations
@@ -13,6 +17,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+from stage5_backend_common import auto_find_manifest, parse_subject_from_run, resolve_segment_path
 
 
 @dataclass
@@ -66,45 +72,6 @@ class ShortlistBackendConfig:
     resume_if_exists: bool = True
     do_contiguity_qc_if_possible: bool = True
     check_numerics: bool = True
-
-
-def _auto_find_manifest(final_root: Path, feature_mode: str, minlen: int) -> Path:
-    mode = feature_mode.lower()
-    candidates = [
-        final_root / f"hmm_segments_minlen{minlen}_{mode}" / "segments_manifest.tsv",
-        final_root / f"hmm_segments_minlen{minlen}" / "segments_manifest.tsv",
-    ]
-    for manifest_tsv in candidates:
-        if manifest_tsv.exists():
-            return manifest_tsv
-
-    hits = list(final_root.rglob("segments_manifest.tsv"))
-    if hits:
-        def score(path: Path) -> int:
-            path_str = str(path)
-            score_value = 0
-            if f"minlen{minlen}" in path_str:
-                score_value += 10
-            if mode in path_str:
-                score_value += 5
-            return score_value
-
-        hits = sorted(hits, key=score, reverse=True)
-        return hits[0]
-
-    raise FileNotFoundError(f"Could not find segments_manifest.tsv under {final_root}")
-
-
-def _parse_subject(run: str) -> str:
-    for part in str(run).split("_"):
-        if part.startswith("sub-"):
-            return part
-    return str(run).split("_")[0]
-
-
-def _resolve_seg_path(seg_root: Path, path_like: str) -> Path:
-    path = Path(path_like)
-    return path if path.is_absolute() else (seg_root / path)
 
 
 def run_loso_shortlist_backend(config: ShortlistBackendConfig) -> dict[str, Any]:
@@ -246,7 +213,7 @@ def run_loso_shortlist_backend(config: ShortlistBackendConfig) -> dict[str, Any]
     (OUT_ROOT / "run_meta.json").write_text(json.dumps(run_meta, indent=2), encoding="utf-8")
 
     if MANIFEST_TSV is None:
-        MANIFEST_TSV = _auto_find_manifest(FINAL_ROOT, FEATURE_MODE, MINLEN)
+        MANIFEST_TSV = auto_find_manifest(FINAL_ROOT, FEATURE_MODE, MINLEN)
 
     print("K_LIST:", K_LIST)
     print("OUT_ROOT:", OUT_ROOT)
@@ -264,14 +231,14 @@ def run_loso_shortlist_backend(config: ShortlistBackendConfig) -> dict[str, Any]
     if "run" not in manifest.columns or "seg_path" not in manifest.columns:
         raise ValueError("Expected manifest columns: 'run', 'seg_path'")
 
-    manifest["subject"] = manifest["run"].apply(_parse_subject)
+    manifest["subject"] = manifest["run"].apply(parse_subject_from_run)
     sort_cols = ["subject", "run"]
     if "seg_id" in manifest.columns:
         sort_cols.append("seg_id")
     manifest = manifest.sort_values(sort_cols).reset_index(drop=True)
 
     seg_root = MANIFEST_TSV.parent
-    manifest["seg_abs"] = [_resolve_seg_path(seg_root, seg_path) for seg_path in manifest["seg_path"].tolist()]
+    manifest["seg_abs"] = [resolve_segment_path(seg_root, seg_path) for seg_path in manifest["seg_path"].tolist()]
     missing = manifest.loc[~manifest["seg_abs"].apply(lambda path: path.exists())]
     if len(missing):
         print("Missing referenced seg files (showing first 10):")

@@ -33,12 +33,14 @@ import pandas as pd
 
 
 def _read_tsv(path: Path) -> pd.DataFrame:
+    """Read a TSV and normalize whitespace around column names."""
     df = pd.read_csv(path, sep="\t")
     df.columns = [str(c).strip() for c in df.columns]
     return df
 
 
 def _find_col(df: pd.DataFrame, candidates: list[str] | tuple[str, ...]) -> str | None:
+    """Return the first matching column name from a case-insensitive candidate list."""
     cols = {str(c).lower(): str(c) for c in df.columns}
     for cand in candidates:
         if cand.lower() in cols:
@@ -69,6 +71,7 @@ def run_id_from_fname(fname: str) -> str | None:
 
 
 def _map_files_by_run(directory: Path, pattern: str) -> dict[str, Path]:
+    """Index files by the public `sub-XX_ses-YY` run identifier extracted from the filename."""
     out: dict[str, Path] = {}
     for path in directory.glob(pattern):
         run_id = run_id_from_fname(path.name)
@@ -161,6 +164,7 @@ def extract_event_times(
 
 
 def greedy_match_intervals(dt_raw: np.ndarray, dt_pre: np.ndarray, tol: float = 0.15) -> list[tuple[int, int]]:
+    """Greedily match successive R128 interval differences when the sequences already align well."""
     matches: list[tuple[int, int]] = []
     j = 0
     for i in range(len(dt_raw)):
@@ -173,6 +177,7 @@ def greedy_match_intervals(dt_raw: np.ndarray, dt_pre: np.ndarray, tol: float = 
 
 
 def dp_monotone_match_intervals(dt_raw: np.ndarray, dt_pre: np.ndarray, tol: float = 0.15) -> list[tuple[int, int]]:
+    """Recover the longest monotone interval match when greedy alignment is not sufficient."""
     n_raw = len(dt_raw)
     n_pre = len(dt_pre)
     if n_raw == 0 or n_pre == 0:

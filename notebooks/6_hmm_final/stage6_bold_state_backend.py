@@ -5,13 +5,8 @@ It preserves the saved-artifact reconstruction logic while keeping the public no
 
 from __future__ import annotations
 
-
-def _display_fallback(obj):
-    try:
-        from IPython.display import display as ipy_display
-        ipy_display(obj)
-    except Exception:
-        print(obj)
+from stage6_backend_common import load_json_file, require_result_file, resolve_existing_path
+from stage6_matrix_utils import corr_from_cov, square_to_ut, ut_to_square
 
 
 def run_bold_state_reconstruction_backend(
@@ -25,8 +20,9 @@ def run_bold_state_reconstruction_backend(
 ):
     """Rebuild the BOLD-state network summaries from saved final-fit artifacts."""
     from pathlib import Path
-    from pathlib import Path
-    import json, math, re, warnings
+    import json
+    import re
+    import warnings
     import numpy as np
     import pandas as pd
     import matplotlib.pyplot as plt
@@ -44,9 +40,7 @@ def run_bold_state_reconstruction_backend(
     pd.set_option("display.max_rows", 300)
     pd.set_option("display.max_columns", 300)
     warnings.filterwarnings("ignore", category=RuntimeWarning)
-    
-    display = _display_fallback
-    
+
     RESULT_ROOT = Path(final_model_root)
     FINAL_DIR = RESULT_ROOT / "final"
     TEMPLATEFLOW_HOME = Path(templateflow_root)
@@ -67,44 +61,22 @@ def run_bold_state_reconstruction_backend(
     print("DEFAULT_SCHAEFER_TSV :", DEFAULT_SCHAEFER_TSV)
     print("DEFAULT_BRAINSTORM_TXT:", DEFAULT_BRAINSTORM_TXT)
     print("FIG_DIR           :", FIG_DIR)
-    # ---- notebook cell 3 ----
-    # =========================
-    # Path helpers
-    # =========================
-    
-    def resolve_existing(*candidates):
-        for c in candidates:
-            if c is None:
-                continue
-            p = Path(c)
-            if p.exists():
-                return p
-        return None
-    
-    def load_json(path):
-        return json.loads(Path(path).read_text())
-    
-    def infer_result_file(name):
-        p = resolve_existing(RESULT_ROOT / name, FINAL_DIR / name, Path(name))
-        if p is None:
-            raise FileNotFoundError(f"Could not find required file: {name}")
-        return p
-    
+    # Resolve the saved final-fit outputs needed for the BOLD reconstruction.
     required = {
-        "qc_summary": infer_result_file("qc_summary.json"),
-        "subject_metrics": infer_result_file("subject_metrics.tsv"),
-        "run_metrics": infer_result_file("run_metrics.tsv"),
-        "trans_prob": infer_result_file("trans_prob.npy"),
-        "state_signature": infer_result_file("state_signature_ut_boldcorr.npy"),
-        "covs_pca": infer_result_file("covs_pca.npy"),
+        "qc_summary": require_result_file(RESULT_ROOT, FINAL_DIR, "qc_summary.json"),
+        "subject_metrics": require_result_file(RESULT_ROOT, FINAL_DIR, "subject_metrics.tsv"),
+        "run_metrics": require_result_file(RESULT_ROOT, FINAL_DIR, "run_metrics.tsv"),
+        "trans_prob": require_result_file(RESULT_ROOT, FINAL_DIR, "trans_prob.npy"),
+        "state_signature": require_result_file(RESULT_ROOT, FINAL_DIR, "state_signature_ut_boldcorr.npy"),
+        "covs_pca": require_result_file(RESULT_ROOT, FINAL_DIR, "covs_pca.npy"),
     }
     optional = {
-        "refit_results": resolve_existing(FINAL_DIR / "refit_results.json", RESULT_ROOT / "refit_results.json"),
-        "topM_seeds": resolve_existing(RESULT_ROOT / "topM_seeds.json"),
-        "dwell_from_A": resolve_existing(RESULT_ROOT / "dwell_from_A.tsv"),
-        "preproc_params": resolve_existing(PREPROC_PARAMS_FILE, RESULT_ROOT / "preproc_params.npz"),
-        "atlas_tsv": resolve_existing(PARCEL_LABELS_FILE, DEFAULT_SCHAEFER_TSV),
-        "atlas_txt": resolve_existing(PARCEL_LABELS_FILE, DEFAULT_BRAINSTORM_TXT),
+        "refit_results": resolve_existing_path(FINAL_DIR / "refit_results.json", RESULT_ROOT / "refit_results.json"),
+        "topM_seeds": resolve_existing_path(RESULT_ROOT / "topM_seeds.json"),
+        "dwell_from_A": resolve_existing_path(RESULT_ROOT / "dwell_from_A.tsv"),
+        "preproc_params": resolve_existing_path(PREPROC_PARAMS_FILE, RESULT_ROOT / "preproc_params.npz"),
+        "atlas_tsv": resolve_existing_path(PARCEL_LABELS_FILE, DEFAULT_SCHAEFER_TSV),
+        "atlas_txt": resolve_existing_path(PARCEL_LABELS_FILE, DEFAULT_BRAINSTORM_TXT),
     }
     
     print("Resolved files:")
@@ -113,20 +85,16 @@ def run_bold_state_reconstruction_backend(
     for k, v in optional.items():
         print(f"  {k:16s} -> {v}")
     
-    # ---- notebook cell 4 ----
-    # =========================
-    # Load saved PipelineE outputs
-    # =========================
-    
-    qc = load_json(required["qc_summary"])
+    # Load the saved result tables and arrays.
+    qc = load_json_file(required["qc_summary"])
     subj = pd.read_csv(required["subject_metrics"], sep="\t")
     runs = pd.read_csv(required["run_metrics"], sep="\t")
     A = np.load(required["trans_prob"])
     sig_ut = np.load(required["state_signature"])
     covs_pca = np.load(required["covs_pca"])
     
-    refit_results = load_json(optional["refit_results"]) if optional["refit_results"] else None
-    topM = load_json(optional["topM_seeds"]) if optional["topM_seeds"] else None
+    refit_results = load_json_file(optional["refit_results"]) if optional["refit_results"] else None
+    topM = load_json_file(optional["topM_seeds"]) if optional["topM_seeds"] else None
     dwell_tbl = pd.read_csv(optional["dwell_from_A"], sep="\t") if optional["dwell_from_A"] else None
     
     print(pd.DataFrame({
@@ -145,42 +113,12 @@ def run_bold_state_reconstruction_backend(
     print("state_signature shape  :", sig_ut.shape)
     print("covs_pca shape         :", covs_pca.shape)
     
-    # ---- notebook cell 5 ----
-    # =========================
-    # Helpers: reconstruct parcel x parcel matrices from upper triangle vectors
-    # =========================
-    
-    def infer_n_from_ut_length(m):
-        # m = n*(n-1)/2
-        n = int((1 + math.sqrt(1 + 8*m)) / 2)
-        if n * (n - 1) // 2 != m:
-            raise ValueError(f"Upper-triangle length {m} does not correspond to any n x n matrix.")
-        return n
-    
-    def ut_to_square(vec, fill_diag=1.0):
-        vec = np.asarray(vec)
-        n = infer_n_from_ut_length(vec.size)
-        M = np.zeros((n, n), dtype=np.float32)
-        iu = np.triu_indices(n, 1)
-        M[iu] = vec
-        M[(iu[1], iu[0])] = vec
-        np.fill_diagonal(M, fill_diag)
-        return M
-    
-    def square_to_ut(M):
-        iu = np.triu_indices(M.shape[0], 1)
-        return M[iu]
-    
-    def corr_from_cov(C):
-        d = np.sqrt(np.clip(np.diag(C), 1e-12, None))
-        return (C / d[:, None]) / d[None, :]
-    
+    # Rebuild parcelwise correlation matrices from the saved upper-triangle vectors.
     corr_mats = np.stack([ut_to_square(sig_ut[k], fill_diag=1.0) for k in range(sig_ut.shape[0])], axis=0)
     K, P, _ = corr_mats.shape
     print(f"Recovered {K} state correlation matrices of size {P} x {P}")
     assert P == 200, f"Expected 200 parcels for Schaefer-200, but got {P}."
     
-    # ---- notebook cell 6 ----
     # =========================
     # Determine final FO vector and dominant/reference state
     # =========================
@@ -206,7 +144,6 @@ def run_bold_state_reconstruction_backend(
     print("Dominant state :", f"S{dominant_state_idx+1}")
     print("Reference state:", f"S{reference_state_idx+1}")
     
-    # ---- notebook cell 7 ----
     # =========================
     # Atlas / parcel label handling for Schaefer2018 200/7
     # =========================
@@ -353,10 +290,10 @@ def run_bold_state_reconstruction_backend(
         })
     
     def resolve_label_file():
-        explicit = resolve_existing(PARCEL_LABELS_FILE)
+        explicit = resolve_existing_path(PARCEL_LABELS_FILE)
         if explicit is not None:
             return explicit
-        preferred = resolve_existing(DEFAULT_SCHAEFER_TSV, DEFAULT_BRAINSTORM_TXT)
+        preferred = resolve_existing_path(DEFAULT_SCHAEFER_TSV, DEFAULT_BRAINSTORM_TXT)
         if preferred is not None:
             return preferred
         hits = auto_find_label_file(RESULT_ROOT)
@@ -415,7 +352,6 @@ def run_bold_state_reconstruction_backend(
     
     print("Network order in parcel table:", network_tick_lab)
     
-    # ---- notebook cell 8 ----
     # =========================
     # Sanity check: saved signature <-> reconstructed matrices
     # =========================
@@ -424,7 +360,6 @@ def run_bold_state_reconstruction_backend(
     print("Max abs reconstruction error from UT vector -> matrix -> UT:", float(max_abs_err))
     assert max_abs_err < 1e-6 + 1e-7, "Unexpected reconstruction error."
     
-    # ---- notebook cell 9 ----
     # =========================
     # State-wise parcel correlation heatmaps (with Schaefer network boundaries)
     # =========================
@@ -475,7 +410,6 @@ def run_bold_state_reconstruction_backend(
     cbar.set_label("Correlation (r)")
     savefig(fig, "state_parcel_corr_heatmaps_schaefer.png")
     
-    # ---- notebook cell 10 ----
     # =========================
     # Parcel-level difference maps versus the reference state
     # =========================
@@ -506,7 +440,6 @@ def run_bold_state_reconstruction_backend(
         cbar.set_label("Δ correlation")
         savefig(fig, "state_parcel_corr_differences_vs_reference_schaefer.png")
     
-    # ---- notebook cell 11 ----
     # =========================
     # Network-level block summaries (Schaefer-7 ordering)
     # =========================
@@ -537,7 +470,6 @@ def run_bold_state_reconstruction_backend(
     
     print(network_blocks["S1"])
     
-    # ---- notebook cell 12 ----
     # =========================
     # Plot state-wise network block heatmaps
     # =========================
@@ -566,7 +498,6 @@ def run_bold_state_reconstruction_backend(
     cbar.set_label("|r|" if USE_ABS_FOR_BLOCK_MEANS else "mean r")
     savefig(fig, "state_network_block_heatmaps_schaefer.png")
     
-    # ---- notebook cell 13 ----
     # =========================
     # Plot network block differences versus the reference state
     # =========================
@@ -594,7 +525,6 @@ def run_bold_state_reconstruction_backend(
         cbar.set_label("Δ " + ("|r|" if USE_ABS_FOR_BLOCK_MEANS else "mean r"))
         savefig(fig, "state_network_block_differences_vs_reference_schaefer.png")
     
-    # ---- notebook cell 14 ----
     # =========================
     # Rank the biggest network-pair contrasts versus the reference state
     # =========================
@@ -630,7 +560,6 @@ def run_bold_state_reconstruction_backend(
     for name, tbl in network_contrasts.items():
         tbl.to_csv(FIG_DIR / f"{name}_top_network_contrasts.tsv", sep="\t", index=False)
     
-    # ---- notebook cell 15 ----
     # =========================
     # Nodal summaries: mean connectivity strength per parcel
     # =========================
@@ -655,7 +584,6 @@ def run_bold_state_reconstruction_backend(
     
     nodal.to_csv(FIG_DIR / "nodal_mean_connectivity_by_state.tsv", sep="\t", index=False)
     
-    # ---- notebook cell 16 ----
     # =========================
     # Parcel-wise contrasts versus the reference state
     # =========================
@@ -673,7 +601,6 @@ def run_bold_state_reconstruction_backend(
         print(tbl[["index", "label_short", "network", "hemi", "delta_mean_r", "abs_delta_mean_r"]].head(20))
         tbl.to_csv(FIG_DIR / f"S{k+1}_vs_S{reference_state_idx+1}_top_parcel_contrasts.tsv", sep="\t", index=False)
     
-    # ---- notebook cell 17 ----
     # =========================
     # Optional: covariance backprojection from covs_pca.npy using preproc_params.npz
     # =========================
@@ -706,7 +633,6 @@ def run_bold_state_reconstruction_backend(
     else:
         print("preproc_params.npz not found. Skipping covariance backprojection.")
     
-    # ---- notebook cell 18 ----
     # =========================
     # Summary tables for manuscript writing
     # =========================
@@ -737,7 +663,6 @@ def run_bold_state_reconstruction_backend(
     print(state_summary)
     state_summary.to_csv(FIG_DIR / "state_summary_table.tsv", sep="\t", index=False)
     
-    # ---- notebook cell 19 ----
     # =========================
     # Plain-language interpretation scaffold
     # =========================
@@ -761,7 +686,6 @@ def run_bold_state_reconstruction_backend(
                 f"largest network shifts include {top_pair_text(tbl, n=5)}."
             )
     
-    # ---- notebook cell 20 ----
     # =========================
     # Save a compact session manifest
     # =========================

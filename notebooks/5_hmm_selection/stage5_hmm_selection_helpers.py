@@ -19,6 +19,8 @@ Important note:
 - the dense TensorFlow and `osl_dynamics` machinery now lives in normal
   same-directory Python backend modules rather than preserved provenance
   notebooks
+- Step 50 focuses on broad screening, Step 51 on the manuscript-facing
+  shortlist comparison, and Step 52 on the compact Figure 2 / Table S8 build
 - the final choice of `K = 3` remains a documented scientific decision, not
   a single automatic rule
 """
