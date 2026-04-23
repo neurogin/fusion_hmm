@@ -31,9 +31,7 @@ function P = stage1_eeg_sensor_settings()
 %
 % Important note:
 %   This is the main user-editable Stage-1 settings file. Most users only
-%   need to edit the two placeholder paths below. The legacy compatibility
-%   helper `r01_stage1_params.m` remains in place so older provenance code
-%   can still run.
+%   need to edit the two placeholder paths below.
 
 % -------------------------------------------------------------------------
 % Manuscript-default ICLabel pruning policy
@@ -54,9 +52,6 @@ P.historical.iclabel_brain_threshold = 0.60;
 P.paths.project_root = "<SET_PROJECT_ROOT>"; % Main project folder containing 01_raw, 02_derivatives, and 04_qc
 P.paths.brainstorm_protocol_root = "<SET_BRAINSTORM_PROTOCOL_ROOT>"; % Brainstorm protocol folder that directly contains data\ and anat\
 P.paths.brainstorm_db_root = P.paths.brainstorm_protocol_root; % Legacy compatibility alias for older provenance code
-
-% Legacy compatibility alias preserved for older provenance code.
-P.paths.r01_rerun_root = P.paths.project_root;
 
 % -------------------------------------------------------------------------
 % Derived Stage-1 paths

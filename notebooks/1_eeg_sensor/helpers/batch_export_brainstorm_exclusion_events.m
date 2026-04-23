@@ -6,7 +6,7 @@ function batch_export_brainstorm_exclusion_events(brainstorm_protocol_root, out_
 %   `boundary`, and `bad_boundary` events to one TSV per run.
 %
 % When it is used:
-%   Called by `export_and_union_merge_brainstorm_exclusions_12.m`.
+%   Called by `step12_export_and_union_merge_brainstorm_exclusions.m`.
 %
 % Key inputs:
 %   - Brainstorm protocol root that directly contains `data\` and `anat\`

@@ -6,7 +6,7 @@ function [QC, MAN, EXC] = build_eeg_run_qc_gates_and_manifests(root_raw_eeglab, 
 %   manifest files that support the manuscript-facing Stage-1 outputs.
 %
 % When it is used:
-%   Called by `eeg_run_qc_and_table_s1_13.m`.
+%   Called by `step13_eeg_run_qc_and_table_s1.m`.
 %
 % Key inputs:
 %   - raw EEGLAB directory
@@ -21,9 +21,9 @@ function [QC, MAN, EXC] = build_eeg_run_qc_gates_and_manifests(root_raw_eeglab, 
 %
 % Important note:
 %   The current QC behavior, including the explicit EMG-proxy gate that is
-%   kept visible for provenance, now lives in the descriptive helper
-%   `build_runlevel_qc_gates.m`. The older `r01_*` file remains only as a
-%   compatibility wrapper.
+%   kept visible for provenance, lives in the descriptive helper
+%   `build_runlevel_qc_gates.m`, which is the active public
+%   implementation used by the Stage-1 workflow.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);

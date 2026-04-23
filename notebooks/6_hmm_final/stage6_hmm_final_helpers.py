@@ -7,9 +7,9 @@ This module supports the public Stage-6 notebooks that:
 - optionally export Figure 4 and Figure 5 panels
 
 Important note:
-- the public notebooks now keep the user-facing setup and scientific notes visible
+- the public notebooks keep the user-facing setup and scientific notes visible
 - the dense runtime code lives in same-directory Python backend modules
-- the old preserved PipelineE notebooks remain provenance copies rather than active backends
+- the active compute path runs through those backend modules rather than through notebook-patching logic
 """
 
 from __future__ import annotations

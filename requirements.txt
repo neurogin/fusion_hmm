@@ -1,0 +1,16 @@
+# Core Python notebook stack
+jupyterlab
+notebook
+ipykernel
+numpy
+pandas
+scipy
+matplotlib
+nibabel
+nilearn
+templateflow
+
+# Stage-5 and Stage-6 runtime stack
+# These packages can be the most platform-sensitive part of setup.
+tensorflow
+osl-dynamics

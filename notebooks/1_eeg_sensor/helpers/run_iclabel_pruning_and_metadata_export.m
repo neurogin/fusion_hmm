@@ -6,7 +6,7 @@ function run_iclabel_pruning_and_metadata_export(root_raw_eeglab, out_base_dir, 
 %   "withICA", "clean", and QC-table outputs used in the public workflow.
 %
 % When it is used:
-%   Called by `eeg_prune_iclabel_and_export_clean_sets_10.m`.
+%   Called by `step10_eeg_prune_iclabel_and_export_clean_sets.m`.
 %
 % Key inputs:
 %   - raw EEGLAB directory
@@ -19,9 +19,8 @@ function run_iclabel_pruning_and_metadata_export(root_raw_eeglab, out_base_dir, 
 %
 % Important note:
 %   The scientific logic now lives in
-%   `prune_iclabel_components_and_export_metadata.m`. The older
-%   `r01_eeg_iclabel_prune_and_metadata.m` file remains only as a
-%   compatibility wrapper.
+%   `prune_iclabel_components_and_export_metadata.m`, which is the active
+%   public implementation used by the Stage-1 workflow.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);

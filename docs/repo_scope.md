@@ -1,84 +1,52 @@
 # Repository Scope
 
-This repository is being prepared as the public code and documentation companion for the manuscript:
+This repository is the public workflow package for the manuscript:
 
 **Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
-## Current scope
+## Included In This Public Release
 
-At the current refactor stage, this repository includes:
+- the active Stage 1 to Stage 6 `stepNN_*` workflow files
+- the active MATLAB helpers used by Stage 1 and Stage 2
+- the active Python helper and backend modules used by Stages 3 to 6
+- manual-step markdown files that are part of the real user workflow
+- core manuscript-facing documentation under `docs/`
+- Python environment templates in `environment.yml` and `requirements.txt`
 
-- repository-level instructions in `AGENTS.md`
-- manuscript workflow documentation in `docs/methods_map.md`
-- manual and hybrid Brainstorm procedures in `docs/manual_steps.md`
-- figure and table provenance notes in `docs/figure_table_map.md`
-- frozen dataset and reproducibility notes in:
-  - `docs/final_dataset_spec.md`
-  - `docs/reproducibility_notes.md`
-- manuscript and supplement reference copies in `docs/_manuscript_reference/`
-- analysis notebooks organized by major manuscript workflow stage in `notebooks/`
-- an archive folder of original notebook versions in `notebooks/_archive_raw_original_names/`
+## Not Included In This Public Release
 
-## What is currently present in the workflow notebooks
+- raw data
+- large derived outputs
+- historical development notebooks and scripts
+- internal refactor-planning and validation memos
+- scratch folders, smoke-test artifacts, notebook checkpoints, and caches
+- empty stage folders that were not part of the intended public workflow
 
-The notebook folders currently cover the main manuscript analysis stages:
+## Practical Scope
 
-- EEG sensor preprocessing and exclusion handling
-- EEG source localization and atlas-aligned parcel workflow
-- BOLD preprocessing and parcel extraction
-- EEG-BOLD timestamp alignment and fusion observation construction
-- HMM model-order selection
-- final full-data HMM fitting
+This repository is meant to help a careful outside scientist:
 
-Stages 1 to 6 now have cleaned public-facing workflow files.
+1. understand the manuscript workflow,
+2. identify which steps are manual or hybrid,
+3. run the active analysis sequence in the intended order,
+4. reproduce the manuscript-facing intermediate outputs and summary products,
+5. trace how figures and tables map onto the workflow.
 
-Some summary, QC, figure, and table logic is still embedded within these earlier method notebooks.
+It is not intended to be:
 
-## What is intentionally not yet finalized
+- a raw-data repository
+- a complete dump of historical notebook development
+- a fully turnkey push-button pipeline that hides the manual Brainstorm steps
 
-The following parts of the intended public repo structure are not yet fully populated:
+## Implemented Stage Structure
 
-- `config/`
-- `scripts/`
-- `src/`
+The public release uses six active stages:
 
-Also, the folders:
+1. `notebooks/1_eeg_sensor/`
+2. `notebooks/2_eeg_source/`
+3. `notebooks/3_bold/`
+4. `notebooks/4_alignment/`
+5. `notebooks/5_hmm_selection/`
+6. `notebooks/6_hmm_final/`
 
-- `notebooks/7_summaries/`
-- `notebooks/8_figures/`
-- `notebooks/9_tables/`
-
-may currently remain empty because summary, figure, and table generation are still partly embedded in earlier method notebooks.
-
-This is intentional in the current public workflow. The repo does not force duplicate wrappers into Stages 7 to 9 when the upstream stage notebooks are still the clearest source of those products.
-
-## What is not the goal of this repo right now
-
-This repository is **not yet** intended to be:
-
-- a fully polished turnkey pipeline
-- a complete historical archive of every exploratory notebook
-- a dump of all intermediate or abandoned analysis variants
-- a repository containing raw dataset files or large private intermediate outputs
-
-## Refactor-stage policy
-
-During this stage, the repository focuses on:
-
-- preserving scientific behavior
-- aligning code organization with the manuscript methods flow
-- documenting manual versus scripted steps honestly
-- preserving original notebook provenance
-- preparing a cleaner public-facing structure for the final paper repo
-- using descriptive names for active public files and active helper layers while keeping legacy names visible only where needed for provenance
-
-## Expected future additions
-
-As the refactor continues, this repository is expected to gain:
-
-- additional helper cleanup and documentation polish
-- selected figure/table generator notebooks or scripts only where they clearly improve readability
-- config templates
-- reusable code in `src/`
-- cleaner runnable entry points in `scripts/`
-- additional environment setup guidance
+Later manuscript summaries and figure-support products remain embedded in these stages where that is clearest for public use.

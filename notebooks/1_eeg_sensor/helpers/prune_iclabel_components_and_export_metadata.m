@@ -9,7 +9,7 @@ function prune_iclabel_components_and_export_metadata(root_raw_eeglab, out_base_
 %
 % When it is used:
 %   Called by `run_iclabel_pruning_and_metadata_export.m` from the public
-%   Stage-1 entry script `eeg_prune_iclabel_and_export_clean_sets_10.m`.
+%   Stage-1 entry script `step10_eeg_prune_iclabel_and_export_clean_sets.m`.
 %
 % Key inputs:
 %   - `root_raw_eeglab`: folder of preprocessed input `.set` files

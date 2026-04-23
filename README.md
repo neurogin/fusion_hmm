@@ -4,249 +4,152 @@ Code and documentation for the manuscript:
 
 **Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
 
+## What This Repository Is
 
-## What this repository is
+This repository is a manuscript-aligned reproducibility package for the published workflow. It is organized as a staged analysis sequence rather than as a general-purpose software library.
 
-This repository is the public paper-code companion for the manuscript above.
-
-It is organized as a manuscript-aligned workflow rather than as a generic software package. The main goal is to make the published analysis readable and traceable for an outside scientific reader while preserving the original scientific behavior.
-
-The active public workflow currently runs through:
+The public release contains only the active Stage 1 to Stage 6 workflow:
 
 1. EEG sensor preprocessing and exclusion handling
 2. EEG source localization and parcel export
 3. BOLD parcel extraction and QC
-4. EEG-BOLD timestamp alignment and retained-segment construction
+4. EEG-BOLD alignment and retained-segment construction
 5. LOSO model-order selection
-6. final full-data `K = 3` fitting and downstream reconstructions
+6. Final full-data `K = 3` fitting and downstream reconstructions
 
-## Read these first
+## What Is Included
 
-If you are new to the repo, start here:
+- active public `stepNN_*` workflow files in `notebooks/1_eeg_sensor/` through `notebooks/6_hmm_final/`
+- active helper and backend files used by those public steps
+- manual-step markdown files that remain real user steps
+- manuscript-facing documentation under `docs/`
+- Python environment templates in `environment.yml` and `requirements.txt`
 
-- `docs/methods_map.md`
-- `docs/manual_steps.md`
-- `docs/final_dataset_spec.md`
-- `docs/reproducibility_notes.md`
-- `docs/figure_table_map.md`
+## What Is Not Included
 
-## Current public status
+- raw EEG-fMRI data
+- large derived outputs
+- old development notebooks and internal provenance files
+- scratch scripts, smoke-test artifacts, notebook checkpoints, and cache folders
 
-Stages 1 to 6 now have cleaned public-facing workflow files.
+## Read These First
 
-The later folders:
+- [docs/setup.md](docs/setup.md)
+- [docs/public_workflow.md](docs/public_workflow.md)
+- [docs/manual_steps.md](docs/manual_steps.md)
+- [docs/methods_map.md](docs/methods_map.md)
+- [docs/final_dataset_spec.md](docs/final_dataset_spec.md)
+- [docs/reproducibility_notes.md](docs/reproducibility_notes.md)
+- [docs/figure_table_map.md](docs/figure_table_map.md)
 
-- `notebooks/7_summaries/`
-- `notebooks/8_figures/`
-- `notebooks/9_tables/`
-
-are intentionally empty for now because those summary, figure, and table products are still most cleanly generated inside the upstream stage notebooks.
-
-The main supporting docs already present are:
-
-- `AGENTS.md`
-- `docs/methods_map.md`
-- `docs/manual_steps.md`
-- `docs/repo_scope.md`
-- `docs/final_dataset_spec.md`
-- `docs/reproducibility_notes.md`
-- `docs/figure_table_map.md`
-- manuscript and supplement reference files under `docs/_manuscript_reference/`
-
-## Canonical manuscript path
-
-The main public manuscript path is:
-
-- Stage 4 retained dataset branch: `intermediate + nolags + minlen15`
-- Stage 5 model-selection story: broad `K = 2..12` screening, then manuscript-facing `K = 3` versus `K = 5` shortlist comparison, final choice `K = 3`
-- Stage 6 final model: full-data `K = 3` fit plus downstream `K = 3` review and reconstruction notebooks
-
-## Canonical final dataset
-
-Unless otherwise noted, the repository should reflect the frozen paper dataset:
-
-- no-lag fusion design
-- minimum retained segment length = 15 TR
-- BOLD TR = 2.1 s
-- EEG sampling rate = 250 Hz
-- 200 BOLD parcel features
-- 200 same-TR EEG parcel-power features
-- 400 features per retained TR
-- 3550 retained TRs
-- 71 retained contiguous segments
-- 124.25 usable minutes
-- final selected model order = `K = 3`
-
-See also:
-
-- `docs/final_dataset_spec.md`
-
-## Workflow overview
+## Workflow At A Glance
 
 ### Stage 1. EEG sensor preprocessing and exclusion handling
-Public files in `notebooks/1_eeg_sensor/`:
-
-- `step10_eeg_prune_iclabel_and_export_clean_sets.m`
-- `step11_brainstorm_exclusion_marking_manual.md`
-- `step12_export_and_union_merge_brainstorm_exclusions.m`
-- `step13_eeg_run_qc_and_table_s1.m`
+- [step10_eeg_prune_iclabel_and_export_clean_sets.m](notebooks/1_eeg_sensor/step10_eeg_prune_iclabel_and_export_clean_sets.m)
+- [step11_brainstorm_exclusion_marking_manual.md](notebooks/1_eeg_sensor/step11_brainstorm_exclusion_marking_manual.md)
+- [step12_export_and_union_merge_brainstorm_exclusions.m](notebooks/1_eeg_sensor/step12_export_and_union_merge_brainstorm_exclusions.m)
+- [step13_eeg_run_qc_and_table_s1.m](notebooks/1_eeg_sensor/step13_eeg_run_qc_and_table_s1.m)
 
 ### Stage 2. EEG source localization, parcel extraction, and source QC
-Public files in `notebooks/2_eeg_source/`:
-
-- `step20_prepare_schaefer200_atlas_for_brainstorm.ipynb`
-- `step21_brainstorm_volume_source_and_atlas_import_manual.md`
-- `step22_extract_volgrid_scouts_from_brainstorm_tess.m`
-- `step23_export_eeg_parcel_pc1_and_gain_normalize.m`
-- `step24_qc_eeg_source_alignment_table_s2.m`
-- `step25_generate_eeg_parcel_export_qc_sidecars.m`
-- `step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb`
+- [step20_prepare_schaefer200_atlas_for_brainstorm.ipynb](notebooks/2_eeg_source/step20_prepare_schaefer200_atlas_for_brainstorm.ipynb)
+- [step21_brainstorm_volume_source_and_atlas_import_manual.md](notebooks/2_eeg_source/step21_brainstorm_volume_source_and_atlas_import_manual.md)
+- [step22_extract_volgrid_scouts_from_brainstorm_tess.m](notebooks/2_eeg_source/step22_extract_volgrid_scouts_from_brainstorm_tess.m)
+- [step23_export_eeg_parcel_pc1_and_gain_normalize.m](notebooks/2_eeg_source/step23_export_eeg_parcel_pc1_and_gain_normalize.m)
+- [step24_qc_eeg_source_alignment_table_s2.m](notebooks/2_eeg_source/step24_qc_eeg_source_alignment_table_s2.m)
+- [step25_generate_eeg_parcel_export_qc_sidecars.m](notebooks/2_eeg_source/step25_generate_eeg_parcel_export_qc_sidecars.m)
+- [step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb](notebooks/2_eeg_source/step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb)
 
 ### Stage 3. BOLD parcel extraction and QC
-Public files in `notebooks/3_bold/`:
-
-- `step30_map_schaefer200_to_bold_run_grids.ipynb`
-- `step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb`
-- `step32_build_table_s4_bold_parcel_atlas_summary.ipynb`
-- `step33_build_table_s5_and_figure_s5_bold_qc.ipynb`
+- [step30_map_schaefer200_to_bold_run_grids.ipynb](notebooks/3_bold/step30_map_schaefer200_to_bold_run_grids.ipynb)
+- [step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb](notebooks/3_bold/step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb)
+- [step32_build_table_s4_bold_parcel_atlas_summary.ipynb](notebooks/3_bold/step32_build_table_s4_bold_parcel_atlas_summary.ipynb)
+- [step33_build_table_s5_and_figure_s5_bold_qc.ipynb](notebooks/3_bold/step33_build_table_s5_and_figure_s5_bold_qc.ipynb)
 
 ### Stage 4. EEG-BOLD alignment and retained-segment construction
-Public files in `notebooks/4_alignment/`:
-
-- `step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb`
-- `step41_build_final_no_lag_fusion_observation_segments.ipynb`
-- `step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb`
+- [step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb](notebooks/4_alignment/step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb)
+- [step41_build_final_no_lag_fusion_observation_segments.ipynb](notebooks/4_alignment/step41_build_final_no_lag_fusion_observation_segments.ipynb)
+- [step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb](notebooks/4_alignment/step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb)
 
 ### Stage 5. LOSO model-order selection
-Public files in `notebooks/5_hmm_selection/`:
+- [step50_run_loso_k_sweep_model_selection.ipynb](notebooks/5_hmm_selection/step50_run_loso_k_sweep_model_selection.ipynb)
+- [step51_run_loso_shortlist_stability_checks.ipynb](notebooks/5_hmm_selection/step51_run_loso_shortlist_stability_checks.ipynb)
+- [step52_build_figure2_and_table_s8_model_selection_summary.ipynb](notebooks/5_hmm_selection/step52_build_figure2_and_table_s8_model_selection_summary.ipynb)
 
-- `step50_run_loso_k_sweep_model_selection.ipynb`
-- `step51_run_loso_shortlist_stability_checks.ipynb`
-- `step52_build_figure2_and_table_s8_model_selection_summary.ipynb`
+### Stage 6. Final full-data `K = 3` fit and downstream reconstructions
+- [step60_fit_final_k3_fusion_hmm.ipynb](notebooks/6_hmm_final/step60_fit_final_k3_fusion_hmm.ipynb)
+- [step61_review_final_k3_fit_qc_and_state_dynamics.ipynb](notebooks/6_hmm_final/step61_review_final_k3_fit_qc_and_state_dynamics.ipynb)
+- [step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb](notebooks/6_hmm_final/step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb)
+- [step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb](notebooks/6_hmm_final/step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb)
+- [step64_build_parcelized_cortical_state_maps.ipynb](notebooks/6_hmm_final/step64_build_parcelized_cortical_state_maps.ipynb)
+- optional: [step65_optional_export_figure4_figure5_panels.ipynb](notebooks/6_hmm_final/step65_optional_export_figure4_figure5_panels.ipynb)
 
-### Stage 6. Final full-data K = 3 fit and downstream reconstructions
-Public files in `notebooks/6_hmm_final/`:
+## Canonical Manuscript Path
 
-- `step60_fit_final_k3_fusion_hmm.ipynb`
-- `step61_review_final_k3_fit_qc_and_state_dynamics.ipynb`
-- `step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb`
-- `step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb`
-- `step64_build_parcelized_cortical_state_maps.ipynb`
-- optional: `step65_optional_export_figure4_figure5_panels.ipynb`
+The manuscript-facing default path is:
 
-## Manual and hybrid steps
+- Stage 4 canonical dataset branch: `intermediate + nolags + minlen15`
+- Stage 5 model-selection narrative: broad `K = 2..12` screening, then a manuscript-facing shortlist comparison centered on `K = 3` and `K = 5`, with final choice `K = 3`
+- Stage 6 final model: full-data `K = 3` fit plus the saved-output review and reconstruction steps
 
-This repo is not fully code-only.
+See [docs/final_dataset_spec.md](docs/final_dataset_spec.md) for the frozen dataset definition.
 
-Important manual or hybrid steps include:
+## Manual And Hybrid Boundaries
+
+This repository is not fully script-only. Real manual or hybrid steps remain in the public workflow, especially:
 
 - Brainstorm EEG exclusion marking
-- Brainstorm subject import and anatomy setup
-- EEG MNI normalization, BEM generation, and source localization in Brainstorm
-- atlas import into Brainstorm as volume scouts
-- some screenshot-based or panel-assembly figure work
+- Brainstorm source-model setup
+- Brainstorm atlas import as volume scouts
+- some final figure-panel assembly
 
-Those steps are documented in `docs/manual_steps.md`. The public notebooks and scripts do not pretend those steps are fully automated when they are not.
+Those boundaries are documented explicitly in [docs/manual_steps.md](docs/manual_steps.md).
 
-## Active helpers and legacy provenance
+## Software Summary
 
-Each active stage folder contains:
+The workflow uses a mixed software stack:
 
-- public entry files meant for outside readers
-- helper files or helper modules used by those public entry files
-- preserved older working files kept for provenance
+- MATLAB for Stage 1 and core parts of Stage 2
+- EEGLAB and ICLabel where the Stage-1 and Stage-2 MATLAB steps actually require them
+- Brainstorm for the manual or hybrid EEG-source stages
+- Python notebooks and helper modules for Stages 2 to 6
+- TensorFlow and `osl_dynamics` for Stage 5 and the Stage-6 final fit
 
-For the active public helper layer:
+Setup details are in [docs/setup.md](docs/setup.md).
 
-- Stage 1 and Stage 2 now use descriptive helper names in the cleaned public workflow
-- the active public-facing top-level files now use `stepNN_*` names across MATLAB, notebook, and manual-handoff files
-- older pre-step filenames may still appear in these folders as compatibility stubs or pointer files, but they are no longer the main public entry points
-- preserved `r01_` MATLAB implementations remain in place as provenance-compatible low-level code, and the public helper layer now checks those dependencies explicitly instead of assuming they are silently on the MATLAB path
-- later Python stages use stage-specific helper modules with plain-language module headers
-
-Historical notebooks and scripts with names such as `r01_*` or `Pipeline*` remain preserved in the workflow folders or in `notebooks/_archive_raw_original_names/`, but they do not define the main public path.
-
-## Repository layout
+## Repository Layout
 
 ```text
 fusion_hmm/
   README.md
-  AGENTS.md
+  environment.yml
+  requirements.txt
+  .gitignore
 
   docs/
-    methods_map.md
+    setup.md
+    public_workflow.md
     manual_steps.md
-    figure_table_map.md
-    repo_scope.md
+    methods_map.md
     final_dataset_spec.md
     reproducibility_notes.md
-    _manuscript_reference/
-      FULL_MANUSCRIPT.docx
-      SUPPLEMENTAL_MATERIALS.docx
-
-  config/
+    figure_table_map.md
+    github_release_checklist.md
+    repo_scope.md
 
   notebooks/
     1_eeg_sensor/
-      step10_eeg_prune_iclabel_and_export_clean_sets.m
-      step11_brainstorm_exclusion_marking_manual.md
-      step12_export_and_union_merge_brainstorm_exclusions.m
-      step13_eeg_run_qc_and_table_s1.m
-      helpers/
     2_eeg_source/
-      step20_prepare_schaefer200_atlas_for_brainstorm.ipynb
-      step21_brainstorm_volume_source_and_atlas_import_manual.md
-      step22_extract_volgrid_scouts_from_brainstorm_tess.m
-      step23_export_eeg_parcel_pc1_and_gain_normalize.m
-      step24_qc_eeg_source_alignment_table_s2.m
-      step25_generate_eeg_parcel_export_qc_sidecars.m
-      step26_qc_eeg_parcel_exports_table_s3_and_figures_s2_s4.ipynb
-      helpers/
     3_bold/
-      step30_map_schaefer200_to_bold_run_grids.ipynb
-      step31_export_bold_parcel_pc1_with_nuisance_regression.ipynb
-      step32_build_table_s4_bold_parcel_atlas_summary.ipynb
-      step33_build_table_s5_and_figure_s5_bold_qc.ipynb
-      helpers/
     4_alignment/
-      step40_align_eeg_to_bold_trs_and_build_keep_masks.ipynb
-      step41_build_final_no_lag_fusion_observation_segments.ipynb
-      step42_qc_alignment_tables_s6_s7_and_figure1_support.ipynb
-      helpers/
     5_hmm_selection/
-      step50_run_loso_k_sweep_model_selection.ipynb
-      step51_run_loso_shortlist_stability_checks.ipynb
-      step52_build_figure2_and_table_s8_model_selection_summary.ipynb
-      helpers/
     6_hmm_final/
-      step60_fit_final_k3_fusion_hmm.ipynb
-      step61_review_final_k3_fit_qc_and_state_dynamics.ipynb
-      step62_reconstruct_bold_state_networks_and_ranked_contrasts.ipynb
-      step63_reconstruct_crossmodal_state_blocks_and_ranked_contrasts.ipynb
-      step64_build_parcelized_cortical_state_maps.ipynb
-      step65_optional_export_figure4_figure5_panels.ipynb
-      helpers/
-    7_summaries/
-    8_figures/
-    9_tables/
-    _archive_raw_original_names/
-
-  scripts/
-  src/
-  results/
-  assets/
 ```
 
-## Current limitations
+## Before A Public Push
 
-This repository is already organized around the final manuscript workflow, but it is still a refactor-phase public release rather than a one-click software package.
+Use [docs/github_release_checklist.md](docs/github_release_checklist.md) for the final packaging checks.
 
-In particular:
+Two release-level items still need manual confirmation outside the code itself:
 
-- some later figure and table products are still generated inside upstream method notebooks
-- manual Brainstorm work remains real and is documented rather than hidden
-- environment setup still matters for MATLAB, Brainstorm, TensorFlow, `osl_dynamics`, and plotting libraries
-- historical provenance notebooks are preserved even when they are no longer the main public entry points
-
-For the most detailed practical caveats, see `docs/reproducibility_notes.md`.
-
+- the repository license choice
+- the author list and citation metadata for `CITATION.cff`

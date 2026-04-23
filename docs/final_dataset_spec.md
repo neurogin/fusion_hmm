@@ -1,174 +1,110 @@
 # Final Dataset Specification
 
-This document defines the **canonical final analysis dataset** used for the manuscript:
+This document defines the frozen manuscript dataset and modeling defaults used by the public workflow.
 
-**Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI**
+Repository steps, comments, and saved outputs should be interpreted against this specification unless a file explicitly says it is reporting a different branch for comparison or provenance.
 
-It is intended to serve as the frozen reference for the final paper workflow during repository refactoring and public release preparation.
+## Canonical Dataset Identity
 
-## Purpose
+The final manuscript dataset uses:
 
-This file exists to prevent ambiguity during refactoring.
+- `DATA_VARIANT = "intermediate"`
+- `FEATURE_MODE = "nolags"`
+- minimum retained segment length = `15` TR
+- final selected model order = `K = 3`
 
-If older notebooks, comments, exports, or intermediate results disagree with the values below, this document should be treated as the reference point for the final paper dataset unless explicitly updated.
-
-## Final analysis dataset identity
-
-The final fusion-HMM analysis used the:
-
-- **no-lag** EEG-BOLD fusion design
-- **15-TR minimum retained segment length**
-- **final selected model order: K = 3**
-
-This is the canonical dataset and model configuration referred to throughout the manuscript and supplement.
-
-## Source data scope
+## Source Data Scope
 
 The final retained dataset was built from:
 
-- **15 eyes-open resting-state runs**
-- **12 healthy adult participants**
-- simultaneous EEG-fMRI recordings from the open-access dataset used in the manuscript
+- 15 eyes-open resting-state runs
+- 12 participants
+- simultaneous resting-state EEG-fMRI data from the open-access dataset used in the manuscript
 
-## Shared temporal framework
+## Shared Temporal Framework
 
-- **BOLD TR:** 2.1 s
-- **EEG sampling rate:** 250 Hz
+- BOLD TR = `2.1` s
+- EEG sampling rate = `250` Hz
 
-EEG and BOLD were aligned on a common TR axis using timestamp-based reconciliation of the raw EEG timeline and the preprocessed EEG timeline before TR-level masking.
+EEG and BOLD are reconciled on the BOLD TR axis using the Stage-4 alignment workflow.
 
-## Final TR-retention rules
+## TR Retention Rules
 
-A BOLD TR was retained only if it passed both the EEG coverage rule and the sample-completeness gate.
+A TR is retained only if it passes all preserved Stage-4 gates:
 
-### 1. Base EEG coverage rule
-A TR was retained directly if at least:
+1. base EEG coverage rule:
+   at least 70% of the TR contains usable EEG
+2. hybrid rescue rule:
+   at least 50% of the TR is usable EEG, and that usable span forms one contiguous block covering at least 50% of the TR
+3. sample-completeness gate:
+   at least `max(50, 0.65 x expected EEG samples per TR)` remain after masking
 
-- **70% of the TR duration** contained usable EEG
+## Final Temporal Design
 
-### 2. Hybrid rescue rule
-A partially contaminated TR could still be retained if:
+The final manuscript dataset uses:
 
-- at least **50% of the TR** was usable EEG, **and**
-- the usable EEG formed **one contiguous block**
-- spanning at least **50% of the TR**
+- same-TR EEG only
+- no lag terms
 
-### 3. Sample-completeness gate
-After interval masking, each TR also had to contain at least:
-
-- `max(50, 0.65 × expected EEG samples per TR)`
-
-This excluded sparsely sampled, incomplete, or NaN-prone EEG bins, including tail bins beyond valid EEG coverage.
-
-## Final temporal design
-
-The final manuscript dataset used:
-
-- **same-TR EEG only**
-- **no lag terms**
-
-EEG entered the model only as parcel-wise same-TR power values.
-
-## Final segment-export rule
+## Final Segment Export Rule
 
 After TR-level masking, only contiguous retained stretches of at least:
 
-- **15 TR**
+- `15` TR
 
-were exported for downstream modeling.
+are exported for downstream modeling.
 
-## Final observation vector definition
+## Final Observation Definition
 
-Each retained TR contributed one **400-dimensional** fusion observation vector:
+Each retained TR contributes one 400-feature fusion observation:
 
-- **200 BOLD parcel features**
-- **200 EEG parcel-power features**
+- 200 BOLD parcel PC1 features
+- 200 same-TR EEG parcel-power features
 
-### BOLD block
-- parcel-wise BOLD PC1 values
-- feature columns: **0–199**
+The EEG block is computed from gain-normalized parcel-PC1 signals on the same TR.
 
-### EEG block
-- parcel-wise same-TR EEG power values
-- EEG power defined as mean squared signal within the TR from the gain-normalized parcel-PC1 signal
-- feature columns: **200–399**
+## PCA Before HMM Fitting
 
-## Final feature-space definition before model fitting
+Before HMM fitting, the retained 400-feature observations are reduced to:
 
-Before HMM fitting, the retained 400-dimensional observations were reduced by modality-specific PCA:
+- 40 BOLD PCs
+- 40 EEG PCs
+- 80 modeled dimensions total
 
-- **40 BOLD PCs**
-- **40 EEG PCs**
-- **80 modeled dimensions total**
+## Final Retained Totals
 
-## Final retained-data totals
+The canonical no-lag, 15-TR-minimum dataset contains:
 
-The final no-lag, 15-TR-minimum fusion dataset contained:
-
-- **15 runs**
-- **71 retained contiguous segments**
-- **3550 retained TRs**
-- **124.25 usable minutes**
-
-These values are the canonical retained-data totals for the final manuscript dataset.
-
-## Final model-order decision
-
-Model order was selected by:
-
-- leave-one-subject-out cross-validation across **K = 2–12**
-- held-out test free energy
-- 1-SE model-selection rule
-- shortlist stability analysis using matched BOLD state signatures across folds
-
-The final selected model order was:
-
-- **K = 3**
-
-## Final full-data model identity
-
-The final full-data solution used:
-
-- the canonical no-lag, 15-TR-minimum dataset
-- **K = 3**
-- full state covariance matrices
-- run-wise normalization within modality
-- modality-specific PCA
-- multi-seed fitting and anti-collapse screening
-
-## Interpretation scope
-
-The final K = 3 model was used to generate:
-
-- temporal summaries
-- BOLD state reconstructions
-- descriptive cross-modal BOLD-EEG reconstructions
-- parcelized cortical maps
-
-These downstream summaries are part of the final paper workflow and should be interpreted in light of the final dataset definition above.
-
-## Refactor policy note
-
-During repository cleanup:
-
-- do not silently change any value listed in this file
-- do not merge in older alternative dataset variants unless clearly labeled
-- do not treat older lagged or differently filtered exports as part of the final paper dataset
-- flag any mismatch between older notebooks and this dataset specification
-
-## Short reference summary
-
-For quick reference, the final paper dataset is:
-
-- no-lag
-- minimum segment length = 15 TR
-- TR = 2.1 s
-- EEG sampling rate = 250 Hz
-- 200 BOLD + 200 EEG features
-- 400 features per retained TR
-- 40 + 40 PCA dimensions
 - 15 runs
-- 71 segments
+- 71 retained contiguous segments
 - 3550 retained TRs
 - 124.25 usable minutes
-- final model order = **K = 3**
+
+## Model-Selection Outcome
+
+The public release preserves the manuscript model-selection story:
+
+- broad LOSO screening over `K = 2..12`
+- shortlist comparison centered on `K = 3` and `K = 5`
+- final manuscript choice = `K = 3`
+
+## Final Full-Data Model Identity
+
+The final Stage-6 fit uses:
+
+- the canonical Stage-4 retained dataset
+- `K = 3`
+- modality-specific PCA
+- full state covariance matrices
+- run-wise normalization within modality
+- multi-seed fitting with seed screening and refit
+
+## Short Reference Summary
+
+For quick reference, the public manuscript path is:
+
+- `intermediate + nolags + minlen15`
+- 200 BOLD features + 200 EEG features
+- 400 features per retained TR
+- 3550 retained TRs across 71 retained segments
+- final `K = 3`

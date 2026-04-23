@@ -20,9 +20,8 @@ function T = batch_extract_volgrid_scouts_from_brainstorm_tess(protocolRoot, sco
 %   returns a build-summary table with one row per subject/session.
 %
 % Important note:
-%   This is now the active descriptive implementation for the Stage-2
-%   scout-building step. The preserved `r01_*` files remain only as
-%   compatibility wrappers.
+%   This is the active descriptive implementation for the Stage-2
+%   scout-building step used by the public workflow.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);

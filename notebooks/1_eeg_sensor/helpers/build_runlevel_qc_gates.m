@@ -10,7 +10,7 @@ function [QC, MAN, EXC] = build_runlevel_qc_gates(root_raw_eeglab, eeg_ic_pruned
 %
 % When it is used:
 %   Called by `build_eeg_run_qc_gates_and_manifests.m` from the public
-%   Stage-1 script `eeg_run_qc_and_table_s1_13.m`.
+%   Stage-1 script `step13_eeg_run_qc_and_table_s1.m`.
 %
 % Important note:
 %   The current QC logic is preserved exactly, including the explicit

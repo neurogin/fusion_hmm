@@ -23,8 +23,8 @@ function qc = run_eeg_parcel_export_qc_summaries(outDir)
 %     - `batch_pve1_lowparcels_frequency_named_v3.csv`
 %
 % Important note:
-%   This wrapper preserves the current v3 QC behavior and default options.
-%   The preserved `r01_*` files now remain only as compatibility wrappers.
+%   This wrapper preserves the current v3 QC behavior and default options
+%   while exposing that behavior through the active public helper layer.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);

@@ -7,7 +7,7 @@ function summarize_exclusion_union_qc(union_dir, out_dir, varargin)
 %   run-level gating.
 %
 % When it is used:
-%   Called by `eeg_run_qc_and_table_s1_13.m`.
+%   Called by `step13_eeg_run_qc_and_table_s1.m`.
 %
 % Key inputs:
 %   - folder containing `*_excl_union.tsv`

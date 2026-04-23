@@ -1,0 +1,16 @@
+name: fusion_hmm
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - jupyterlab
+  - notebook
+  - ipykernel
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - nibabel
+  - nilearn
+  - templateflow

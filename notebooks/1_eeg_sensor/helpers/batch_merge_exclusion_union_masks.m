@@ -7,7 +7,7 @@ function batch_merge_exclusion_union_masks(export_dir, union_dir, varargin)
 %   `union_masks` folder.
 %
 % When it is used:
-%   Called by `export_and_union_merge_brainstorm_exclusions_12.m`.
+%   Called by `step12_export_and_union_merge_brainstorm_exclusions.m`.
 %
 % Key inputs:
 %   - folder containing `*_bst_exclusions.tsv`
@@ -18,9 +18,9 @@ function batch_merge_exclusion_union_masks(export_dir, union_dir, varargin)
 %   Writes `*_excl_union.tsv` and per-run QC CSV sidecars in `union_dir`.
 %
 % Important note:
-%   The interval-merging logic now lives in the descriptive one-run helper
-%   `merge_exclusion_union_masks.m`. The older `r01_*` file remains only as
-%   a compatibility wrapper.
+%   The interval-merging logic lives in the descriptive one-run helper
+%   `merge_exclusion_union_masks.m`, which is the active public
+%   implementation used by the Stage-1 workflow.
 
 this_file = mfilename('fullpath');
 this_dir = fileparts(this_file);

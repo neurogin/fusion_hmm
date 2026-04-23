@@ -1,9 +1,24 @@
-_local_recovery_examples/
+# Python
+__pycache__/
+*.py[cod]
 
-_scratch_stage5_backend_extracts/
+# Jupyter
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
 
-_scratch_stage6_backend_extracts/
-_scratch_stage6_generate.ps1
-_scratch_stage6_repair_modules.ps1
+# MATLAB
+*.asv
+*.m~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Common local data and output roots
+01_raw/
+02_derivatives/
+04_qc/
+
+# Local scratch
+_local_*/
+_scratch_*/
