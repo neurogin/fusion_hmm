@@ -7,8 +7,8 @@ authors:
   - family-names: "Cruz"
     given-names: "G.E."
 abstract: "Manuscript-aligned reproducibility package for the staged EEG-fMRI fusion workflow associated with the manuscript Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI. The repository organizes public workflow steps for EEG preprocessing, EEG source parcellation, BOLD parcel extraction, EEG-BOLD alignment, LOSO HMM model-order selection, and final K=3 fusion-HMM reconstruction outputs."
-repository-code: "https://github.com/<YOUR-USERNAME>/fusion_hmm"
-url: "https://github.com/<YOUR-USERNAME>/fusion_hmm"
+repository-code: "https://github.com/neurogin/fusion_hmm"
+url: "https://github.com/neurogin/fusion_hmm"
 license: "MIT"
 keywords:
   - EEG-fMRI

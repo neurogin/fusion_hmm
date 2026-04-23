@@ -14,3 +14,5 @@ dependencies:
   - nibabel
   - nilearn
   - templateflow
+  - osl-dynamics
+  - tensorflow
