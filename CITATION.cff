@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the software metadata in this file and the associated manuscript once the final journal citation is available."
+title: "fusion_hmm"
+version: "1.0.0"
+type: software
+authors:
+  - family-names: "Cruz"
+    given-names: "G.E."
+abstract: "Manuscript-aligned reproducibility package for the staged EEG-fMRI fusion workflow associated with the manuscript Fusion hidden Markov modeling reveals a reproducible shared state architecture in simultaneous resting-state EEG-fMRI. The repository organizes public workflow steps for EEG preprocessing, EEG source parcellation, BOLD parcel extraction, EEG-BOLD alignment, LOSO HMM model-order selection, and final K=3 fusion-HMM reconstruction outputs."
+repository-code: "https://github.com/<YOUR-USERNAME>/fusion_hmm"
+url: "https://github.com/<YOUR-USERNAME>/fusion_hmm"
+license: "MIT"
+keywords:
+  - EEG-fMRI
+  - hidden Markov model
+  - HMM
+  - multimodal fusion
+  - resting state
+  - neuroimaging
+  - reproducibility

@@ -1,0 +1,12 @@
+Split License Notice
+
+This repository uses a split-license structure.
+
+Code files are licensed under the MIT License. See LICENSE-CODE.
+
+Repository documentation, manuscript-aligned explanatory text, and figures are
+licensed under the Creative Commons Attribution-NonCommercial 4.0 International
+License (CC BY-NC 4.0), unless otherwise noted. See LICENSE-DOCS.
+
+If a file states a different license or includes third-party material with its
+own terms, that file-specific notice takes precedence.

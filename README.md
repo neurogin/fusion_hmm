@@ -145,11 +145,17 @@ fusion_hmm/
     6_hmm_final/
 ```
 
-## Before A Public Push
+## Citation And License
 
-Use [docs/github_release_checklist.md](docs/github_release_checklist.md) for the final packaging checks.
+If you use this repository, please cite the software metadata in
+[CITATION.cff](CITATION.cff) and cite the associated manuscript once the final
+journal citation is available.
 
-Two release-level items still need manual confirmation outside the code itself:
+This repository uses a split-license structure:
 
-- the repository license choice
-- the author list and citation metadata for `CITATION.cff`
+- code files are licensed under the MIT License; see [LICENSE-CODE](LICENSE-CODE)
+- repository documentation, manuscript-aligned explanatory text, and figures are
+  licensed under CC BY-NC 4.0 unless otherwise noted; see
+  [LICENSE-DOCS](LICENSE-DOCS)
+
+The top-level [LICENSE](LICENSE) file summarizes this split-license structure.
