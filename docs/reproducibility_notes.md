@@ -134,3 +134,10 @@ This public release intentionally excludes:
 - scratch files and smoke-test artifacts
 
 The remaining tree is meant to be the active public workflow only.
+
+
+## AI use during repository preparation
+
+Large language model-based AI tools were used during repository preparation to assist with code drafting and debugging, script refactoring, documentation organization, and the conversion of internal analysis materials into a cleaner public-facing workflow. These tools were also used to help improve code readability, reorganize public step files, and prepare manuscript-aligned repository documentation.
+
+All AI-assisted code and text were manually reviewed by the author, and all retained code was executed and validated before inclusion in the repository. AI tools were not used to fabricate, alter, selectively remove, or otherwise manipulate the underlying data or reported results. The scientific design, analytical decisions, interpretation of findings, and conclusions remain the responsibility of the author.

@@ -145,6 +145,11 @@ fusion_hmm/
     6_hmm_final/
 ```
 
+## AI use in repository preparation
+
+Large language model-based AI tools, including Codex, were used to assist with code drafting, debugging, script refactoring, and the preparation and reformatting of the public-facing repository files and documentation. All AI-assisted code and text were manually reviewed, revised, executed, and validated by the author before inclusion in this repository. No AI tools were used to fabricate, alter, or selectively remove data or results. All scientific content, analysis decisions, interpretations, and conclusions reflected in this repository remain the author’s own.
+
+
 ## Citation And License
 
 If you use this repository, please cite the software metadata in
